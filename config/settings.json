@@ -1,0 +1,22 @@
+{
+    "InputDir": "test",
+    "OutputFile": "results/table.csv",
+    "ListFiles": true,
+    "ListDir": true,
+    "GuessDirType": true,
+    "CalcSize": true,
+    "Level": 3,
+    "IncludeRegex": true,
+    "Include": [
+        "tSNE_1",
+        "GO_MALE_MEIOSIS"
+    ],
+    "ExcludeRegex": true,
+    "Exclude": [
+        "tSNE_2",
+        "GO_MITOCHONDRION"
+    ],
+    "OlderThan": "2022-01-01",
+    "NewerThan": "2022-01-01"
+
+}

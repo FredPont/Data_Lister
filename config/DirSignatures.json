@@ -1,0 +1,11 @@
+{
+    "Software": {
+                "content": [".go", ".git", ".DLL", ".dll", ".r", ".jl", ".pl"],
+                "scoreThreshold": 0.2
+    },
+    "Fasta": {
+        "content": [".fasta", ".FASTA", ".fasta.gz"],
+        "scoreThreshold": 0.8
+}
+}
+
