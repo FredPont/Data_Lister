@@ -13,5 +13,6 @@ func DirSize(dir string) int64 {
 		fmt.Println(err)
 	}
 	//fmt.Println(size / 1e6) // print the size in Mbytes
-	return (size / 1e6) // return the size in Mbytes
+	//return (size / 1e6) // return the size in Mbytes
+	return (size)
 }

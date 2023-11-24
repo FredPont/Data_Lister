@@ -1,7 +1,7 @@
 {
     "InputDir": "test",
     "OutputFile": "results/table.csv",
-    "ListFiles": true,
+    "ListFiles": false,
     "ListDir": true,
     "GuessDirType": true,
     "CalcSize": true,

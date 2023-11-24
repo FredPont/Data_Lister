@@ -1,3 +1,21 @@
+/*
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ Written by Frederic PONT.
+ (c) Frederic Pont 2023
+*/
+
 package process
 
 import (
@@ -107,13 +125,25 @@ func ScanDirType(names []string, pref types.Conf, dirSignatures map[string]types
 // DirOutput decide the output of the file/dir information
 func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf) {
 	if pref.ListFiles && fileType == "file" {
-		saveOutput(filePath, info)
+		saveOutput(filePath, info, pref)
 	} else if fileType == "dir" {
-		saveOutput(filePath, info)
+		saveOutput(filePath, info, pref)
 	}
 }
 
 // saveOutput save the file/dir information
-func saveOutput(filePath string, info fs.FileInfo) {
-	fmt.Println(filePath, "size=", info.Size())
+func saveOutput(filePath string, info fs.FileInfo, pref types.Conf) {
+	var size int64
+	if pref.CalcSize {
+		if info.IsDir() {
+			size = DirSize(filePath)
+		} else {
+			size = info.Size()
+		}
+	}
+	modTime := info.ModTime()
+	year := modTime.Year()
+	month := int(modTime.Month())
+	day := modTime.Day()
+	fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
 }
