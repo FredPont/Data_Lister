@@ -20,26 +20,36 @@ package process
 
 import (
 	conf "Data_Lister/src/configuration"
+	"Data_Lister/src/pogrebdb"
 	"Data_Lister/src/types"
 	"fmt"
 	"io/fs"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
+
+	"github.com/akrylysov/pogreb"
 )
 
 func Parse() {
-	dirSignatures := conf.ReadDirSignatures()
+	pogrebdb.InitDB()
+	fDB := pogrebdb.OpenDB("files")
+	dtDB := pogrebdb.OpenDB("dirTypes")
+	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	fmt.Println(dirSignatures)
-	pref := conf.ReadConf()
+	pref := conf.ReadConf() // read preferences
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
-	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref)
+	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB)
 	if err != nil {
 		panic(err)
 	}
+	pogrebdb.ShowDB(fDB)
+	fDB.Close()
+	dtDB.Close()
 }
 
-func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf) error {
+func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, fDB, dtDB *pogreb.DB) error {
 	//fmt.Println("level=", rootLevel)
 	file, err := os.Open(path)
 	if err != nil {
@@ -64,12 +74,12 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if err != nil {
 			return err
 		}
-		DirOutput(filePath, "file", fileInfo, pref)
+		DirOutput(filePath, "file", fileInfo, pref, fDB, dtDB)
 		if fileInfo.IsDir() {
-			DirOutput(filePath, "dir", fileInfo, pref)
+			DirOutput(filePath, "dir", fileInfo, pref, fDB, dtDB)
 
 			if Level(filePath, rootLevel) < pref.Level {
-				readDir(filePath, rootLevel, dirSignatures, pref)
+				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB)
 			}
 		}
 
@@ -123,16 +133,16 @@ func ScanDirType(names []string, pref types.Conf, dirSignatures map[string]types
 }
 
 // DirOutput decide the output of the file/dir information
-func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf) {
+func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf, fDB, dtDB *pogreb.DB) {
 	if pref.ListFiles && fileType == "file" {
-		saveOutput(filePath, info, pref)
+		saveOutput(filePath, info, pref, fDB, dtDB)
 	} else if fileType == "dir" {
-		saveOutput(filePath, info, pref)
+		saveOutput(filePath, info, pref, fDB, dtDB)
 	}
 }
 
 // saveOutput save the file/dir information
-func saveOutput(filePath string, info fs.FileInfo, pref types.Conf) {
+func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dtDB *pogreb.DB) {
 	var size int64
 	if pref.CalcSize {
 		if info.IsDir() {
@@ -142,8 +152,12 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf) {
 		}
 	}
 	modTime := info.ModTime()
-	year := modTime.Year()
-	month := int(modTime.Month())
-	day := modTime.Day()
-	fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
+	year := strconv.Itoa(modTime.Year())
+	month := strconv.Itoa(int(modTime.Month()))
+	day := strconv.Itoa(modTime.Day())
+
+	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
+	outString := strings.Join([]string{info.Name(), strconv.FormatInt(size, 10), year + "-" + month + "-" + day}, "\t")
+	pogrebdb.InsertDataDB(fDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
+
 }
