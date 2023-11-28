@@ -34,8 +34,8 @@ import (
 
 func Parse() {
 	pogrebdb.InitDB()
-	fDB := pogrebdb.OpenDB("files")
-	dtDB := pogrebdb.OpenDB("dirTypes")
+	fDB := pogrebdb.OpenDB("db/files")
+	dtDB := pogrebdb.OpenDB("db/dirTypes")
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
@@ -45,6 +45,7 @@ func Parse() {
 		panic(err)
 	}
 	pogrebdb.ShowDB(fDB)
+	pogrebdb.ShowDB(dtDB)
 	fDB.Close()
 	dtDB.Close()
 }
@@ -61,6 +62,8 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 	dirScore := ScoreType(names, dirSignatures)
 	if dirScore.IsMatch {
 		fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
+		outString := strings.Join([]string{dirScore.Label, strconv.FormatFloat(dirScore.Score, 'f', -1, 64)}, "\t")
+		pogrebdb.InsertDataDB(dtDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
 		return nil
 	}
 	for _, name := range names {
@@ -157,7 +160,6 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dtDB *p
 	day := strconv.Itoa(modTime.Day())
 
 	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
-	outString := strings.Join([]string{info.Name(), strconv.FormatInt(size, 10), year + "-" + month + "-" + day}, "\t")
+	outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")
 	pogrebdb.InsertDataDB(fDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
-
 }

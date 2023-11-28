@@ -60,8 +60,8 @@ func GetDataDB(db *pogreb.DB, key string) []byte {
 // InitDB clear db dir and create new databases for files and dir signatures
 func InitDB() {
 	CleanDB("db")
-	CreateDataBase("db/files")
-	CreateDataBase("db/dirTypes")
+	//CreateDataBase("files")
+	//CreateDataBase("dirTypes")
 }
 
 // CreateDataBase create a new pogreb database in tmp dir
@@ -69,11 +69,11 @@ func CreateDataBase(dbName string) *pogreb.DB {
 	db, err := pogreb.Open("db/"+dbName, nil)
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println("cannot create database in tmp dir !")
+		fmt.Println("cannot create database in db dir !")
 	}
 	//defer db.Close() // do not close the database before the end of the run
 
-	fmt.Println("database created in tmp/" + dbName)
+	fmt.Println("database created in db/" + dbName)
 	return db
 }
 
