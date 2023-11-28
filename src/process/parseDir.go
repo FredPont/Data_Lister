@@ -60,11 +60,11 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 	}
 	defer file.Close()
 	names, _ := file.Readdirnames(0)
-	fmt.Println(names)
+	//fmt.Println(names)
 	if pref.GuessDirType {
 		dirScore := ScoreType(names, dirSignatures)
 		if dirScore.IsMatch {
-			fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
+			//fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
 			outString := strings.Join([]string{dirScore.Label, strconv.FormatFloat(dirScore.Score, 'f', -1, 64)}, "\t")
 			pogrebdb.InsertDataDB(dtDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
 			return nil

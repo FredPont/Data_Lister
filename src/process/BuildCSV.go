@@ -17,8 +17,10 @@
 package process
 
 import (
+	conf "Data_Lister/src/configuration"
 	"Data_Lister/src/pogrebdb"
 	"Data_Lister/src/types"
+	"fmt"
 	"log"
 	"strings"
 
@@ -26,6 +28,12 @@ import (
 )
 
 func WriteCSV(fDB, dtDB *pogreb.DB, pref types.Conf) {
+	header := []string{"Path", "Name", "Size", "LastAccessDate", "DirType", "TypeScore"}
+	userCols, defaultValues := conf.ReadOptionalColumns()
+	header = append(header, userCols...)
+	fmt.Println(strings.Join(header, "\t"))
+	userValues := strings.Join(defaultValues, "\t")
+
 	it := fDB.Items()
 	for {
 		var dirInfo []byte
@@ -39,10 +47,13 @@ func WriteCSV(fDB, dtDB *pogreb.DB, pref types.Conf) {
 
 		if pref.GuessDirType {
 			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
+			if dirInfo == nil || !pref.GuessDirType {
+				dirInfo = pogrebdb.StringToByte(" \t ")
+			}
 		}
 		//log.Printf("%s %s", ByteToString(key), ByteToString(val))
 		//log.Println(pogrebdb.ByteToString(key), pogrebdb.ByteToString(val))
-		line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo)}, "\t")
-		log.Println(line)
+		line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
+		fmt.Println(line)
 	}
 }
