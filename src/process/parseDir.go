@@ -37,19 +37,21 @@ func Parse() {
 	fDB := pogrebdb.OpenDB("db/files")
 	dtDB := pogrebdb.OpenDB("db/dirTypes")
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
-	fmt.Println(dirSignatures)
+	//fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
 	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB)
 	if err != nil {
 		panic(err)
 	}
-	pogrebdb.ShowDB(fDB)
-	pogrebdb.ShowDB(dtDB)
+	//pogrebdb.ShowDB(fDB)
+	//pogrebdb.ShowDB(dtDB)
+	WriteCSV(fDB, dtDB, pref)
 	fDB.Close()
 	dtDB.Close()
 }
 
+// readDir recursive function to read dir and files to a certain level of deepness
 func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, fDB, dtDB *pogreb.DB) error {
 	//fmt.Println("level=", rootLevel)
 	file, err := os.Open(path)
@@ -59,13 +61,16 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 	defer file.Close()
 	names, _ := file.Readdirnames(0)
 	fmt.Println(names)
-	dirScore := ScoreType(names, dirSignatures)
-	if dirScore.IsMatch {
-		fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
-		outString := strings.Join([]string{dirScore.Label, strconv.FormatFloat(dirScore.Score, 'f', -1, 64)}, "\t")
-		pogrebdb.InsertDataDB(dtDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
-		return nil
+	if pref.GuessDirType {
+		dirScore := ScoreType(names, dirSignatures)
+		if dirScore.IsMatch {
+			fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
+			outString := strings.Join([]string{dirScore.Label, strconv.FormatFloat(dirScore.Score, 'f', -1, 64)}, "\t")
+			pogrebdb.InsertDataDB(dtDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
+			return nil
+		}
 	}
+
 	for _, name := range names {
 		filePath := fmt.Sprintf("%v/%v", path, name)
 		file, err := os.Open(filePath)

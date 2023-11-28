@@ -47,13 +47,23 @@ func OpenDB(dbName string) *pogreb.DB {
 	//defer db.Close()
 }
 
-// GetDataDB retrieve the inserted value matching "key" in []byte
+// GetDataDB retrieve the inserted value matching the string "key" in []byte
 func GetDataDB(db *pogreb.DB, key string) []byte {
 	val, err := db.Get([]byte(key))
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("%s", val)
+	//log.Printf("%s", val)
+	return val
+}
+
+// GetKeyDB retrieve the inserted value matching the "key" in []byte
+func GetKeyDB(db *pogreb.DB, key []byte) []byte {
+	val, err := db.Get(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//log.Printf("%s", val)
 	return val
 }
 
