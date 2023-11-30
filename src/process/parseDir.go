@@ -46,7 +46,7 @@ func Parse() {
 	}
 	//pogrebdb.ShowDB(fDB)
 	//pogrebdb.ShowDB(dtDB)
-	WriteCSV(fDB, dtDB, pref)
+	WriteCSV(pref.OutputFile, fDB, dtDB, pref)
 	fDB.Close()
 	dtDB.Close()
 }
@@ -82,9 +82,9 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if err != nil {
 			return err
 		}
-		DirOutput(filePath, "file", fileInfo, pref, fDB, dtDB)
+		DirOutput(filePath, "file", fileInfo, pref, fDB)
 		if fileInfo.IsDir() {
-			DirOutput(filePath, "dir", fileInfo, pref, fDB, dtDB)
+			DirOutput(filePath, "dir", fileInfo, pref, fDB)
 
 			if Level(filePath, rootLevel) < pref.Level {
 				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB)
@@ -141,16 +141,16 @@ func ScanDirType(names []string, pref types.Conf, dirSignatures map[string]types
 }
 
 // DirOutput decide the output of the file/dir information
-func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf, fDB, dtDB *pogreb.DB) {
+func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf, fDB *pogreb.DB) {
 	if pref.ListFiles && fileType == "file" {
-		saveOutput(filePath, info, pref, fDB, dtDB)
+		saveOutput(filePath, info, pref, fDB)
 	} else if fileType == "dir" {
-		saveOutput(filePath, info, pref, fDB, dtDB)
+		saveOutput(filePath, info, pref, fDB)
 	}
 }
 
-// saveOutput save the file/dir information
-func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dtDB *pogreb.DB) {
+// saveOutput save the file/dir information to the pogreb databases
+func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB *pogreb.DB) {
 	var size int64
 	if pref.CalcSize {
 		if info.IsDir() {

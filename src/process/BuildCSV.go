@@ -20,20 +20,45 @@ import (
 	conf "Data_Lister/src/configuration"
 	"Data_Lister/src/pogrebdb"
 	"Data_Lister/src/types"
+	"encoding/csv"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/akrylysov/pogreb"
 )
 
-func WriteCSV(fDB, dtDB *pogreb.DB, pref types.Conf) {
+func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
+	//  =========================
+	// build result table header
+	//  =========================
 	header := []string{"Path", "Name", "Size", "LastAccessDate", "DirType", "TypeScore"}
 	userCols, defaultValues := conf.ReadOptionalColumns()
 	header = append(header, userCols...)
 	fmt.Println(strings.Join(header, "\t"))
+
+	// userValues string storing the default values of user custom columns
 	userValues := strings.Join(defaultValues, "\t")
 
+	// Create a file to write to
+	file, err := os.Create(outputFile)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+
+	// Create a new csv.Writer
+	writer := csv.NewWriter(file)
+	// Set the delimiter to tab
+	writer.Comma = '\t'
+	// write result table header
+	writeLine(writer, header)
+
+	//  =======================================================
+	// read the dir/files infos stored in the pogreb databases
+	//  =======================================================
 	it := fDB.Items()
 	for {
 		var dirInfo []byte
@@ -55,5 +80,26 @@ func WriteCSV(fDB, dtDB *pogreb.DB, pref types.Conf) {
 		//log.Println(pogrebdb.ByteToString(key), pogrebdb.ByteToString(val))
 		line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
 		fmt.Println(line)
+
+		writeLine(writer, formatOutput(key, val, dirInfo, defaultValues))
 	}
+	// Flush the buffered data
+	writer.Flush()
+}
+
+func writeLine(writer *csv.Writer, data []string) {
+	// Write the []string as a row to the file
+	err := writer.Write(data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func formatOutput(key, val, dirInfo []byte, defaultValues []string) []string {
+	out := []string{pogrebdb.ByteToString(key)}
+	out = append(out, strings.Split(pogrebdb.ByteToString(val), "\t")...)
+	out = append(out, strings.Split(pogrebdb.ByteToString(dirInfo), "\t")...)
+	out = append(out, defaultValues...)
+	return out
 }
