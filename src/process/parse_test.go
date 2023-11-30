@@ -46,3 +46,25 @@ func TestScoreType(t *testing.T) {
 		})
 	}
 }
+
+func TestRegexFilter(t *testing.T) {
+	tests := []struct {
+		names, reg string
+		want       bool
+	}{
+		{"test.pl", ".pl", true},
+		{"test.pl", "\\.pl", true},
+		{"file.json", "j[a-z]{2}n", true},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := regexFilter(tc.names, tc.reg)
+			if got != tc.want {
+				t.Fatalf("got %v; want %v", got, tc.want)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}

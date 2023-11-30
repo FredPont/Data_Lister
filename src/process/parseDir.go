@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -44,6 +43,8 @@ func Parse() {
 	if err != nil {
 		panic(err)
 	}
+	PreCompileAllRegex(pref)
+	fmt.Println(pref.CompiledExcludeRegex)
 	//pogrebdb.ShowDB(fDB)
 	//pogrebdb.ShowDB(dtDB)
 	WriteCSV(pref.OutputFile, fDB, dtDB, pref)
@@ -107,12 +108,13 @@ func ScoreType(names []string, dirSignatures map[string]types.DirSignature) type
 	score := 0.
 	for label, dirSig := range dirSignatures {
 		for _, signature := range dirSig.Content {
-			reg := regexp.QuoteMeta(signature)
+			//reg := regexp.QuoteMeta(signature)
 			for _, name := range names {
-				result, err := regexp.MatchString(reg, name)
-				if err != nil {
-					fmt.Println(err)
-				}
+				// result, err := regexp.MatchString(reg, name)
+				// if err != nil {
+				// 	fmt.Println(err)
+				// }
+				result := strings.Contains(name, signature)
 				if result {
 					matchNB++
 					//fmt.Println("match!", label, matchNB, "/", len(names), signature, name, "sign=", i, "name=", j)

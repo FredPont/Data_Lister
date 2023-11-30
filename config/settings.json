@@ -5,7 +5,7 @@
     "ListDir": true,
     "GuessDirType": true,
     "CalcSize": true,
-    "Level": 3,
+    "Level": 4,
     "IncludeRegex": true,
     "Include": [
         "tSNE_1",

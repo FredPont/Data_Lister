@@ -18,20 +18,24 @@
 
 package types
 
+import "regexp"
+
 type Conf struct {
-	InputDir     string   `json:"InputDir"`
-	OutputFile   string   `json:"OutputFile"`
-	ListFiles    bool     `json:"ListFiles"`
-	ListDir      bool     `json:"ListDir"`
-	GuessDirType bool     `json:"GuessDirType"`
-	CalcSize     bool     `json:"CalcSize"`
-	Level        int      `json:"Level"`
-	IncludeRegex bool     `json:"IncludeRegex"`
-	Include      []string `json:"Include"`
-	ExcludeRegex bool     `json:"ExcludeRegex"`
-	Exclude      []string `json:"Exclude"`
-	OlderThan    string   `json:"OlderThan"`
-	NewerThan    string   `json:"NewerThan"`
+	InputDir             string   `json:"InputDir"`
+	OutputFile           string   `json:"OutputFile"`
+	ListFiles            bool     `json:"ListFiles"`
+	ListDir              bool     `json:"ListDir"`
+	GuessDirType         bool     `json:"GuessDirType"`
+	CalcSize             bool     `json:"CalcSize"`
+	Level                int      `json:"Level"`
+	IncludeRegex         bool     `json:"IncludeRegex"`
+	Include              []string `json:"Include"`
+	ExcludeRegex         bool     `json:"ExcludeRegex"`
+	Exclude              []string `json:"Exclude"`
+	OlderThan            string   `json:"OlderThan"`
+	NewerThan            string   `json:"NewerThan"`
+	CompiledIncludeRegex []*regexp.Regexp
+	CompiledExcludeRegex []*regexp.Regexp
 }
 
 type DirSignature struct {
