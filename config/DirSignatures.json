@@ -4,8 +4,20 @@
                 "scoreThreshold": 0.2
     },
     "Fasta": {
-        "content": [".fasta", ".FASTA", ".fasta.gz"],
-        "scoreThreshold": 0.8
-}
+            "content": [".fasta", ".FASTA", ".fasta.gz"],
+            "scoreThreshold": 0.8
+    },
+    "BCL2": {
+            "content": ["Config", "Images", "InterOp", "Recipe", "RTAConfiguration.xml", "RTARead", "RunCompletionStatus.xml", "RunParameters.xml", "Data", "InstrumentAnalyticsLogs", "Logs", "RTAComplete.txt", "RTALogs", "RunInfo.xml"],
+            "scoreThreshold": 0.8
+    },
+    "VideoMicroscope": {
+            "content": [".czi"],
+            "scoreThreshold": 0.8
+    },
+    "Cytometry": {
+            "content": [".fcs", "mqd"],
+            "scoreThreshold": 0.8
+    }
 }
 

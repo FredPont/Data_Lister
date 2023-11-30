@@ -123,7 +123,9 @@ func ScoreType(names []string, dirSignatures map[string]types.DirSignature) type
 			// the score is the ratio of names matching regex / number of elements in the directory
 			score = float64(matchNB) / float64(len(names))
 			if score >= dirSig.ScoreThreshold {
-				//fmt.Println("trouvé!", label, score, dirSig.ScoreThreshold)
+				if score > 1. {
+					score = 1.
+				}
 				return types.DirMatch{IsMatch: true, Label: label, Score: score}
 			}
 		}
