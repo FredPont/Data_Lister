@@ -18,8 +18,20 @@
 
 package main
 
-import "Data_Lister/src/process"
+import (
+	"Data_Lister/src/process"
+	"fmt"
+	"time"
+)
 
 func main() {
+	process.Title()
+	t0 := time.Now()
+	fmt.Print("Starting directory analysis...")
+
 	process.Parse()
+
+	t1 := time.Now()
+	fmt.Println("done !")
+	fmt.Println("Elapsed time : ", t1.Sub(t0))
 }

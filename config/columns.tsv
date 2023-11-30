@@ -1,3 +1,6 @@
 ColumnName	DefaultValues
 SampleType	Skin
-RelatedProject	MyProject
+Project_ID	Project_1
+RelatedProject	Project_2
+content	MyExperiments
+Delete_Date	2028-01-01

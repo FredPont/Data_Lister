@@ -36,10 +36,10 @@ func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
 	header := []string{"Path", "Name", "Size", "LastAccessDate", "DirType", "TypeScore"}
 	userCols, defaultValues := conf.ReadOptionalColumns()
 	header = append(header, userCols...)
-	fmt.Println(strings.Join(header, "\t"))
+	//fmt.Println(strings.Join(header, "\t"))
 
 	// userValues string storing the default values of user custom columns
-	userValues := strings.Join(defaultValues, "\t")
+	//userValues := strings.Join(defaultValues, "\t")
 
 	// Create a file to write to
 	file, err := os.Create(outputFile)
@@ -76,10 +76,9 @@ func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
 				dirInfo = pogrebdb.StringToByte(" \t ")
 			}
 		}
-		//log.Printf("%s %s", ByteToString(key), ByteToString(val))
-		//log.Println(pogrebdb.ByteToString(key), pogrebdb.ByteToString(val))
-		line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
-		fmt.Println(line)
+
+		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
+		//fmt.Println(line)
 
 		writeLine(writer, formatOutput(key, val, dirInfo, defaultValues))
 	}
