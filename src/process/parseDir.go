@@ -43,8 +43,9 @@ func Parse() {
 	if err != nil {
 		panic(err)
 	}
-	PreCompileAllRegex(pref)
-	fmt.Println(pref.CompiledExcludeRegex)
+	// precompilation of include/exclude regex to speed filters
+	PreCompileAllRegex(&pref)
+
 	//pogrebdb.ShowDB(fDB)
 	//pogrebdb.ShowDB(dtDB)
 	WriteCSV(pref.OutputFile, fDB, dtDB, pref)

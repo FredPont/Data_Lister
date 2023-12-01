@@ -27,7 +27,7 @@ import (
 func main() {
 	process.Title()
 	t0 := time.Now()
-	fmt.Print("Starting directory analysis...")
+	fmt.Println("Starting directory analysis...")
 
 	process.Parse()
 

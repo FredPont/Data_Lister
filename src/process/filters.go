@@ -51,9 +51,10 @@ func regexFilter(name, reg string) bool {
 	return re.MatchString(name)
 }
 
-func PreCompileAllRegex(pref types.Conf) {
+func PreCompileAllRegex(pref *types.Conf) {
 	if pref.ExcludeRegex {
 		pref.CompiledExcludeRegex = PreCompileRegex(pref.Exclude)
+		//fmt.Println(pref.CompiledExcludeRegex)
 	}
 	if pref.IncludeRegex {
 		pref.CompiledIncludeRegex = PreCompileRegex(pref.Include)

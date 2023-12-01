@@ -30,13 +30,13 @@ import (
 )
 
 func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
+	fmt.Println("writing results to ", outputFile)
 	//  =========================
 	// build result table header
 	//  =========================
 	header := []string{"Path", "Name", "Size", "LastAccessDate", "DirType", "TypeScore"}
 	userCols, defaultValues := conf.ReadOptionalColumns()
 	header = append(header, userCols...)
-	//fmt.Println(strings.Join(header, "\t"))
 
 	// userValues string storing the default values of user custom columns
 	//userValues := strings.Join(defaultValues, "\t")
