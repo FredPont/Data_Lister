@@ -3,4 +3,6 @@
 
 Edit config/settings.json to set root directory and options
 
+
+ ![Output Table](src/images/table.png)
 work in progress...
