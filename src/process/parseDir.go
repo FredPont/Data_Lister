@@ -38,13 +38,14 @@ func Parse() {
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	//fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
+	// precompilation of include/exclude regex to speed filters
+	PreCompileAllRegex(&pref)
+
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
 	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB)
 	if err != nil {
 		panic(err)
 	}
-	// precompilation of include/exclude regex to speed filters
-	PreCompileAllRegex(&pref)
 
 	//pogrebdb.ShowDB(fDB)
 	//pogrebdb.ShowDB(dtDB)
@@ -74,6 +75,9 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 	}
 
 	for _, name := range names {
+		if !FilterName(name, pref) {
+			continue
+		}
 		filePath := fmt.Sprintf("%v/%v", path, name)
 		file, err := os.Open(filePath)
 		if err != nil {

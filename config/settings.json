@@ -8,13 +8,11 @@
     "Level": 4,
     "IncludeRegex": true,
     "Include": [
-        "tSNE_1",
-        "GO_MALE_MEIOSIS"
+      
     ],
     "ExcludeRegex": true,
     "Exclude": [
-        "tSNE_2",
-        "GO_MITOCHONDRION"
+        "image"
     ],
     "OlderThan": "2022-01-01",
     "NewerThan": "2022-01-01"

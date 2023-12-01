@@ -24,15 +24,48 @@ import (
 	"strings"
 )
 
+func FilterName(name string, pref types.Conf) bool {
+	if len(pref.Include) > 0 {
+		return IncludeFilter(name, pref)
+	} else if len(pref.Exclude) > 0 {
+		//fmt.Println(name, ExcludeFilter(name, pref))
+		return ExcludeFilter(name, pref)
+	}
+	return true // if no filter, any name is valid
+}
+
+func ExcludeFilter(name string, pref types.Conf) bool {
+	excList := pref.Exclude
+	excListRegex := pref.CompiledExcludeRegex
+	if pref.IncludeRegex {
+		for _, reg := range excListRegex {
+			if regexFilter(name, reg) {
+				return false
+			}
+		}
+	} else {
+		for _, reg := range excList {
+			if stringFilter(name, reg) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func IncludeFilter(name string, pref types.Conf) bool {
 	incList := pref.Include
-
-	for _, reg := range incList {
-		if pref.IncludeRegex {
+	incListRegex := pref.CompiledIncludeRegex
+	if pref.IncludeRegex {
+		//fmt.Println(pref)
+		for _, reg := range incListRegex {
+			//fmt.Println(name, reg, regexFilter(name, reg))
 			if regexFilter(name, reg) {
 				return true
 			}
-		} else {
+		}
+	} else {
+		for _, reg := range incList {
 			if stringFilter(name, reg) {
 				return true
 			}
@@ -42,13 +75,12 @@ func IncludeFilter(name string, pref types.Conf) bool {
 }
 
 func stringFilter(name, reg string) bool {
-	result := strings.Contains(name, reg)
-	return result
+	return strings.Contains(name, reg)
 }
 
-func regexFilter(name, reg string) bool {
-	re := regexp.MustCompile(reg)
-	return re.MatchString(name)
+func regexFilter(name string, reg *regexp.Regexp) bool {
+	//re := regexp.MustCompile(reg)
+	return reg.MatchString(name)
 }
 
 func PreCompileAllRegex(pref *types.Conf) {

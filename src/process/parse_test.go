@@ -21,6 +21,7 @@ import (
 	"Data_Lister/src/types"
 	"fmt"
 	"reflect"
+	"regexp"
 	"testing"
 )
 
@@ -55,10 +56,11 @@ func TestRegexFilter(t *testing.T) {
 		{"test.pl", ".pl", true},
 		{"test.pl", "\\.pl", true},
 		{"file.json", "j[a-z]{2}n", true},
+		{"dir1", "dir", true},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
-			got := regexFilter(tc.names, tc.reg)
+			got := regexFilter(tc.names, regexp.MustCompile(tc.reg))
 			if got != tc.want {
 				t.Fatalf("got %v; want %v", got, tc.want)
 			} else {
