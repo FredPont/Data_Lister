@@ -21,10 +21,10 @@ package types
 import "regexp"
 
 type Conf struct {
-	InputDir             string   `json:"InputDir"`
-	OutputFile           string   `json:"OutputFile"`
-	ListFiles            bool     `json:"ListFiles"`
-	ListDir              bool     `json:"ListDir"`
+	InputDir   string `json:"InputDir"`
+	OutputFile string `json:"OutputFile"`
+	ListFiles  bool   `json:"ListFiles"`
+	//ListDir              bool     `json:"ListDir"`
 	GuessDirType         bool     `json:"GuessDirType"`
 	CalcSize             bool     `json:"CalcSize"`
 	Level                int      `json:"Level"`

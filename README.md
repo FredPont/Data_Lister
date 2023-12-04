@@ -4,6 +4,15 @@
   ![Output Table](src/images/table.png)
 work in progress...
 
+## Key characteristics
+- List directories and optionally files.
+- TSV output
+- Compute dir size
+- Try to guess dir content
+- Tunable dir level
+- Include/Exclude filter list by string or regex
+- Filter by date
+
 ## Installation
 
 No installation required the code is statically compiled.
@@ -19,7 +28,6 @@ No installation required the code is statically compiled.
     "InputDir": "test",
     "OutputFile": "results/table.csv",
     "ListFiles": false,
-    "ListDir": true,
     "GuessDirType": true,
     "CalcSize": true,
     "Level": 4,
@@ -36,7 +44,7 @@ No installation required the code is statically compiled.
     "NewerThan": "2022-12-12"
 }
 ```
-- Edit config/DirSignatures.json to set the directory patterns
+- Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 ```json
 {
     "Software": {
@@ -58,4 +66,4 @@ RelatedProject	Project_2
 content	MyExperiments
 Delete_Date	2028-01-01
 ```
-- Start the softwares using the precompiled binaries for Linux, Mac or Windows
+- Start the software using the precompiled binaries for Linux, Mac or Windows
