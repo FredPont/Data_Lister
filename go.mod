@@ -2,10 +2,12 @@ module Data_Lister
 
 go 1.21.3
 
-require github.com/markthree/go-get-folder-size v0.5.2
+require (
+	github.com/akrylysov/pogreb v0.10.1
+	github.com/markthree/go-get-folder-size v0.5.2
+)
 
 require (
-	github.com/akrylysov/pogreb v0.10.1 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/schollz/progressbar/v3 v3.14.1 // indirect

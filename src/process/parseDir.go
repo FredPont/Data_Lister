@@ -112,27 +112,23 @@ func ScoreType(names []string, dirSignatures map[string]types.DirSignature) type
 	matchNB := 0
 	score := 0.
 	for label, dirSig := range dirSignatures {
-		for _, signature := range dirSig.Content {
-			//reg := regexp.QuoteMeta(signature)
-			for _, name := range names {
-				// result, err := regexp.MatchString(reg, name)
-				// if err != nil {
-				// 	fmt.Println(err)
-				// }
+		for _, name := range names {
+			for _, signature := range dirSig.Content {
 				result := strings.Contains(name, signature)
 				if result {
 					matchNB++
-					//fmt.Println("match!", label, matchNB, "/", len(names), signature, name, "sign=", i, "name=", j)
+					//fmt.Println("match!", label, matchNB, "/", len(names), signature, name)
+					break
 				}
 			}
 		}
-		if len(names) > 0 {
+		if len(names) > 0 { // security to avoid division by zero
 			// the score is the ratio of names matching regex / number of elements in the directory
 			score = float64(matchNB) / float64(len(names))
 			if score >= dirSig.ScoreThreshold {
-				if score > 1. {
-					score = 1.
-				}
+				// if score > 1. {
+				// 	score = 1.
+				// }
 				return types.DirMatch{IsMatch: true, Label: label, Score: score}
 			}
 		}
