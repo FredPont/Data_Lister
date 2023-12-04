@@ -20,10 +20,13 @@ package process
 
 import (
 	"Data_Lister/src/types"
+	"fmt"
 	"regexp"
 	"strings"
+	"time"
 )
 
+// FilterName apply filters to the dir/file name
 func FilterName(name string, pref types.Conf) bool {
 	if len(pref.Include) > 0 {
 		return IncludeFilter(name, pref)
@@ -34,16 +37,17 @@ func FilterName(name string, pref types.Conf) bool {
 	return true // if no filter, any name is valid
 }
 
+// ExcludeFilter apply exclusion list to the name
 func ExcludeFilter(name string, pref types.Conf) bool {
-	excList := pref.Exclude
-	excListRegex := pref.CompiledExcludeRegex
 	if pref.IncludeRegex {
+		excListRegex := pref.CompiledExcludeRegex
 		for _, reg := range excListRegex {
 			if regexFilter(name, reg) {
 				return false
 			}
 		}
 	} else {
+		excList := pref.Exclude
 		for _, reg := range excList {
 			if stringFilter(name, reg) {
 				return false
@@ -53,11 +57,10 @@ func ExcludeFilter(name string, pref types.Conf) bool {
 	return true
 }
 
+// IncludeFilter apply inclusion list to the name
 func IncludeFilter(name string, pref types.Conf) bool {
-	incList := pref.Include
-	incListRegex := pref.CompiledIncludeRegex
 	if pref.IncludeRegex {
-		//fmt.Println(pref)
+		incListRegex := pref.CompiledIncludeRegex
 		for _, reg := range incListRegex {
 			//fmt.Println(name, reg, regexFilter(name, reg))
 			if regexFilter(name, reg) {
@@ -65,6 +68,7 @@ func IncludeFilter(name string, pref types.Conf) bool {
 			}
 		}
 	} else {
+		incList := pref.Include
 		for _, reg := range incList {
 			if stringFilter(name, reg) {
 				return true
@@ -74,15 +78,18 @@ func IncludeFilter(name string, pref types.Conf) bool {
 	return false
 }
 
+// stringFilter search "reg" string in name
 func stringFilter(name, reg string) bool {
 	return strings.Contains(name, reg)
 }
 
+// regexFilter returns if regex "reg" match name
 func regexFilter(name string, reg *regexp.Regexp) bool {
 	//re := regexp.MustCompile(reg)
 	return reg.MatchString(name)
 }
 
+// PreCompileAllRegex compile include/exclude regex to save compilation timea []string to []*regexp.Regexp
 func PreCompileAllRegex(pref *types.Conf) {
 	if pref.ExcludeRegex {
 		pref.CompiledExcludeRegex = PreCompileRegex(pref.Exclude)
@@ -94,10 +101,57 @@ func PreCompileAllRegex(pref *types.Conf) {
 
 }
 
+// PreCompileRegex compile a []string to []*regexp.Regexp to save compilation time
 func PreCompileRegex(stringList []string) []*regexp.Regexp {
 	regList := make([]*regexp.Regexp, len(stringList))
 	for i, str := range stringList {
 		regList[i] = regexp.MustCompile(str)
 	}
 	return regList
+}
+
+// FilterDate filter the accesstime of dir/file by date
+func FilterDate(accessTime time.Time, pref types.Conf) bool {
+	if pref.OlderThan != "" && pref.NewerThan != "" {
+		return Between(accessTime, pref.OlderThan, pref.NewerThan)
+	} else if pref.OlderThan != "" {
+		return OlderThan(accessTime, pref.OlderThan)
+	} else if pref.NewerThan != "" {
+		return NewerThan(accessTime, pref.OlderThan)
+	}
+	return true // if date filter is not set any date is valid
+}
+
+// OlderThan test if accessTime is older than userValue
+func OlderThan(accessTime time.Time, userValue string) bool {
+	return accessTime.After(StringToTime(userValue))
+}
+
+// NewerThan test if accessTime  is newer than userValue
+func NewerThan(accessTime time.Time, userValue string) bool {
+	return accessTime.Before(StringToTime(userValue))
+}
+
+// Between  test if accessTime t is between time1 and time2
+func Between(t time.Time, time1, time2 string) bool {
+	t1 := StringToTime(time1)
+	t2 := StringToTime(time2)
+	// Check if t is between t1 and t2
+	if t.After(t1) && t.Before(t2) {
+		return true
+	} else {
+		return false
+	}
+}
+
+// StringToTime convert "2023-01-01" to time.Time
+func StringToTime(str string) time.Time {
+	layout := "2006-01-02"            // layout string using the reference date
+	t, err := time.Parse(layout, str) // parse the str string into a time.Time object
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		return t
+	}
+	return time.Time{}
 }

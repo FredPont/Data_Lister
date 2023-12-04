@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"regexp"
 	"testing"
+	"time"
 )
 
 func TestScoreType(t *testing.T) {
@@ -61,6 +62,50 @@ func TestRegexFilter(t *testing.T) {
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
 			got := regexFilter(tc.names, regexp.MustCompile(tc.reg))
+			if got != tc.want {
+				t.Fatalf("got %v; want %v", got, tc.want)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}
+
+func TestOlderThan(t *testing.T) {
+	tests := []struct {
+		userDate string
+		modTime  time.Time
+		want     bool
+	}{
+		{"2023-01-01", StringToTime("2023-02-02"), true},
+		{"2023-01-01", StringToTime("2022-02-02"), false},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := OlderThan(tc.modTime, tc.userDate)
+			if got != tc.want {
+				t.Fatalf("got %v; want %v", got, tc.want)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}
+
+func TestBetween(t *testing.T) {
+	tests := []struct {
+		time1, time2 string
+		modTime      time.Time
+		want         bool
+	}{
+		{"2022-01-01", "2023-02-02", StringToTime("2023-01-01"), true},
+		{"2022-01-05", "2023-02-02", StringToTime("2022-01-01"), false},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := Between(tc.modTime, tc.time1, tc.time2)
 			if got != tc.want {
 				t.Fatalf("got %v; want %v", got, tc.want)
 			} else {
