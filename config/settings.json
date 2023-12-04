@@ -14,7 +14,8 @@
     "Exclude": [
         "image"
     ],
-    "OlderThan": "2022-01-01",
-    "NewerThan": "2023-12-21"
+    "DateFilter": false,
+    "OlderThan": "2023-12-12",
+    "NewerThan": "2022-12-12"
 
 }

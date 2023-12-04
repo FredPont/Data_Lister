@@ -88,6 +88,10 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if err != nil {
 			return err
 		}
+		// filter the name by date
+		if !FilterDate(fileInfo.ModTime(), pref) {
+			continue
+		}
 		DirOutput(filePath, "file", fileInfo, pref, fDB)
 		if fileInfo.IsDir() {
 			DirOutput(filePath, "dir", fileInfo, pref, fDB)

@@ -34,6 +34,7 @@ type Conf struct {
 	Exclude              []string `json:"Exclude"`
 	OlderThan            string   `json:"OlderThan"`
 	NewerThan            string   `json:"NewerThan"`
+	DateFilter           bool     `json:"DateFilter"`
 	CompiledIncludeRegex []*regexp.Regexp
 	CompiledExcludeRegex []*regexp.Regexp
 }

@@ -78,12 +78,34 @@ func TestOlderThan(t *testing.T) {
 		modTime  time.Time
 		want     bool
 	}{
+		{"2023-01-01", StringToTime("2023-02-02"), false},
+		{"2023-01-01", StringToTime("2022-02-02"), true},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := OlderThan(tc.modTime, tc.userDate)
+			if got != tc.want {
+				t.Fatalf("got %v; want %v", got, tc.want)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}
+
+func TestNewerThan(t *testing.T) {
+	tests := []struct {
+		userDate string
+		modTime  time.Time
+		want     bool
+	}{
 		{"2023-01-01", StringToTime("2023-02-02"), true},
 		{"2023-01-01", StringToTime("2022-02-02"), false},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
-			got := OlderThan(tc.modTime, tc.userDate)
+			got := NewerThan(tc.modTime, tc.userDate)
 			if got != tc.want {
 				t.Fatalf("got %v; want %v", got, tc.want)
 			} else {
@@ -102,6 +124,7 @@ func TestBetween(t *testing.T) {
 	}{
 		{"2022-01-01", "2023-02-02", StringToTime("2023-01-01"), true},
 		{"2022-01-05", "2023-02-02", StringToTime("2022-01-01"), false},
+		{"2022-12-12", "2023-12-12", StringToTime("2023-12-04"), true},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {

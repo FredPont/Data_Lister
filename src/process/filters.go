@@ -112,24 +112,27 @@ func PreCompileRegex(stringList []string) []*regexp.Regexp {
 
 // FilterDate filter the accesstime of dir/file by date
 func FilterDate(accessTime time.Time, pref types.Conf) bool {
+	if !pref.DateFilter {
+		return true // if date filter is not set any date is valid
+	}
 	if pref.OlderThan != "" && pref.NewerThan != "" {
-		return Between(accessTime, pref.OlderThan, pref.NewerThan)
+		return Between(accessTime, pref.NewerThan, pref.OlderThan)
 	} else if pref.OlderThan != "" {
 		return OlderThan(accessTime, pref.OlderThan)
 	} else if pref.NewerThan != "" {
-		return NewerThan(accessTime, pref.OlderThan)
+		return NewerThan(accessTime, pref.NewerThan)
 	}
 	return true // if date filter is not set any date is valid
 }
 
 // OlderThan test if accessTime is older than userValue
 func OlderThan(accessTime time.Time, userValue string) bool {
-	return accessTime.After(StringToTime(userValue))
+	return accessTime.Before(StringToTime(userValue))
 }
 
 // NewerThan test if accessTime  is newer than userValue
 func NewerThan(accessTime time.Time, userValue string) bool {
-	return accessTime.Before(StringToTime(userValue))
+	return accessTime.After(StringToTime(userValue))
 }
 
 // Between  test if accessTime t is between time1 and time2
