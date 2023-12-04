@@ -7,11 +7,12 @@ work in progress...
 ## Key characteristics
 - List directories and optionally files.
 - TSV output
-- Compute dir size
-- Try to guess dir content
 - Tunable dir level
+- Compute dir size
+- Try to guess dir content (level must be set to dir +1 to allow the dir content analysis)
 - Include/Exclude filter list by string or regex
 - Filter by date
+- Custom (pre-filed) columns
 
 ## Installation
 
