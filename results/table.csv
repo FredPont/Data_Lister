@@ -1,9 +1,9 @@
 Path	Name	Size	LastAccessDate	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
-test/analyses	analyses	0	2023-12-4	Cytometry	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/sequences_2	sequences_2	0	2023-12-4	Fasta	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/sequences	sequences	0	2023-12-4	BCL2	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level0	level0	0	2023-12-4	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level0/file1	file1	0	2023-12-4	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level0/file1/sofware	sofware	0	2023-12-4	Software	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/images1	images1	0	2023-12-4	VideoMicroscope	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/dir1	dir1	0	2023-12-4	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/analyses	analyses	0	2023-12-04	Cytometry	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/sequences_2	sequences_2	0	2023-12-04	Fasta	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/sequences	sequences	0	2023-12-04	BCL2	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level0	level0	0	2023-12-04	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level0/file1	file1	0	2023-12-04	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level0/file1/sofware	sofware	0	2023-12-04	Software	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/images1	images1	0	2023-12-04	Microscope_Zeiss	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/dir1	dir1	0	2023-12-04	" "	" "	Cells	Project_1	Project_2	MyExperiments	2028-01-01

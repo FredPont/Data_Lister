@@ -170,8 +170,8 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB *pogreb.
 	}
 	modTime := info.ModTime()
 	year := strconv.Itoa(modTime.Year())
-	month := strconv.Itoa(int(modTime.Month()))
-	day := strconv.Itoa(modTime.Day())
+	month := fmt.Sprintf("%02d", int(modTime.Month()))
+	day := fmt.Sprintf("%02d", modTime.Day())
 
 	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
 	outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")

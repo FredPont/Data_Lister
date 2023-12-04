@@ -11,12 +11,16 @@
             "content": ["Config", "Images", "InterOp", "Recipe", "RTAConfiguration.xml", "RTARead", "RunCompletionStatus.xml", "RunParameters.xml", "Data", "InstrumentAnalyticsLogs", "Logs", "RTAComplete.txt", "RTALogs", "RunInfo.xml"],
             "scoreThreshold": 0.8
     },
-    "VideoMicroscope": {
+    "Microscope_Zeiss": {
             "content": [".czi"],
             "scoreThreshold": 0.8
     },
     "Cytometry": {
             "content": [".fcs", ".mqd"],
+            "scoreThreshold": 0.8
+    },
+    "Harmony-Archive": {
+            "content": ["Harmony-Archive.oar", "IMAGES", "StructureData.dsc", "XML"],
             "scoreThreshold": 0.8
     }
 }
