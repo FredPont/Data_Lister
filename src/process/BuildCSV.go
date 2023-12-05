@@ -30,7 +30,7 @@ import (
 )
 
 func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
-	fmt.Println("writing results to ", outputFile)
+	//fmt.Println("writing results to ", outputFile)
 	//  =========================
 	// build result table header
 	//  =========================

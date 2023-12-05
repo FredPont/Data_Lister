@@ -38,10 +38,12 @@ func Parse() {
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	//fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
+	//fmt.Println(pref.InputDir)
 	// precompilation of include/exclude regex to speed filters
 	PreCompileAllRegex(&pref)
 
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
+
 	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB)
 	if err != nil {
 		panic(err)

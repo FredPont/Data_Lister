@@ -28,10 +28,11 @@ func main() {
 	process.Title()
 	t0 := time.Now()
 	fmt.Println("Starting directory analysis...")
-
+	// start a new goroutine that runs the spinner function
+	go process.Spinner()
 	process.Parse()
 
 	t1 := time.Now()
-	fmt.Println("done !")
+	fmt.Println("\ndone !")
 	fmt.Println("Elapsed time : ", t1.Sub(t0))
 }
