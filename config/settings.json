@@ -2,7 +2,7 @@
     "InputDir": "test",
     "OutputFile": "results/table.csv",
     "ListFiles": false,
-    "GuessDirType": true,
+    "GuessDirType": false,
     "CalcSize": false,
     "Level": 2,
     "IncludeRegex": false,

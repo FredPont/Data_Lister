@@ -4,6 +4,8 @@
   ![Output Table](src/images/table.png)
 work in progress...
 
+Caution : Set the directory level to a reasonable value before starting DATA Lister on a large file system.
+
 ## Key characteristics
 - List directories and optionally files.
 - TSV output
@@ -14,7 +16,7 @@ work in progress...
 - Custom (pre-filed) columns
 
 ## Known issues
-- The current algorithm to quickly compute dir size can be unstable and crash the software. So it is better to disable the size dir calculation.
+- The current algorithm to quickly compute dir size can be unstable and crash the software. So it is better to disable the size dir calculation, or use it on a small file system.
 
 ## Installation
 
