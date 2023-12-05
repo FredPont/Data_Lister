@@ -8,11 +8,13 @@ work in progress...
 - List directories and optionally files.
 - TSV output
 - Tunable dir level
-- Compute dir size
 - Try to guess dir content (level must be set to dir +1 to allow the dir content analysis)
 - Include/Exclude filter list by string or regex
 - Filter by date
 - Custom (pre-filed) columns
+
+## Known issues
+- The current algorithm to quickly compute dir size can be unstable and crash the software. So it is better to disable the size dir calculation.
 
 ## Installation
 
@@ -30,7 +32,7 @@ No installation required the code is statically compiled.
     "OutputFile": "results/table.csv",
     "ListFiles": false,
     "GuessDirType": true,
-    "CalcSize": true,
+    "CalcSize": false,
     "Level": 4,
     "IncludeRegex": true,
     "Include": [

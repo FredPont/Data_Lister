@@ -7,13 +7,13 @@ import (
 )
 
 // spinner function that prints a rotating line
-func Spinner() {
+func Spinner(stop chan struct{}) {
 	// create a slice of characters for the spinner animation
 	//chars := []string{"|", "/", "-", "\\"}
-	chars := randSpinner()
+	chars := RandSpinner()
 
 	// create a channel that will send a value after 3 seconds
-	stop := time.After(3 * time.Second)
+	//stop := time.After(3 * time.Second)
 
 	// create a loop that will run until the channel sends a value
 	for {
@@ -22,8 +22,8 @@ func Spinner() {
 			// print the character and a backspace
 			fmt.Printf("\r%s\b", c)
 
-			// sleep for 100 milliseconds
-			time.Sleep(100 * time.Millisecond)
+			// sleep for 500 milliseconds
+			time.Sleep(500 * time.Millisecond)
 
 			// check if the channel has sent a value
 			select {
@@ -39,7 +39,7 @@ func Spinner() {
 }
 
 // randSpinner return a random spinner
-func randSpinner() []string {
+func RandSpinner() []string {
 	// spinners Credits : https://github.com/schollz/progressbar/
 	var spinners = map[int][]string{
 		0:  {"←", "↖", "↑", "↗", "→", "↘", "↓", "↙"},

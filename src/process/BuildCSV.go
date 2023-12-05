@@ -34,7 +34,7 @@ func WriteCSV(outputFile string, fDB, dtDB *pogreb.DB, pref types.Conf) {
 	//  =========================
 	// build result table header
 	//  =========================
-	header := []string{"Path", "Name", "Size", "LastAccessDate", "DirType", "TypeScore"}
+	header := []string{"Path", "Name", "Size", "Modified", "DirType", "TypeScore"}
 	userCols, defaultValues := conf.ReadOptionalColumns()
 	header = append(header, userCols...)
 

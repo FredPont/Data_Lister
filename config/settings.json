@@ -3,18 +3,18 @@
     "OutputFile": "results/table.csv",
     "ListFiles": false,
     "GuessDirType": true,
-    "CalcSize": true,
-    "Level": 4,
-    "IncludeRegex": true,
+    "CalcSize": false,
+    "Level": 2,
+    "IncludeRegex": false,
     "Include": [
-      ".*"
+      
     ],
-    "ExcludeRegex": true,
+    "ExcludeRegex": false,
     "Exclude": [
-        "image"
+        
     ],
     "DateFilter": false,
-    "OlderThan": "2023-12-12",
-    "NewerThan": "2022-12-12"
+    "OlderThan": "3023-12-12",
+    "NewerThan": "1922-12-12"
 
 }

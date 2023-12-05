@@ -29,9 +29,13 @@ func main() {
 	t0 := time.Now()
 	fmt.Println("Starting directory analysis...")
 	// start a new goroutine that runs the spinner function
-	go process.Spinner()
+	// Create a channel called stop
+	stop := make(chan struct{})
+	go process.Spinner(stop) // enable spinner
+
 	process.Parse()
 
+	close(stop) // closing the channel stop the goroutine
 	t1 := time.Now()
 	fmt.Println("\ndone !")
 	fmt.Println("Elapsed time : ", t1.Sub(t0))

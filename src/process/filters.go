@@ -27,10 +27,12 @@ import (
 )
 
 // FilterName apply filters to the dir/file name
+// if return is false, the name is rejected
 func FilterName(name string, pref types.Conf) bool {
-	if len(pref.Include) > 0 {
+	if len(pref.Include) > 0 && pref.Include[0] != "" {
+		//fmt.Println(pref.Include)
 		return IncludeFilter(name, pref)
-	} else if len(pref.Exclude) > 0 {
+	} else if len(pref.Exclude) > 0 && pref.Exclude[0] != "" {
 		//fmt.Println(name, ExcludeFilter(name, pref))
 		return ExcludeFilter(name, pref)
 	}
@@ -39,7 +41,7 @@ func FilterName(name string, pref types.Conf) bool {
 
 // ExcludeFilter apply exclusion list to the name
 func ExcludeFilter(name string, pref types.Conf) bool {
-	if pref.IncludeRegex {
+	if pref.ExcludeRegex {
 		excListRegex := pref.CompiledExcludeRegex
 		for _, reg := range excListRegex {
 			if regexFilter(name, reg) {
@@ -49,6 +51,7 @@ func ExcludeFilter(name string, pref types.Conf) bool {
 	} else {
 		excList := pref.Exclude
 		for _, reg := range excList {
+			fmt.Println(name, reg, stringFilter(name, reg))
 			if stringFilter(name, reg) {
 				return false
 			}
