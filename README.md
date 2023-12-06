@@ -4,7 +4,7 @@
   ![Output Table](src/images/table.png)
 work in progress...
 
-Caution : Set the directory level to a reasonable value before starting DATA Lister on a large file system.
+Caution : set the directory level to a reasonable value before starting DATA Lister on a large file system to avoid producing a huge result table.
 
 ## Key characteristics
 - List directories and optionally files.
@@ -14,9 +14,7 @@ Caution : Set the directory level to a reasonable value before starting DATA Lis
 - Include/Exclude filter list by string or regex
 - Filter by date
 - Custom (pre-filed) columns
-
-## Known issues
-- The current algorithm to quickly compute dir size can be unstable and crash the software. So it is better to disable the size dir calculation, or use it on a small file system.
+- Compute directory size (slow, use this option on small file system)
 
 ## Installation
 
