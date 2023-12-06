@@ -24,6 +24,7 @@ import (
 	"Data_Lister/src/types"
 	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -163,9 +164,13 @@ func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf, fDB
 // saveOutput save the file/dir information to the pogreb databases
 func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB *pogreb.DB) {
 	var size int64
+	var err error
 	if pref.CalcSize {
 		if info.IsDir() {
-			size = DirSize(filePath)
+			size, err = DirSize(filePath)
+			if err != nil {
+				log.Printf("failed to calculate size of directory %s: %v\n", filePath, err)
+			}
 		} else {
 			size = info.Size()
 		}
