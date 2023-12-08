@@ -29,7 +29,7 @@ import (
 func InsertDataDB(db *pogreb.DB, key, record []byte) {
 	// mutex.Lock()
 	// defer mutex.Unlock()
-	err := db.Put([]byte(key), record)
+	err := db.Put(key, record)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func MkDir(dir string) {
 	}
 }
 
-// ShowDB print the database content
+// ShowDB print the database content as string
 func ShowDB(db *pogreb.DB) {
 	it := db.Items()
 	for {
@@ -124,5 +124,29 @@ func ShowDB(db *pogreb.DB) {
 		}
 		//log.Printf("%s %s", ByteToString(key), ByteToString(val))
 		log.Println(ByteToString(key), ByteToString(val))
+	}
+}
+
+// ShowDB print the database content as string -> integer
+func ShowDBInt(db *pogreb.DB) {
+	it := db.Items()
+	for {
+		key, val, err := it.Next()
+		if err == pogreb.ErrIterationDone {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		//log.Printf("%s %s", ByteToString(key), ByteToString(val))
+		log.Println(ByteToString(key), ByteToInt(val))
+	}
+}
+
+// MapToDB, fill a DB with a map
+func MapToDB(sizes map[string]int64, db *pogreb.DB) {
+	for key, v := range sizes {
+		//InsertDataDB(db, []byte(key), StringToByte(IntToString(v)))
+		InsertDataDB(db, []byte(key), IntToBytes(v))
 	}
 }

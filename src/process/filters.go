@@ -51,7 +51,7 @@ func ExcludeFilter(name string, pref types.Conf) bool {
 	} else {
 		excList := pref.Exclude
 		for _, reg := range excList {
-			fmt.Println(name, reg, stringFilter(name, reg))
+			//fmt.Println(name, reg, stringFilter(name, reg))
 			if stringFilter(name, reg) {
 				return false
 			}

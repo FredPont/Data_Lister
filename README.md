@@ -14,7 +14,7 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 - Include/Exclude filter list by string or regex
 - Filter by date
 - Custom (pre-filed) columns
-- Compute directory size (slow, use this option on small file system)
+- Compute directory size (slow on terabytes of data, use this option on small file system)
 
 ## Installation
 

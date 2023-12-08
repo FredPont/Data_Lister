@@ -69,3 +69,30 @@ func ByteToString(bt []byte) string {
 func StringToByte(str string) []byte {
 	return []byte(str)
 }
+
+// IntToBytes convert int to []byte
+func IntToBytes(i int64) []byte {
+	//b := make([]byte, 4)
+	//binary.LittleEndian.PutUint32(b, uint32(i))
+	buf := make([]byte, binary.MaxVarintLen64) // make a byte slice with enough capacity
+	n := binary.PutVarint(buf, i)              // encode the int64 value into the byte slice
+	b := buf[:n]                               // slice the byte slice to the actual length
+
+	return b
+}
+
+func ByteToInt(b []byte) int64 {
+	// Convert the byte slice to an uint64 value using binary.BigEndian.Uint64
+	//return int64(binary.BigEndian.Uint64(b))
+	// var ret uint64
+	// buf := bytes.NewBuffer(b)
+	// binary.Read(buf, binary.BigEndian, &ret)
+	// return int64(ret)
+
+	x, _ := binary.Varint(b) // decode the byte slice to an int64 value
+	return x
+}
+
+func IntToString(i int64) string {
+	return strconv.FormatInt(i, 10) // base 10 for decimal
+}

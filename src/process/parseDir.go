@@ -24,7 +24,6 @@ import (
 	"Data_Lister/src/types"
 	"fmt"
 	"io/fs"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -34,8 +33,9 @@ import (
 
 func Parse() {
 	pogrebdb.InitDB()
-	fDB := pogrebdb.OpenDB("db/files")
-	dtDB := pogrebdb.OpenDB("db/dirTypes")
+	fDB := pogrebdb.OpenDB("db/files")        // database filePath => "name", "size",  "date"
+	dtDB := pogrebdb.OpenDB("db/dirTypes")    // database dirPath => "dir label", "dir score"
+	dsizeDB := pogrebdb.OpenDB("db/dirSize")  // database dirPath => "dir size"
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	//fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
@@ -45,20 +45,20 @@ func Parse() {
 
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
 
-	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB)
+	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)
 	if err != nil {
 		panic(err)
 	}
 
 	//pogrebdb.ShowDB(fDB)
-	//pogrebdb.ShowDB(dtDB)
-	WriteCSV(pref.OutputFile, fDB, dtDB, pref)
+	//pogrebdb.ShowDBInt(dsizeDB)
+	WriteCSV(pref.OutputFile, fDB, dtDB, dsizeDB, pref)
 	fDB.Close()
 	dtDB.Close()
 }
 
 // readDir recursive function to read dir and files to a certain level of deepness
-func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, fDB, dtDB *pogreb.DB) error {
+func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, fDB, dtDB, dsizeDB *pogreb.DB) error {
 	//fmt.Println("level=", rootLevel)
 	file, err := os.Open(path)
 	if err != nil {
@@ -95,12 +95,16 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if !FilterDate(fileInfo.ModTime(), pref) {
 			continue
 		}
-		DirOutput(filePath, "file", fileInfo, pref, fDB)
+		// store file info
+		if pref.ListFiles {
+			saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+		}
+		// store dir info
 		if fileInfo.IsDir() {
-			DirOutput(filePath, "dir", fileInfo, pref, fDB)
-
+			saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+			// analyse subdir if current level < user level limit
 			if Level(filePath, rootLevel) < pref.Level {
-				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB)
+				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)
 			}
 		}
 
@@ -152,27 +156,14 @@ func ScanDirType(names []string, pref types.Conf, dirSignatures map[string]types
 	return ""
 }
 
-// DirOutput decide the output of the file/dir information
-func DirOutput(filePath, fileType string, info fs.FileInfo, pref types.Conf, fDB *pogreb.DB) {
-	if pref.ListFiles && fileType == "file" {
-		saveOutput(filePath, info, pref, fDB)
-	} else if fileType == "dir" {
-		saveOutput(filePath, info, pref, fDB)
-	}
-}
-
 // saveOutput save the file/dir information to the pogreb databases
-func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB *pogreb.DB) {
-	var size int64
-	var err error
+func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dsizeDB *pogreb.DB) {
 	if pref.CalcSize {
 		if info.IsDir() {
-			size, err = DirSize(filePath)
-			if err != nil {
-				log.Printf("failed to calculate size of directory %s: %v\n", filePath, err)
-			}
+			DirSize(filePath, dsizeDB)
 		} else {
-			size = info.Size()
+			//size = info.Size()
+			pogrebdb.InsertDataDB(dsizeDB, pogrebdb.StringToByte(filePath), pogrebdb.IntToBytes(info.Size()))
 		}
 	}
 	modTime := info.ModTime()
@@ -181,6 +172,7 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB *pogreb.
 	day := fmt.Sprintf("%02d", modTime.Day())
 
 	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
-	outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")
+	//outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")
+	outString := strings.Join([]string{info.Name(), year + "-" + month + "-" + day}, "\t") // save name and date to database
 	pogrebdb.InsertDataDB(fDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
 }
