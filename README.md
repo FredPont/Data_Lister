@@ -15,6 +15,7 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 - Filter by date
 - Custom (pre-filed) columns
 - Compute directory size (slow on terabytes of data, use this option on small file system)
+- Merge tool to update old table with the new rows from a new analysis
 
 ## Installation
 
@@ -70,3 +71,21 @@ content	MyExperiments
 Delete_Date	2028-01-01
 ```
 - Start the software using the precompiled binaries for Linux, Mac or Windows
+```bash
+Usage :
+  -c	Start DataLister directories analysis in command line.
+
+  -m	Start DataLister merging tool.
+  -i string
+    	New result file path. Only new files/dir are added to the old file
+  -o string
+    	Old result file path. 
+
+      Examples :
+
+      Start the analysis of the directories in command line (-c):
+      ./Linux_DataLister.bin -c
+
+      To add new data from newfile to oldfile :
+      ./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
+```

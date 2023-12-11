@@ -61,7 +61,7 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 	//  =======================================================
 	it := fDB.Items()
 	for {
-		dirInfo := pogrebdb.StringToByte(" \t ") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
+		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
 		dirSize := pogrebdb.StringToByte("")
 		key, val, err := it.Next()
 		if err == pogreb.ErrIterationDone {
@@ -74,7 +74,7 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 		if pref.GuessDirType {
 			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
 			if dirInfo == nil || !pref.GuessDirType {
-				dirInfo = pogrebdb.StringToByte(" \t ")
+				dirInfo = pogrebdb.StringToByte("\t")
 			}
 		}
 
