@@ -48,6 +48,10 @@ No installation required the code is statically compiled.
     "NewerThan": "2022-12-12"
 }
 ```
+Note : backslashes must be escaped in regex. 
+
+Example : to exclude names starting with a dot use "^\\\\..+"
+
 - Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 ```json
 {

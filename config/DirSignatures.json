@@ -12,7 +12,11 @@
             "scoreThreshold": 0.8
     },
     "Microscope_Zeiss": {
-            "content": [".czi"],
+            "content": [".czi", ".lsm"],
+            "scoreThreshold": 0.8
+    },
+    "Qpath": {
+            "content": [".qptiff", ".xpd"],
             "scoreThreshold": 0.8
     },
     "Cytometry": {
