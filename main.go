@@ -21,9 +21,12 @@ package main
 import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
+	"Data_Lister/src/ui"
 	"flag"
 	"fmt"
 	"time"
+
+	"fyne.io/fyne/v2/app"
 )
 
 func main() {
@@ -47,11 +50,13 @@ func main() {
 func cmdLine() {
 	// start DataLister in cmd line
 	var cmd bool
+	var gui bool
 	var mergeFiles bool
 	var oldFile string //old result file to be merged with
 	var newFile string // new result file
 	flag.BoolVar(&mergeFiles, "m", false, "Start DataLister merging tool.")
 	flag.BoolVar(&cmd, "c", false, "Start DataLister directories analysis in command line. Example : DataLister -c")
+	flag.BoolVar(&gui, "g", false, "Start DataLister directories analysis in graphic mode. Example : DataLister -g")
 	flag.StringVar(&oldFile, "o", "", "Old result file path. Example, to add new data from newfile to oldfile : DataLister -m -o oldfile.csv -i newfile.csv")
 	flag.StringVar(&newFile, "i", "", "New result file path. Only new files/dir are added to the old file")
 	flag.Parse() // parse the flags
@@ -76,5 +81,23 @@ func cmdLine() {
 		merge.Merge(oldFile, newFile)
 		close(stop) // closing the channel stop the goroutine
 	}
+
+	if gui {
+		GraphicInterface()
+	}
+
+}
+
+func GraphicInterface() {
+
+	a := app.NewWithID("DataLister")
+
+	w := a.NewWindow("DataLister v202231213 © Frédéric Pont 2023")
+
+	reg := ui.NewRegist()
+
+	reg.BuildUI(w)
+
+	w.ShowAndRun()
 
 }
