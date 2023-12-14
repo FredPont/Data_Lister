@@ -1,6 +1,7 @@
  <!--![Output Table](src/images/logo.png) -->
- <img src="src/images/logo.png" alt="drawing" width="200" height="200" align="center"/>
-
+<div style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+<img src="src/images/logo.png" alt="drawing" width="250" height="250" style="display: block; margin-left: auto; margin-right: auto;"/>
+</div>
 
 # DATA Lister
  DATA Lister is a software to list directories/files and produce a TSV table for data management.
