@@ -1,7 +1,5 @@
- <!--![Output Table](src/images/logo.png)
-<div style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
-<img src="src/images/logo.png" alt="drawing" width="250" height="250" style="display: block; margin-left: auto; margin-right: auto;"/>
-</div> -->
+ <!--![Output Table](src/images/logo.png) -->
+
 
 <p align="center">
 <img src="src/images/logo.png" alt="drawing" width="250" height="250" />
@@ -17,7 +15,7 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 
 ## Key characteristics
 - List directories and optionally files.
-- TSV output
+- TSV table output
 - Tunable dir level
 - Try to guess dir content (level must be set to dir +1 to allow the dir content analysis)
 - Include/Exclude filter list by string or regex
