@@ -152,13 +152,13 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	// Create a string binding
 	oldFileURL := binding.NewString()
-	oldFileButton := getfilePath2(reg.win, "Choose file to update", oldFileURL)
+	oldFileButton := getfilePath(reg.win, "Choose file to update", oldFileURL)
 	//oldFileButton
 
 	//oldFileURL.Set(oldfile)
 	// Create a string binding
 	newFileURL := binding.NewString()
-	newFileButton := getfilePath2(reg.win, "Choose new file", newFileURL)
+	newFileButton := getfilePath(reg.win, "Choose new file", newFileURL)
 	mergeButton := widget.NewButton("Merge Files", func() {
 		progBar.Show()
 		oldURL, _ := oldFileURL.Get()
