@@ -93,6 +93,8 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	// buttons
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
+		userSetting = reg.GetUserSettings(inputDirURL, outFileURL, listfiles)
+		log.Println(userSetting)
 		reg.saveConfig(userSetting)
 		//reg.win.Close()
 	})

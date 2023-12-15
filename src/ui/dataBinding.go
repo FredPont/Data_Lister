@@ -21,6 +21,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 )
 
 func errorBinding(err error, window fyne.Window) {
@@ -29,8 +30,12 @@ func errorBinding(err error, window fyne.Window) {
 }
 
 // GetUserSettings get user settings from the gui
-func (reg *Regist) GetUserSettings(inputDirURL binding.String) types.Conf {
-	userSetting := types.Conf{InputDir: reg.dbToStr(inputDirURL)}
+func (reg *Regist) GetUserSettings(inputDirURL, outFileURL binding.String, listFilesCB *widget.Check) types.Conf {
+	userSetting := types.Conf{
+		InputDir:   reg.dbToStr(inputDirURL),
+		OutputFile: reg.dbToStr(outFileURL),
+		ListFiles:  listFilesCB.Checked,
+	}
 	return userSetting
 }
 
