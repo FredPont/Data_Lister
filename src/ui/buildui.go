@@ -16,6 +16,8 @@
 package ui
 
 import (
+	conf "Data_Lister/src/configuration"
+	"Data_Lister/src/merge"
 	"Data_Lister/src/types"
 	"log"
 	"strings"
@@ -44,8 +46,9 @@ type Regist struct {
 func NewRegist() *Regist {
 
 	im := picture()
+	pref := conf.ReadConf() // read preferences
 
-	regist := &Regist{img: im}
+	regist := &Regist{img: im, config: pref}
 	return regist
 }
 
@@ -53,18 +56,30 @@ func NewRegist() *Regist {
 func (reg *Regist) BuildUI(w fyne.Window) {
 	reg.win = w
 
+	// user settings
+	var userSetting types.Conf
 	//---------
 	// home tab
 
 	inputDirURL := binding.NewString()
-	inputDirButton := getdirPath(reg.win, "Choose the directory to scan", inputDirURL)
+	inputDirURL.Set(insertNewlines(reg.config.InputDir, 45))
+	inputDirStr, _ := inputDirURL.Get()
+	//inputDirLabel := widget.NewLabel(inputDirStr)
+	inputDirLabel := widget.NewLabelWithStyle(inputDirStr, fyne.TextAlignLeading, fyne.TextStyle{})
+	inputDirButton := getdirPath(reg.win, "Choose the directory to scan", inputDirURL, inputDirLabel)
 
 	//oldFileURL.Set(oldfile)
 	// Create a string binding
 	outFileURL := binding.NewString()
-	outFileButton := getfileSave(reg.win, "Output file", outFileURL)
+	outFileURL.Set(insertNewlines(reg.config.OutputFile, 45))
+	outFileStr, _ := outFileURL.Get()
+	outFileLabel := widget.NewLabelWithStyle(outFileStr, fyne.TextAlignLeading, fyne.TextStyle{})
+	outFileButton := getfileSave(reg.win, "Output file", outFileURL, outFileLabel) // label a dissocier
+	//outFileButton := getfilePath(reg.win, "Output file", outFileURL, outFileLabel)
 
+	// image logo
 	pict := widget.NewCard(reg.cardTitle, reg.cardSubTitle, reg.img)
+
 	listfiles := widget.NewCheck("List Files", func(v bool) {})
 	listfiles.Checked = false // set the default value to false
 
@@ -79,14 +94,19 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
 
+	// buttons
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
+	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
+		reg.saveConfig(userSetting)
+		//reg.win.Close()
+	})
 
 	progBar := widget.NewProgressBarInfinite()
 	progBar.Hide()
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
 	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
-		container.NewVBox(inputDirButton, outFileButton, listfiles, guessType, dirSize, levelEntry, closeButton, progBar),
+		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType, dirSize, levelEntry, runButton, closeButton, progBar),
 		pict)
 
 	//-------------
@@ -94,19 +114,19 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	includeRegex := widget.NewCheck("Include Regex", func(v bool) {})
 	includeRegex.Checked = false // set the default value to true
 
-	includeFormated := ""
+	var includeFormated []string
 	include := widget.NewMultiLineEntry()
 	include.OnChanged = func(s string) {
-		includeFormated = commentValidation(s)
+		includeFormated = textValidation(s)
 		log.Println(includeFormated)
 	}
 
 	excludeRegex := widget.NewCheck("Exclude Regex", func(v bool) {})
 	excludeRegex.Checked = false // set the default value to true
-	excludeFormated := ""
+	var excludeFormated []string
 	exclude := widget.NewMultiLineEntry()
 	exclude.OnChanged = func(s string) {
-		excludeFormated = commentValidation(s)
+		excludeFormated = textValidation(s)
 		log.Println(includeFormated)
 		log.Println(excludeFormated)
 	}
@@ -116,9 +136,11 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	olderthan := widget.NewEntry()
 	olderthan.SetPlaceHolder("3023-12-12")
+	olderthan.Validator = dateValidator
 
 	newerthan := widget.NewEntry()
 	newerthan.SetPlaceHolder("1922-12-12")
+	newerthan.Validator = dateValidator
 
 	filtersContent := container.NewVBox(
 		includeRegex,
@@ -134,23 +156,25 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	// Create a string binding
 	oldFileURL := binding.NewString()
-	oldFileButton := getfilePath(reg.win, "Choose file to update", oldFileURL)
+	oldFileButton := getfilePath2(reg.win, "Choose file to update", oldFileURL)
+	//oldFileButton
 
 	//oldFileURL.Set(oldfile)
 	// Create a string binding
 	newFileURL := binding.NewString()
-	newFileButton := getfilePath(reg.win, "Choose new file", newFileURL)
+	newFileButton := getfilePath2(reg.win, "Choose new file", newFileURL)
 	mergeButton := widget.NewButton("Merge Files", func() {
 		progBar.Show()
 		oldURL, _ := oldFileURL.Get()
 		newURL, _ := newFileURL.Get()
-		time.Sleep(3 * time.Second) // pauses the execution for 3 seconds
+		merge.Merge(cleanFileURL(oldURL), cleanFileURL(newURL))
+		//time.Sleep(3 * time.Second) // pauses the execution for 3 seconds
 		log.Println(oldURL, newURL)
 		progBar.Hide()
 	})
 	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, progBar)
 	// Create a widget label with some help text
-	helpContent := widget.NewLabel(helpText())
+	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
 	//--------------------
 	// build windows tabs
@@ -209,7 +233,7 @@ func helpText() string {
 }
 
 // getfilePath create a file button and stores the file path using databinding
-func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
+func getfilePath2(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
 	//var path string // file path
 	// Créer un label pour afficher le chemin du fichier
 	label := widget.NewLabel("")
@@ -244,8 +268,76 @@ func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fy
 	return container.NewVBox(button, label)
 }
 
+func getfilePath(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
+	// Créer une fonction de choix de fichier
+	chooseFile := func() {
+		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
+			if err != nil {
+				// Afficher une erreur si nécessaire
+				dialog.ShowError(err, window)
+				return
+			}
+			if file == nil {
+				// Ne rien faire si aucun fichier n'est sélectionné
+				return
+			}
+			// Fermer le fichier
+			file.Close()
+			// Afficher le chemin du fichier dans le label
+			//label.SetText(file.URI().String())
+			//path = file.URI().String()
+			url.Set(file.URI().String())
+			outFileLabel.Text = insertNewlines(file.URI().String(), 45)
+			outFileLabel.Refresh()
+		}, window)
+	}
+	// Créer un bouton qui déclenche la fonction de choix de fichier
+	button := widget.NewButton(buttonlabel, chooseFile)
+
+	return button
+}
+
 // getfileSave create a file button and stores the file path entered by the user
-func getfileSave(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
+func getfileSave(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
+	//var path string // file path
+	// Créer un label pour afficher le chemin du fichier
+	//label := widget.NewLabel("")
+
+	// Créer une fonction de choix de fichier
+	chooseFile := func() {
+		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		dialog.ShowFileSave(func(file fyne.URIWriteCloser, err error) {
+			if err != nil {
+				// Afficher une erreur si nécessaire
+				dialog.ShowError(err, window)
+				return
+			}
+			if file == nil {
+				// Ne rien faire si aucun fichier n'est sélectionné
+				return
+			}
+			// Fermer le fichier
+			file.Close()
+			// Afficher le chemin du fichier dans le label
+			//label.SetText(file.URI().String())
+			//path = file.URI().String()
+			url.Set(file.URI().String())
+			outFileLabel.Text = insertNewlines(file.URI().String(), 45)
+			outFileLabel.Refresh()
+		}, window)
+	}
+	// Créer un bouton qui déclenche la fonction de choix de fichier
+	button := widget.NewButton(buttonlabel, chooseFile)
+
+	// Ajouter le bouton et le label à la fenêtre
+	//	window.SetContent(container.NewVBox(button, label))
+
+	//return container.NewVBox(button, label)
+	return button
+}
+
+func getfileSave2(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
 	//var path string // file path
 	// Créer un label pour afficher le chemin du fichier
 	label := widget.NewLabel("")
@@ -281,7 +373,44 @@ func getfileSave(window fyne.Window, buttonlabel string, url binding.String) *fy
 }
 
 // getdirPath create a file button and stores the dir path using databinding
-func getdirPath(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
+func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outDirLabel *widget.Label) *widget.Button {
+	//var path string // file path
+	// Créer un label pour afficher le chemin du fichier
+	//label := widget.NewLabel("")
+
+	// Créer une fonction de choix de fichier
+	chooseDir := func() {
+		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		dialog.ShowFolderOpen(func(dir fyne.ListableURI, err error) {
+			if err != nil {
+				// Afficher une erreur si nécessaire
+				dialog.ShowError(err, window)
+				return
+			}
+			if dir == nil {
+				// Ne rien faire si aucun fichier n'est sélectionné
+				return
+			}
+
+			// Afficher le chemin du fichier dans le label
+			//label.SetText(dir.Path())
+			//path = file.URI().String()
+			outDirLabel.SetText(insertNewlines(dir.Path(), 45))
+			url.Set(dir.String())
+			outDirLabel.Refresh()
+		}, window)
+	}
+	// Créer un bouton qui déclenche la fonction de choix de fichier
+	button := widget.NewButton(buttonlabel, chooseDir)
+
+	// Ajouter le bouton et le label à la fenêtre
+	//	window.SetContent(container.NewVBox(button, label))
+
+	return button
+}
+
+// getdirPath create a file button and stores the dir path using databinding
+func getdirPath2(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
 	//var path string // file path
 	// Créer un label pour afficher le chemin du fichier
 	label := widget.NewLabel("")
@@ -315,12 +444,43 @@ func getdirPath(window fyne.Window, buttonlabel string, url binding.String) *fyn
 	return container.NewVBox(button, label)
 }
 
-// getEntry create an entry widget and stores the entry
-func getEntry() {
+func textValidation(cmt string) []string {
+	//cmt = strings.ReplaceAll(cmt, "\n", " ")  // remove all newline
+	cmt = strings.ReplaceAll(cmt, "\r", " ") // remove all carriage return
+	return strings.Split(cmt, "\n")
 
 }
 
-func commentValidation(cmt string) string {
-	cmt = strings.ReplaceAll(cmt, "\n", " ")  // remove all newline
-	return strings.ReplaceAll(cmt, "\r", " ") // remove all carriage return
+// cleanFileURL removes "file://" at the beginning of URL
+func cleanFileURL(url string) string {
+	return strings.TrimPrefix(url, "file://") // t is "lang"
+}
+
+// dateValidator control the date format
+func dateValidator(text string) error {
+	const dateFormat = "2006-01-02"
+	_, err := time.Parse(dateFormat, text)
+	return err
+}
+
+// saveConfig export the user setting to the config/settingsjson file
+func (reg *Regist) saveConfig(userSetting types.Conf) {
+
+}
+
+// formatURL insert newline every x char to split the url in more than one line
+func formatURL(url string) {
+	//x := 50
+}
+
+// insertNewlines insert newline every x char to split the url in more than one line
+func insertNewlines(s string, n int) string {
+	var result string
+	for i, runeValue := range s {
+		if i > 0 && i%n == 0 {
+			result += "\n"
+		}
+		result += string(runeValue)
+	}
+	return result
 }

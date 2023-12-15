@@ -17,11 +17,12 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 - List directories and optionally files.
 - TSV table output
 - Tunable dir level
-- Try to guess dir content (level must be set to dir +1 to allow the dir content analysis)
-- Include/Exclude filter list by string or regex
+- Try to guess dir content based on footprint (level must be set to dir +1 to allow the dir content analysis)
+- Unlimited number of customizable dir footprint
+- Include/Exclude filter list by unlimited number of string or regex
 - Filter by date
-- Custom (pre-filed) columns
-- Compute directory size (slow on terabytes of data, use this option on small file system)
+- Unlimited number of custom (pre-filed) columns
+- Compute directory size (slow on terabytes of data because 100% of the files are parsed)
 - Merge tool to update old table with the new rows from a new analysis
 
 ## Installation

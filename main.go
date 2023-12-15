@@ -71,18 +71,16 @@ func cmdLine() {
 		process.Parse()
 
 		close(stop) // closing the channel stop the goroutine
-	}
-
-	if mergeFiles {
+		return
+	} else if mergeFiles {
 		fmt.Println("Starting update of ...", oldFile, "with", newFile)
 		// start the merging tool. The old result file is merged with a new result file
 		// Create a channel called stop
 		stop := make(chan struct{})
 		merge.Merge(oldFile, newFile)
 		close(stop) // closing the channel stop the goroutine
-	}
-
-	if gui {
+		return
+	} else if gui {
 		GraphicInterface()
 	}
 
