@@ -45,11 +45,6 @@ func (reg *Regist) saveConfig(userSetting types.Conf) {
 
 }
 
-// formatURL insert newline every x char to split the url in more than one line
-func formatURL(url string) {
-	//x := 50
-}
-
 // insertNewlines insert newline every x char to split the url in more than one line
 func insertNewlines(s string, n int) string {
 	var result string
