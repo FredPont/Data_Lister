@@ -100,6 +100,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	var includeFormated []string
 	include := widget.NewMultiLineEntry()
+	include.SetText(strSliceToString(reg.config.Include))
 	include.OnChanged = func(s string) {
 		includeFormated = textValidation(s)
 		log.Println(includeFormated)
@@ -109,6 +110,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	excludeRegex.Checked = false // set the default value to true
 	var excludeFormated []string
 	exclude := widget.NewMultiLineEntry()
+	exclude.SetText(strSliceToString(reg.config.Exclude))
 	exclude.OnChanged = func(s string) {
 		excludeFormated = textValidation(s)
 		log.Println(excludeFormated)
