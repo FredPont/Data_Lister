@@ -30,15 +30,22 @@ func errorBinding(err error, window fyne.Window) {
 }
 
 // GetUserSettings get user settings from the gui
-func (reg *Regist) GetUserSettings(inputDirURL, outFileURL binding.String, listFilesCB *widget.Check) types.Conf {
+func (reg *Regist) GetUserSettings(inputDirURL, outFileURL binding.String,
+	listFiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check) types.Conf {
 	userSetting := types.Conf{
-		InputDir:   reg.dbToStr(inputDirURL),
-		OutputFile: reg.dbToStr(outFileURL),
-		ListFiles:  listFilesCB.Checked,
+		InputDir:     reg.dbToStr(inputDirURL),
+		OutputFile:   reg.dbToStr(outFileURL),
+		ListFiles:    listFiles.Checked,
+		GuessDirType: guessType.Checked,
+		CalcSize:     dirSize.Checked,
+		IncludeRegex: includeRegex.Checked,
+		ExcludeRegex: excludeRegex.Checked,
+		DateFilter:   dateFilter.Checked,
 	}
 	return userSetting
 }
 
+// dbToStr convert dataBind binding.String to string
 func (reg *Regist) dbToStr(dataBind binding.String) string {
 	s, err := dataBind.Get() // s is a string, err is an error
 	if err != nil {

@@ -56,6 +56,8 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	var userSetting types.Conf
 	//---------
 	// home tab
+	progBar := widget.NewProgressBarInfinite()
+	progBar.Hide()
 
 	inputDirURL := binding.NewString()
 	inputDirURL.Set(insertNewlines(reg.config.InputDir, 45))
@@ -89,23 +91,6 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	level := widget.NewEntry()
 	level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
-
-	// buttons
-	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
-	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
-		userSetting = reg.GetUserSettings(inputDirURL, outFileURL, listfiles)
-		log.Println(userSetting)
-		reg.saveConfig(userSetting)
-		//reg.win.Close()
-	})
-
-	progBar := widget.NewProgressBarInfinite()
-	progBar.Hide()
-
-	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
-	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
-		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType, dirSize, levelEntry, runButton, closeButton, progBar),
-		pict)
 
 	//-------------
 	// filters tab
@@ -173,6 +158,21 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, progBar)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
+
+	// buttons
+	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
+	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
+		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter)
+		log.Println(userSetting)
+		reg.saveConfig(userSetting)
+		//reg.win.Close()
+	})
+
+	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
+	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
+		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType, dirSize, levelEntry, runButton, closeButton, progBar),
+		pict)
 
 	//--------------------
 	// build windows tabs
