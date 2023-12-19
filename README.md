@@ -45,8 +45,8 @@ No installation required the code is statically compiled.
     "Level": 4,
     "IncludeRegex": true,
     "Include": [
-      ".*"
-    ],
+	      ".*", "level", "seq"	
+    ]
     "ExcludeRegex": true,
     "Exclude": [
         "image"

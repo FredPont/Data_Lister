@@ -101,9 +101,10 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	var includeFormated []string
 	include := widget.NewMultiLineEntry()
 	include.SetText(strSliceToString(reg.config.Include))
+	includeFormated = reg.config.Include
 	include.OnChanged = func(s string) {
 		includeFormated = textValidation(s)
-		log.Println(includeFormated)
+		//log.Println(includeFormated)
 	}
 
 	excludeRegex := widget.NewCheck("Exclude Regex", func(v bool) {})
@@ -111,20 +112,23 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	var excludeFormated []string
 	exclude := widget.NewMultiLineEntry()
 	exclude.SetText(strSliceToString(reg.config.Exclude))
+	excludeFormated = reg.config.Exclude
 	exclude.OnChanged = func(s string) {
 		excludeFormated = textValidation(s)
-		log.Println(excludeFormated)
+		//log.Println(excludeFormated)
 	}
 
 	dateFilter := widget.NewCheck("Date Filter", func(v bool) {})
 	dateFilter.Checked = false // set the default value to true
 
 	olderthan := widget.NewEntry()
-	olderthan.SetPlaceHolder("3023-12-12")
+	olderthan.SetText(reg.config.OlderThan)
+	//olderthan.SetPlaceHolder("3023-12-12")
 	olderthan.Validator = dateValidator
 
 	newerthan := widget.NewEntry()
-	newerthan.SetPlaceHolder("1922-12-12")
+	newerthan.SetText(reg.config.NewerThan)
+	//newerthan.SetPlaceHolder("1922-12-12")
 	newerthan.Validator = dateValidator
 
 	filtersContent := container.NewVBox(
@@ -167,6 +171,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
+			olderthan, newerthan,
 			includeFormated, excludeFormated)
 		log.Println(userSetting)
 		reg.saveConfig(userSetting)
@@ -187,11 +192,6 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	// build tab container
 	tabs := container.NewAppTabs(homeTab, filtersTab, mergeTab, helpTab)
-
-	// buttonsBlock := container.NewGridWithRows(2,
-	// 	layout.NewSpacer(),
-	// 	buttons,
-	// )
 
 	content := tabs
 
