@@ -18,6 +18,7 @@ package ui
 import (
 	conf "Data_Lister/src/configuration"
 	"Data_Lister/src/merge"
+	"Data_Lister/src/process"
 	"Data_Lister/src/types"
 	"log"
 
@@ -60,18 +61,18 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	progBar.Hide()
 
 	inputDirURL := binding.NewString()
-	inputDirURL.Set(insertNewlines(reg.config.InputDir, 45))
+	inputDirURL.Set(reg.config.InputDir)
 	inputDirStr, _ := inputDirURL.Get()
 	//inputDirLabel := widget.NewLabel(inputDirStr)
-	inputDirLabel := widget.NewLabelWithStyle(inputDirStr, fyne.TextAlignLeading, fyne.TextStyle{})
+	inputDirLabel := widget.NewLabelWithStyle(insertNewlines(inputDirStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
 	inputDirButton := getdirPath(reg.win, "Choose the directory to scan", inputDirURL, inputDirLabel)
 
 	//oldFileURL.Set(oldfile)
 	// Create a string binding
 	outFileURL := binding.NewString()
-	outFileURL.Set(insertNewlines(reg.config.OutputFile, 45))
+	outFileURL.Set(reg.config.OutputFile)
 	outFileStr, _ := outFileURL.Get()
-	outFileLabel := widget.NewLabelWithStyle(outFileStr, fyne.TextAlignLeading, fyne.TextStyle{})
+	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
 	outFileButton := getfileSave(reg.win, "Output file", outFileURL, outFileLabel) // label a dissocier
 	//outFileButton := getfilePath(reg.win, "Output file", outFileURL, outFileLabel)
 
@@ -79,13 +80,16 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	pict := widget.NewCard(reg.cardTitle, reg.cardSubTitle, reg.img)
 
 	listfiles := widget.NewCheck("List Files", func(v bool) {})
-	listfiles.Checked = false // set the default value to false
+	//listfiles.Checked = false // set the default value to false
+	listfiles.Checked = reg.config.ListFiles
 
 	guessType := widget.NewCheck("Guess Dir Type", func(v bool) {})
-	guessType.Checked = true // set the default value to true
+	//guessType.Checked = true // set the default value to true
+	guessType.Checked = reg.config.GuessDirType
 
 	dirSize := widget.NewCheck("Compute dir Size", func(v bool) {})
-	dirSize.Checked = false // set the default value to false
+	// dirSize.Checked = false // set the default value to false
+	dirSize.Checked = reg.config.CalcSize
 
 	levelLab := widget.NewLabel("Level")
 	level := widget.NewEntry()
@@ -95,8 +99,9 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	//-------------
 	// filters tab
-	includeRegex := widget.NewCheck("Include Regex", func(v bool) {})
-	includeRegex.Checked = false // set the default value to true
+	includeRegex := widget.NewCheck("Include : check to use Regex instead of string", func(v bool) {})
+	//includeRegex.Checked = false // set the default value to true
+	includeRegex.Checked = reg.config.IncludeRegex
 
 	var includeFormated []string
 	include := widget.NewMultiLineEntry()
@@ -107,8 +112,10 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		//log.Println(includeFormated)
 	}
 
-	excludeRegex := widget.NewCheck("Exclude Regex", func(v bool) {})
-	excludeRegex.Checked = false // set the default value to true
+	excludeRegex := widget.NewCheck("Exclude : check to use Regex instead of string", func(v bool) {})
+	//excludeRegex.Checked = false // set the default value to true
+	excludeRegex.Checked = reg.config.ExcludeRegex
+
 	var excludeFormated []string
 	exclude := widget.NewMultiLineEntry()
 	exclude.SetText(strSliceToString(reg.config.Exclude))
@@ -119,17 +126,20 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	}
 
 	dateFilter := widget.NewCheck("Date Filter", func(v bool) {})
-	dateFilter.Checked = false // set the default value to true
+	//dateFilter.Checked = false // set the default value to true
+	dateFilter.Checked = reg.config.DateFilter
 
 	olderthan := widget.NewEntry()
 	olderthan.SetText(reg.config.OlderThan)
 	//olderthan.SetPlaceHolder("3023-12-12")
 	olderthan.Validator = dateValidator
+	olderthanLab := widget.NewLabel("Older Than")
 
 	newerthan := widget.NewEntry()
 	newerthan.SetText(reg.config.NewerThan)
 	//newerthan.SetPlaceHolder("1922-12-12")
 	newerthan.Validator = dateValidator
+	newerthanLab := widget.NewLabel("Newer Than")
 
 	filtersContent := container.NewVBox(
 		includeRegex,
@@ -137,8 +147,8 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		excludeRegex,
 		exclude,
 		dateFilter,
-		olderthan,
-		newerthan,
+		container.NewGridWithColumns(2, olderthanLab, olderthan),
+		container.NewGridWithColumns(2, newerthanLab, newerthan),
 	)
 
 	//---------
@@ -159,7 +169,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		newURL, _ := newFileURL.Get()
 		merge.Merge(cleanFileURL(oldURL), cleanFileURL(newURL))
 		//time.Sleep(3 * time.Second) // pauses the execution for 3 seconds
-		log.Println(oldURL, newURL)
+		//log.Println(oldURL, newURL)
 		progBar.Hide()
 	})
 	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, progBar)
@@ -169,13 +179,16 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	// buttons
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
+		progBar.Show()
 		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
 			olderthan, newerthan,
 			includeFormated, excludeFormated)
 		log.Println(userSetting)
 		reg.saveConfig(userSetting)
-		//reg.win.Close()
+		process.Parse()
+		progBar.Hide()
+
 	})
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
@@ -190,7 +203,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	mergeTab := container.NewTabItem("Merge", mergeContent)
 	helpTab := container.NewTabItem("Help", helpContent)
 
-	// build tab container
+	// build tab containerprocess.Parse()
 	tabs := container.NewAppTabs(homeTab, filtersTab, mergeTab, helpTab)
 
 	content := tabs
@@ -198,4 +211,20 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	w.SetContent(content)
 
 	w.Content().Refresh()
+}
+
+func startDirAnalysis(reg *Regist, progBar *widget.ProgressBar, inputDirURL, outFileURL binding.String,
+	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
+	level, olderthan, newerthan *widget.Entry,
+	includeFormated, excludeFormated []string) {
+
+	progBar.Show()
+	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
+		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
+		olderthan, newerthan,
+		includeFormated, excludeFormated)
+	log.Println(userSetting)
+	reg.saveConfig(userSetting)
+	process.Parse()
+	progBar.Hide()
 }

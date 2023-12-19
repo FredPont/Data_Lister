@@ -45,50 +45,16 @@ func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fy
 			// Fermer le fichier
 			file.Close()
 			// Afficher le chemin du fichier dans le label
-			label.SetText(file.URI().String())
+			label.SetText(cleanFileURL(file.URI().String()))
 			//path = file.URI().String()
-			url.Set(file.URI().String())
+			url.Set(cleanFileURL(file.URI().String()))
 		}, window)
 	}
 	// Créer un bouton qui déclenche la fonction de choix de fichier
 	button := widget.NewButton(buttonlabel, chooseFile)
 
-	// Ajouter le bouton et le label à la fenêtre
-	//	window.SetContent(container.NewVBox(button, label))
-
 	return container.NewVBox(button, label)
 }
-
-// getfilePath create a file button and stores the file path using databinding  and refresh the path label
-// func getfilePath2(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
-// 	// Créer une fonction de choix de fichier
-// 	chooseFile := func() {
-// 		// Ouvrir une boîte de dialogue pour sélectionner un fichier
-// 		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
-// 			if err != nil {
-// 				// Afficher une erreur si nécessaire
-// 				dialog.ShowError(err, window)
-// 				return
-// 			}
-// 			if file == nil {
-// 				// Ne rien faire si aucun fichier n'est sélectionné
-// 				return
-// 			}
-// 			// Fermer le fichier
-// 			file.Close()
-// 			// Afficher le chemin du fichier dans le label
-// 			//label.SetText(file.URI().String())
-// 			//path = file.URI().String()
-// 			url.Set(file.URI().String())
-// 			outFileLabel.Text = insertNewlines(file.URI().String(), 45)
-// 			outFileLabel.Refresh()
-// 		}, window)
-// 	}
-// 	// Créer un bouton qui déclenche la fonction de choix de fichier
-// 	button := widget.NewButton(buttonlabel, chooseFile)
-
-// 	return button
-// }
 
 // getfileSave create a file button and stores the file path entered by the user and refresh the path label
 func getfileSave(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
@@ -114,55 +80,16 @@ func getfileSave(window fyne.Window, buttonlabel string, url binding.String, out
 			// Afficher le chemin du fichier dans le label
 			//label.SetText(file.URI().String())
 			//path = file.URI().String()
-			url.Set(file.URI().String())
-			outFileLabel.Text = insertNewlines(file.URI().String(), 45)
+			url.Set(cleanFileURL(file.URI().String()))
+			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 45)
 			outFileLabel.Refresh()
 		}, window)
 	}
 	// Créer un bouton qui déclenche la fonction de choix de fichier
 	button := widget.NewButton(buttonlabel, chooseFile)
 
-	// Ajouter le bouton et le label à la fenêtre
-	//	window.SetContent(container.NewVBox(button, label))
-
-	//return container.NewVBox(button, label)
 	return button
 }
-
-// func getfileSave2(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
-// 	//var path string // file path
-// 	// Créer un label pour afficher le chemin du fichier
-// 	label := widget.NewLabel("")
-
-// 	// Créer une fonction de choix de fichier
-// 	chooseFile := func() {
-// 		// Ouvrir une boîte de dialogue pour sélectionner un fichier
-// 		dialog.ShowFileSave(func(file fyne.URIWriteCloser, err error) {
-// 			if err != nil {
-// 				// Afficher une erreur si nécessaire
-// 				dialog.ShowError(err, window)
-// 				return
-// 			}
-// 			if file == nil {
-// 				// Ne rien faire si aucun fichier n'est sélectionné
-// 				return
-// 			}
-// 			// Fermer le fichier
-// 			file.Close()
-// 			// Afficher le chemin du fichier dans le label
-// 			label.SetText(file.URI().String())
-// 			//path = file.URI().String()
-// 			url.Set(file.URI().String())
-// 		}, window)
-// 	}
-// 	// Créer un bouton qui déclenche la fonction de choix de fichier
-// 	button := widget.NewButton(buttonlabel, chooseFile)
-
-// 	// Ajouter le bouton et le label à la fenêtre
-// 	//	window.SetContent(container.NewVBox(button, label))
-
-// 	return container.NewVBox(button, label)
-// }
 
 // getdirPath create a file button and stores the dir path using databinding and refresh the path label
 func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outDirLabel *widget.Label) *widget.Button {
@@ -187,51 +114,13 @@ func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outD
 			// Afficher le chemin du fichier dans le label
 			//label.SetText(dir.Path())
 			//path = file.URI().String()
-			outDirLabel.SetText(insertNewlines(dir.Path(), 45))
-			url.Set(dir.String())
+			outDirLabel.SetText(insertNewlines(cleanFileURL(dir.Path()), 45))
+			url.Set(cleanFileURL(dir.String()))
 			outDirLabel.Refresh()
 		}, window)
 	}
 	// Créer un bouton qui déclenche la fonction de choix de fichier
 	button := widget.NewButton(buttonlabel, chooseDir)
 
-	// Ajouter le bouton et le label à la fenêtre
-	//	window.SetContent(container.NewVBox(button, label))
-
 	return button
 }
-
-// getdirPath create a file button and stores the dir path using databinding
-// func getdirPath2(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
-// 	//var path string // file path
-// 	// Créer un label pour afficher le chemin du fichier
-// 	label := widget.NewLabel("")
-
-// 	// Créer une fonction de choix de fichier
-// 	chooseDir := func() {
-// 		// Ouvrir une boîte de dialogue pour sélectionner un fichier
-// 		dialog.ShowFolderOpen(func(dir fyne.ListableURI, err error) {
-// 			if err != nil {
-// 				// Afficher une erreur si nécessaire
-// 				dialog.ShowError(err, window)
-// 				return
-// 			}
-// 			if dir == nil {
-// 				// Ne rien faire si aucun fichier n'est sélectionné
-// 				return
-// 			}
-
-// 			// Afficher le chemin du fichier dans le label
-// 			label.SetText(dir.Path())
-// 			//path = file.URI().String()
-// 			url.Set(dir.String())
-// 		}, window)
-// 	}
-// 	// Créer un bouton qui déclenche la fonction de choix de fichier
-// 	button := widget.NewButton(buttonlabel, chooseDir)
-
-// 	// Ajouter le bouton et le label à la fenêtre
-// 	//	window.SetContent(container.NewVBox(button, label))
-
-// 	return container.NewVBox(button, label)
-// }

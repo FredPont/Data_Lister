@@ -17,8 +17,12 @@ package ui
 
 import (
 	"Data_Lister/src/types"
+	"encoding/json"
+	"os"
 	"strings"
 	"time"
+
+	"fyne.io/fyne/v2/dialog"
 )
 
 // textValidation convert a string containing newlines into a []string
@@ -49,6 +53,18 @@ func dateValidator(text string) error {
 
 // saveConfig export the user setting to the config/settingsjson file
 func (reg *Regist) saveConfig(userSetting types.Conf) {
+	fname := "config/settings.json"
+	b, err := json.Marshal(userSetting) // convert the struct to JSON
+	if err != nil {
+		// handle error
+		dialog.ShowInformation("Alert", "Cannot convert user data to struct !", reg.win) // show the alert dialog
+
+	}
+	err = os.WriteFile(fname, b, 0644) // write the JSON to a file
+	if err != nil {
+		// handle error
+		dialog.ShowInformation("Alert", "Cannot save user data to "+fname, reg.win) // show the alert dialog
+	}
 
 }
 
