@@ -7,8 +7,11 @@
 
 # DATA Lister
  DATA Lister is a software to list directories/files and produce a TSV table for data management.
-  ![Output Table](src/images/gui1.png)
+
+  ![GUI](src/images/gui1.png)
+
 work in progress...
+
   ![Output Table](src/images/table.png)
 
 
