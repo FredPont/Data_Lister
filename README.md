@@ -7,9 +7,10 @@
 
 # DATA Lister
  DATA Lister is a software to list directories/files and produce a TSV table for data management.
-
-  ![Output Table](src/images/table.png)
+  ![Output Table](src/images/gui1.png)
 work in progress...
+  ![Output Table](src/images/table.png)
+
 
 Caution : set the directory level to a reasonable value before starting DATA Lister on a large file system to avoid producing a huge result table.
 
@@ -75,7 +76,7 @@ Example : to exclude names starting with a dot use "^\\\\..+"
 ```
 - Edit config/columns.tsv to add custom columns and their optional default values
 ```tsv
-ColumnName	DefaultValues
+ColumnName	DefaultValueswork in progress...
 SampleType	Cells
 Project_ID	Project_1
 RelatedProject	Project_2
@@ -86,7 +87,7 @@ Delete_Date	2028-01-01
 ```bash
 Usage :
   -c	Start DataLister directories analysis in command line.
-
+  -g	Start DataLister directories analysis in graphic mode.
   -m	Start DataLister merging tool.
   -i string
     	New result file path. Only new files/dir are added to the old file
@@ -97,6 +98,9 @@ Usage :
 
       Start the analysis of the directories in command line (-c):
       ./Linux_DataLister.bin -c
+
+      Start the analysis of the directories in graphic mode (-g):
+      ./Linux_DataLister.bin -g
 
       To add new data from newfile to oldfile :
       ./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
