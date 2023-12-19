@@ -32,7 +32,7 @@ func errorBinding(err error, window fyne.Window) {
 // GetUserSettings get user settings from the gui
 func (reg *Regist) GetUserSettings(inputDirURL, outFileURL binding.String,
 	listFiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
-	level *widget.Entry) types.Conf {
+	level *widget.Entry, includeFormated, excludeFormated []string) types.Conf {
 	userSetting := types.Conf{
 		InputDir:     reg.dbToStr(inputDirURL),
 		OutputFile:   reg.dbToStr(outFileURL),
@@ -41,7 +41,9 @@ func (reg *Regist) GetUserSettings(inputDirURL, outFileURL binding.String,
 		CalcSize:     dirSize.Checked,
 		Level:        StrToInt(level.Text),
 		IncludeRegex: includeRegex.Checked,
+		Include:      includeFormated,
 		ExcludeRegex: excludeRegex.Checked,
+		Exclude:      excludeFormated,
 		DateFilter:   dateFilter.Checked,
 	}
 	return userSetting

@@ -111,7 +111,6 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	exclude := widget.NewMultiLineEntry()
 	exclude.OnChanged = func(s string) {
 		excludeFormated = textValidation(s)
-		log.Println(includeFormated)
 		log.Println(excludeFormated)
 	}
 
@@ -165,7 +164,8 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level)
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
+			includeFormated, excludeFormated)
 		log.Println(userSetting)
 		reg.saveConfig(userSetting)
 		//reg.win.Close()

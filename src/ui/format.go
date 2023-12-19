@@ -21,11 +21,18 @@ import (
 	"time"
 )
 
+// textValidation convert a string containing newlines into a []string
 func textValidation(cmt string) []string {
 	//cmt = strings.ReplaceAll(cmt, "\n", " ")  // remove all newline
 	cmt = strings.ReplaceAll(cmt, "\r", " ") // remove all carriage return
 	return strings.Split(cmt, "\n")
 
+}
+
+// strSliceToString convert a []string to string inserting new lines.
+// Used for include/exclude multiline entry of the GUI
+func strSliceToString(sl []string) string {
+	return strings.Join(sl, "\n")
 }
 
 // cleanFileURL removes "file://" at the beginning of URL
