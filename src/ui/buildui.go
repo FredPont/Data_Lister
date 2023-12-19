@@ -89,7 +89,8 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	levelLab := widget.NewLabel("Level")
 	level := widget.NewEntry()
-	level.SetPlaceHolder("3")
+	level.SetText(IntToString(reg.config.Level))
+	//level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
 
 	//-------------
@@ -134,6 +135,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		olderthan,
 		newerthan,
 	)
+
 	//---------
 	// merge
 
@@ -163,7 +165,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter)
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level)
 		log.Println(userSetting)
 		reg.saveConfig(userSetting)
 		//reg.win.Close()
