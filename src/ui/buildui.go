@@ -25,6 +25,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -54,7 +55,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	reg.win = w
 
 	// user settings
-	var userSetting types.Conf
+	//var userSetting types.Conf
 	//---------
 	// home tab
 	progBar := widget.NewProgressBarInfinite()
@@ -179,15 +180,19 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	// buttons
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
-		progBar.Show()
-		userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
-			olderthan, newerthan,
+		go startDirAnalysis(reg, progBar, inputDirURL, outFileURL,
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
+			level, olderthan, newerthan,
 			includeFormated, excludeFormated)
-		log.Println(userSetting)
-		reg.saveConfig(userSetting)
-		process.Parse()
-		progBar.Hide()
+		// progBar.Show()
+		// userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
+		// 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
+		// 	olderthan, newerthan,
+		// 	includeFormated, excludeFormated)
+		// log.Println(userSetting)
+		// reg.saveConfig(userSetting)
+		// process.Parse()
+		// progBar.Hide()
 
 	})
 
@@ -213,7 +218,7 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	w.Content().Refresh()
 }
 
-func startDirAnalysis(reg *Regist, progBar *widget.ProgressBar, inputDirURL, outFileURL binding.String,
+func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDirURL, outFileURL binding.String,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	includeFormated, excludeFormated []string) {
@@ -227,4 +232,5 @@ func startDirAnalysis(reg *Regist, progBar *widget.ProgressBar, inputDirURL, out
 	reg.saveConfig(userSetting)
 	process.Parse()
 	progBar.Hide()
+	dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
 }

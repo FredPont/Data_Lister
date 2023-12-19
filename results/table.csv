@@ -1,8 +1,8 @@
 Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
-/home/fred/Teletravail/2023/Data_Lister/test/analyses	analyses	2023-12-19	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/sequences_2	sequences_2	2023-12-19	5			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/level1	level1	2023-12-19	1351			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/file0.txt	file0.txt	2023-12-19	4			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/sequences	sequences	2023-12-19	9			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/images1	images1	2023-12-19	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-/home/fred/Teletravail/2023/Data_Lister/test/dir1	dir1	2023-12-19	4			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/analyses	analyses	2023-12-19	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/sequences_2	sequences_2	2023-12-19	5			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level1	level1	2023-12-19	1351			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/file0.txt	file0.txt	2023-12-19	4			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/sequences	sequences	2023-12-19	9			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/images1	images1	2023-12-19	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/dir1	dir1	2023-12-19	4			Cells	Project_1	Project_2	MyExperiments	2028-01-01
