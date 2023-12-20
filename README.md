@@ -64,9 +64,9 @@ No installation required the code is statically compiled.
     "NewerThan": "2022-12-12"
 }
 ```
-Note : backslashes must be escaped in regex. 
+Note : for the command line version, backslashes must be escaped in regex in the settings.json file (this is not necessary in the GUI). 
 
-Example : to exclude names starting with a dot use "^\\\\..+"
+Example : to exclude names starting with a dot use "^\\..+"
 
 - Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 ```json
@@ -112,3 +112,6 @@ Usage :
       To add new data from newfile to oldfile :
       ./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
 ```
+
+## Known issues
+In some computers, the pop up window showing the end of the analysis can freeze. To close the application click on the up right corner.
