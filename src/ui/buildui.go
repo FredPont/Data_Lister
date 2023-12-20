@@ -20,7 +20,6 @@ import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
 	"Data_Lister/src/types"
-	"log"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -184,16 +183,6 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
 			level, olderthan, newerthan,
 			includeFormated, excludeFormated)
-		// progBar.Show()
-		// userSetting = reg.GetUserSettings(inputDirURL, outFileURL,
-		// 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
-		// 	olderthan, newerthan,
-		// 	includeFormated, excludeFormated)
-		// log.Println(userSetting)
-		// reg.saveConfig(userSetting)
-		// process.Parse()
-		// progBar.Hide()
-
 	})
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
@@ -228,7 +217,7 @@ func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDir
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
 		olderthan, newerthan,
 		includeFormated, excludeFormated)
-	log.Println(userSetting)
+	//log.Println(userSetting)
 	reg.saveConfig(userSetting)
 	process.Parse()
 	progBar.Hide()

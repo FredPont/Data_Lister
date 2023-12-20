@@ -33,15 +33,7 @@ func main() {
 	process.Title()
 	t0 := time.Now()
 	cmdLine()
-	//fmt.Println("Starting directory analysis...")
-	// start a new goroutine that runs the spinner function
-	// Create a channel called stop
-	// stop := make(chan struct{})
-	// go process.Spinner(stop) // enable spinner
 
-	// process.Parse()
-
-	// close(stop) // closing the channel stop the goroutine
 	t1 := time.Now()
 	fmt.Println("\ndone !")
 	fmt.Println("Elapsed time : ", t1.Sub(t0))
@@ -56,7 +48,7 @@ func cmdLine() {
 	var newFile string // new result file
 	flag.BoolVar(&mergeFiles, "m", false, "Start DataLister merging tool.")
 	flag.BoolVar(&cmd, "c", false, "Start DataLister directories analysis in command line. Example : DataLister -c")
-	flag.BoolVar(&gui, "g", false, "Start DataLister directories analysis in graphic mode. Example : DataLister -g")
+	flag.BoolVar(&gui, "g", true, "Start DataLister directories analysis in graphic mode. Example : DataLister -g")
 	flag.StringVar(&oldFile, "o", "", "Old result file path. Example, to add new data from newfile to oldfile : DataLister -m -o oldfile.csv -i newfile.csv")
 	flag.StringVar(&newFile, "i", "", "New result file path. Only new files/dir are added to the old file")
 	flag.Parse() // parse the flags

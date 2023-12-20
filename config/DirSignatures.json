@@ -8,7 +8,7 @@
             "scoreThreshold": 0.8
     },
     "BCL2": {
-            "content": ["Config", "Images", "InterOp", "Recipe", "RTAConfiguration.xml", "RTARead", "RunCompletionStatus.xml", "RunParameters.xml", "Data", "InstrumentAnalyticsLogs", "Logs", "RTAComplete.txt", "RTALogs", "RunInfo.xml"],
+            "content": ["InterOp", "Recipe", "RTAConfiguration.xml", "RTARead", "RunCompletionStatus.xml", "RunParameters.xml", "InstrumentAnalyticsLogs", "Logs", "RTAComplete.txt", "RTALogs", "RunInfo.xml"],
             "scoreThreshold": 0.8
     },
     "Microscope_Zeiss": {
@@ -24,7 +24,7 @@
             "scoreThreshold": 0.8
     },
     "Harmony-Archive": {
-            "content": ["Harmony-Archive.oar", "IMAGES", "StructureData.dsc", "XML"],
+            "content": ["Harmony-Archive.oar", "StructureData.dsc", "XML"],
             "scoreThreshold": 0.8
     }
 }
