@@ -53,12 +53,17 @@ func NewRegist() *Regist {
 func (reg *Regist) BuildUI(w fyne.Window) {
 	reg.win = w
 
-	// user settings
-	//var userSetting types.Conf
-	//---------
-	// home tab
+	////////////////////
+	// shared widgets
+	////////////////////
+
+	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	progBar := widget.NewProgressBarInfinite()
 	progBar.Hide()
+
+	//////////////
+	// home tab
+	/////////////
 
 	inputDirURL := binding.NewString()
 	inputDirURL.Set(reg.config.InputDir)
@@ -97,8 +102,10 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	//level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
 
-	//-------------
+	////////////////
 	// filters tab
+	///////////////
+
 	includeRegex := widget.NewCheck("Include : check to use Regex instead of string", func(v bool) {})
 	//includeRegex.Checked = false // set the default value to true
 	includeRegex.Checked = reg.config.IncludeRegex
@@ -151,8 +158,9 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		container.NewGridWithColumns(2, newerthanLab, newerthan),
 	)
 
-	//---------
-	// merge
+	////////////
+	// 	merge
+	////////////
 
 	// Create a string binding
 	oldFileURL := binding.NewString()
@@ -172,12 +180,12 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		//log.Println(oldURL, newURL)
 		progBar.Hide()
 	})
-	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, progBar)
+	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, progBar)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
 	// buttons
-	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
+
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, progBar, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
@@ -190,8 +198,10 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType, dirSize, levelEntry, runButton, closeButton, progBar),
 		pict)
 
-	//--------------------
+	//////////////////////
 	// build windows tabs
+	/////////////////////
+
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
 	mergeTab := container.NewTabItem("Merge", mergeContent)
@@ -207,11 +217,12 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	w.Content().Refresh()
 }
 
+// startDirAnalysis start a goroutine that register user settings, save them in json file
+// and then start computation with cmd line engine
 func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDirURL, outFileURL binding.String,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	includeFormated, excludeFormated []string) {
-
 	progBar.Show()
 	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,

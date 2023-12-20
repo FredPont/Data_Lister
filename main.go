@@ -24,12 +24,16 @@ import (
 	"Data_Lister/src/ui"
 	"flag"
 	"fmt"
+	_ "net/http/pprof"
 	"time"
 
 	"fyne.io/fyne/v2/app"
 )
 
 func main() {
+	// start pprof profiler in http://localhost:6060/debug/pprof/goroutine?debug=1
+	// go func() { log.Println(http.ListenAndServe(":6060", nil)) }()
+
 	process.Title()
 	t0 := time.Now()
 	cmdLine()
@@ -78,6 +82,9 @@ func cmdLine() {
 
 }
 
+// GraphicInterface() start GUI
+// the gui register user configuration to config/settings.json
+// and then start the command line engine
 func GraphicInterface() {
 
 	a := app.NewWithID("DataLister")
