@@ -26,7 +26,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -36,6 +35,7 @@ import (
 type Regist struct {
 	win          fyne.Window
 	img          fyne.CanvasObject
+	progBar      *widget.ProgressBarInfinite
 	cardTitle    string
 	cardSubTitle string
 	config       types.Conf
@@ -43,29 +43,26 @@ type Regist struct {
 
 // NewRegist create a new registration application
 func NewRegist() *Regist {
-
+	progBar := widget.NewProgressBarInfinite()
 	im := picture()
 	pref := conf.ReadConf() // read preferences
 
-	regist := &Regist{img: im, config: pref}
+	regist := &Regist{img: im, progBar: progBar, config: pref}
 	return regist
 }
 
 // BuildUI creates the main window of our application
-func (reg *Regist) BuildUI(w fyne.Window) {
-	reg.win = w
+func (reg *Regist) BuildUI(win fyne.Window) {
+	reg.win = win
 
 	////////////////////
 	// shared widgets
 	////////////////////
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
-	progBar := widget.NewProgressBarInfinite()
-	progBar.Hide()
-
-	//////////////
-	// home tab
-	/////////////
+	//progBar := widget.NewProgressBarInfinite()
+	//progBar.Hide()
+	reg.progBar.Hide()
 
 	inputDirURL := binding.NewString()
 	inputDirURL.Set(reg.config.InputDir)
@@ -178,31 +175,31 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	newFileURL := binding.NewString()
 	newFileButton := getfilePath(reg.win, "Choose new file", newFileURL)
 	mergeButton := widget.NewButton("Merge Files", func() {
-		progBar.Show()
+		reg.progBar.Show()
 		oldURL, _ := oldFileURL.Get()
 		newURL, _ := newFileURL.Get()
 		merge.Merge(cleanFileURL(oldURL), cleanFileURL(newURL))
 		//time.Sleep(3 * time.Second) // pauses the execution for 3 seconds
 		//log.Println(oldURL, newURL)
-		progBar.Hide()
+		reg.progBar.Hide()
 	})
-	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, progBar)
+	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
 	// buttons
 
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, progBar, inputDirURL, outFileURL,
+		go startDirAnalysis(reg, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
 			level, olderthan, newerthan, infoLabel,
 			includeFormated, excludeFormated)
 	})
 
-	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
+	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
 	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
 		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
-			dirSize, levelEntry, runButton, closeButton, progBar, infoLabel),
+			dirSize, levelEntry, runButton, closeButton, reg.progBar, infoLabel),
 		pict)
 
 	//////////////////////
@@ -219,19 +216,19 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 
 	content := tabs
 
-	w.SetContent(content)
+	win.SetContent(content)
 
-	w.Content().Refresh()
+	win.Content().Refresh()
 }
 
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
-func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDirURL, outFileURL binding.String,
+func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	infoLabel *widget.Label,
 	includeFormated, excludeFormated []string) {
-	progBar.Show()
+	reg.progBar.Show()
 
 	log.Println("Saving user settings...")
 	infoLabel.Text = "Saving user settings..."
@@ -250,13 +247,13 @@ func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDir
 
 	process.Parse()
 
-	progBar.Hide()
+	reg.progBar.Hide()
 
 	log.Println("Listing done !")
 	infoLabel.Text = "Listing done !"
 	infoLabel.Refresh()
 	time.Sleep(time.Second)
-	dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
+	//dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
 
 	infoLabel.Text = "Ready"
 	infoLabel.Refresh()
