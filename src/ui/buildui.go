@@ -20,6 +20,8 @@ import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
 	"Data_Lister/src/types"
+	"log"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -101,6 +103,10 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	level.SetText(IntToString(reg.config.Level))
 	//level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
+
+	// status bar
+	// create a label to show some information
+	infoLabel := widget.NewLabel("Ready")
 
 	////////////////
 	// filters tab
@@ -189,13 +195,14 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, progBar, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
-			level, olderthan, newerthan,
+			level, olderthan, newerthan, infoLabel,
 			includeFormated, excludeFormated)
 	})
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)
 	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
-		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType, dirSize, levelEntry, runButton, closeButton, progBar),
+		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
+			dirSize, levelEntry, runButton, closeButton, progBar, infoLabel),
 		pict)
 
 	//////////////////////
@@ -222,15 +229,35 @@ func (reg *Regist) BuildUI(w fyne.Window) {
 func startDirAnalysis(reg *Regist, progBar *widget.ProgressBarInfinite, inputDirURL, outFileURL binding.String,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
+	infoLabel *widget.Label,
 	includeFormated, excludeFormated []string) {
 	progBar.Show()
+
+	log.Println("Saving user settings...")
+	infoLabel.Text = "Saving user settings..."
+	infoLabel.Refresh()
+
 	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
 		olderthan, newerthan,
 		includeFormated, excludeFormated)
 	//log.Println(userSetting)
 	reg.saveConfig(userSetting)
+
+	log.Println("Starting directory listing...")
+	infoLabel.Text = "Starting directory listing..."
+	infoLabel.Refresh()
+
 	process.Parse()
+
 	progBar.Hide()
+
+	log.Println("Listing done !")
+	infoLabel.Text = "Listing done !"
+	infoLabel.Refresh()
+	time.Sleep(time.Second)
 	dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
+
+	infoLabel.Text = "Ready"
+	infoLabel.Refresh()
 }
