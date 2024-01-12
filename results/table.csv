@@ -1,10 +1,5 @@
 Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
-test/analyses	analyses	2023-12-21	0	Cytometry	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/sequences_2	sequences_2	2023-12-21	0	Fasta	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1	level1	2023-12-21	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2	level2	2023-12-21	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2/sofware	sofware	2023-12-21	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2/level3	level3	2023-12-21	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/sequences	sequences	2023-12-21	0	BCL2	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/images1	images1	2023-12-21	0	Microscope_Zeiss	1	Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/dir1	dir1	2023-12-21	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level1	level1	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level1/level2	level2	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level1/level2/sofware	sofware	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+test/level1/level2/level3	level3	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01

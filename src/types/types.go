@@ -28,6 +28,9 @@ type Conf struct {
 	GuessDirType         bool     `json:"GuessDirType"`
 	CalcSize             bool     `json:"CalcSize"`
 	Level                int      `json:"Level"`
+	FilterName           bool     `json:"filterName"`
+	FilterPath           bool     `json:"filterPath"`
+	FilterPathName       bool     `json:"filterPathName"`
 	IncludeRegex         bool     `json:"IncludeRegex"`
 	Include              []string `json:"Include"`
 	ExcludeRegex         bool     `json:"ExcludeRegex"`

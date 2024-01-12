@@ -28,7 +28,15 @@ import (
 
 // FilterName apply filters to the dir/file name
 // if return is false, the name is rejected
-func FilterName(name string, pref types.Conf) bool {
+func FilterName(path, name string, pref types.Conf) bool {
+	//fmt.Println(path, name)
+	// select between name, path or both to filter
+	if pref.FilterPath {
+		name = path
+	} else if pref.FilterPathName {
+		name = path + "/" + name
+	}
+
 	if len(pref.Include) > 0 && pref.Include[0] != "" {
 		//fmt.Println(pref.Include)
 		return IncludeFilter(name, pref)
