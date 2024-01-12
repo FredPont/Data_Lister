@@ -3,7 +3,7 @@ module Data_Lister
 go 1.21.5
 
 require (
-	fyne.io/fyne/v2 v2.4.2
+	fyne.io/fyne/v2 v2.4.3
 	github.com/akrylysov/pogreb v0.10.2
 	github.com/markthree/go-get-folder-size v0.5.2
 )

@@ -1,5 +1,2 @@
 Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
 test/level1	level1	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2	level2	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2/sofware	sofware	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
-test/level1/level2/level3	level3	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01

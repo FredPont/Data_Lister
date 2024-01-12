@@ -52,3 +52,9 @@ type DirMatch struct {
 	Label   string
 	Score   float64
 }
+
+type RadioGroupFilters struct {
+	FilterName     bool
+	FilterPath     bool
+	FilterPathName bool
+}

@@ -20,6 +20,7 @@ import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
 	"Data_Lister/src/types"
+	"fmt"
 	"log"
 	"time"
 
@@ -109,6 +110,16 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// filters tab
 	///////////////
 
+	var selection types.RadioGroupFilters
+
+	// create a radio button group with four options
+	radioGroup := widget.NewRadioGroup([]string{"Filter Names", "Path", "Path and Names"}, func(s string) {
+		// do something when the option changes
+		fmt.Println("You selected", s)
+
+	})
+	selection = setRadioGroupFilters(reg, radioGroup)
+
 	includeRegex := widget.NewCheck("Include : check to use Regex instead of string", func(v bool) {})
 	//includeRegex.Checked = false // set the default value to true
 	includeRegex.Checked = reg.config.IncludeRegex
@@ -152,6 +163,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	newerthanLab := widget.NewLabel("Newer Than")
 
 	filtersContent := container.NewVBox(
+		radioGroup,
 		includeRegex,
 		include,
 		excludeRegex,
@@ -193,7 +205,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		go startDirAnalysis(reg, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
 			level, olderthan, newerthan, infoLabel,
-			includeFormated, excludeFormated)
+			includeFormated, excludeFormated, selection)
 	})
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
@@ -227,7 +239,8 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	infoLabel *widget.Label,
-	includeFormated, excludeFormated []string) {
+	includeFormated, excludeFormated []string,
+	selection types.RadioGroupFilters) {
 	reg.progBar.Show()
 
 	log.Println("Saving user settings...")
@@ -237,7 +250,8 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
 		olderthan, newerthan,
-		includeFormated, excludeFormated)
+		includeFormated, excludeFormated,
+		selection)
 	//log.Println(userSetting)
 	reg.saveConfig(userSetting)
 
@@ -257,4 +271,36 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 
 	infoLabel.Text = "Ready"
 	infoLabel.Refresh()
+}
+
+// setRadioGroupFilters read and save the radiogroup configuration for filters
+func setRadioGroupFilters(reg *Regist, radioGroup *widget.RadioGroup) types.RadioGroupFilters {
+	var selection types.RadioGroupFilters
+	savedOption := "Filter Names"
+
+	if reg.config.FilterPath {
+		savedOption = "Path"
+	} else if reg.config.FilterPathName {
+		savedOption = "Path and Names"
+	}
+
+	// default value from the json file
+	radioGroup.SetSelected(savedOption)
+
+	switch savedOption {
+	case "Filter Names":
+		selection.FilterName = true
+		selection.FilterPath = false
+		selection.FilterPathName = false
+	case "Path":
+		selection.FilterName = false
+		selection.FilterPath = true
+		selection.FilterPathName = false
+	case "Path and Names":
+		selection.FilterName = false
+		selection.FilterPath = false
+		selection.FilterPathName = true
+	}
+	log.Println(selection)
+	return selection
 }
