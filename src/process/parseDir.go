@@ -78,9 +78,9 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 	}
 
 	for _, name := range names {
-		if !FilterName(path, name, pref) {
-			continue
-		}
+		// if !FilterName(path, name, pref) {
+		// 	continue
+		// }
 		filePath := fmt.Sprintf("%v/%v", path, name)
 		file, err := os.Open(filePath)
 		if err != nil {
@@ -97,11 +97,20 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		}
 		// store file info
 		if pref.ListFiles {
+			if !FilterName(path, name, pref) {
+				// do not save the file if it does not contain the include string pattern
+				continue
+			}
 			saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
 		}
 		// store dir info
 		if fileInfo.IsDir() {
-			saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+			if FilterName(path, name, pref) {
+				// do not block subdir analysis because subdir can contain the filter string
+				saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+				//continue
+			}
+
 			// analyse subdir if current level < user level limit
 			if Level(filePath, rootLevel) < pref.Level {
 				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)

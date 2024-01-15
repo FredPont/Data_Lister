@@ -36,7 +36,6 @@ func FilterName(path, name string, pref types.Conf) bool {
 	} else if pref.FilterPathName {
 		name = path + "/" + name
 	}
-
 	if len(pref.Include) > 0 && pref.Include[0] != "" {
 		//fmt.Println(pref.Include)
 		return IncludeFilter(name, pref)
