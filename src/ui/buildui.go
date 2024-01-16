@@ -60,8 +60,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	////////////////////
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
-	//progBar := widget.NewProgressBarInfinite()
-	//progBar.Hide()
+	// progress bar
+	//reg.progBar.Show() // to avoid resizing of the window by the progress bar
 	reg.progBar.Hide()
 
 	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
@@ -118,10 +118,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	excludeRegex.Checked = reg.config.ExcludeRegex
 
 	exclude, excludeFormated := excludeArea(reg)
-	//var excludeFormated []string
-	//exclude := widget.NewMultiLineEntry()
-	//exclude.SetText(strSliceToString(reg.config.Exclude))
-	//excludeFormated = reg.config.Exclude
 	exclude.OnChanged = func(s string) {
 		excludeFormated = textValidation(s)
 		//log.Println(excludeFormated)
@@ -172,8 +168,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		oldURL, _ := oldFileURL.Get()
 		newURL, _ := newFileURL.Get()
 		merge.Merge(cleanFileURL(oldURL), cleanFileURL(newURL))
-		//time.Sleep(3 * time.Second) // pauses the execution for 3 seconds
-		//log.Println(oldURL, newURL)
 		reg.progBar.Hide()
 	})
 	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar)
