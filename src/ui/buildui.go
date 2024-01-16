@@ -157,9 +157,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// Create a string binding
 	oldFileURL := binding.NewString()
 	oldFileButton := getfilePath(reg.win, "Choose file to update", oldFileURL)
-	//oldFileButton
 
-	//oldFileURL.Set(oldfile)
 	// Create a string binding
 	newFileURL := binding.NewString()
 	newFileButton := getfilePath(reg.win, "Choose new file", newFileURL)
@@ -174,8 +172,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
-	// buttons
-
+	// run button
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
@@ -198,7 +195,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	mergeTab := container.NewTabItem("Merge", mergeContent)
 	helpTab := container.NewTabItem("Help", helpContent)
 
-	// build tab containerprocess.Parse()
+	// build tab container
 	tabs := container.NewAppTabs(homeTab, filtersTab, mergeTab, helpTab)
 
 	content := tabs
@@ -264,10 +261,7 @@ func setRadioGroupFilters(reg *Regist, radioGroup *widget.RadioGroup) types.Radi
 
 	switch savedOption {
 	case "Filter Names":
-		selection.FilterName = true //var excludeFormated []string
-		//exclude := widget.NewMultiLineEntry()
-		//exclude.SetText(strSliceToString(reg.config.Exclude))
-		//excludeFormated = reg.config.Exclude
+		selection.FilterName = true
 		selection.FilterPath = false
 		selection.FilterPathName = false
 	case "Path":
