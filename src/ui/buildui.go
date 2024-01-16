@@ -64,31 +64,16 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//progBar.Hide()
 	reg.progBar.Hide()
 
-	inputDirURL := binding.NewString()
-	inputDirURL.Set(reg.config.InputDir)
-	inputDirStr, _ := inputDirURL.Get()
-	//inputDirLabel := widget.NewLabel(inputDirStr)
-	inputDirLabel := widget.NewLabelWithStyle(insertNewlines(inputDirStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
-	inputDirButton := getdirPath(reg.win, "Choose the directory to scan", inputDirURL, inputDirLabel)
-
-	//oldFileURL.Set(oldfile)
-	// Create a string binding
-	outFileURL := binding.NewString()
-	outFileURL.Set(reg.config.OutputFile)
-	outFileStr, _ := outFileURL.Get()
-	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
-	outFileButton := getfileSave(reg.win, "Output file", outFileURL, outFileLabel) // label a dissocier
-	//outFileButton := getfilePath(reg.win, "Output file", outFileURL, outFileLabel)
+	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
+	outFileButton, outFileLabel, outFileURL := outPutButton(reg)
 
 	// image logo
 	pict := widget.NewCard(reg.cardTitle, reg.cardSubTitle, reg.img)
 
 	listfiles := widget.NewCheck("List Files", func(v bool) {})
-	//listfiles.Checked = false // set the default value to false
 	listfiles.Checked = reg.config.ListFiles
 
 	guessType := widget.NewCheck("Guess Dir Type", func(v bool) {})
-	//guessType.Checked = true // set the default value to true
 	guessType.Checked = reg.config.GuessDirType
 
 	dirSize := widget.NewCheck("Compute dir Size", func(v bool) {})
@@ -98,7 +83,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	levelLab := widget.NewLabel("Level")
 	level := widget.NewEntry()
 	level.SetText(IntToString(reg.config.Level))
-	//level.SetPlaceHolder("3")
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
 
 	// status bar
@@ -111,7 +95,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	var selection types.RadioGroupFilters
 
-	// create a radio button group with four options
+	// create a radio button group for Names filtering
 	radioGroup := widget.NewRadioGroup([]string{"Filter Names", "Path", "Path and Names"}, func(s string) {
 		// do something when the option changes
 		//fmt.Println("You selected", s)
@@ -124,13 +108,10 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//includeRegex.Checked = false // set the default value to true
 	includeRegex.Checked = reg.config.IncludeRegex
 
-	var includeFormated []string
 	include := widget.NewMultiLineEntry()
-	include.SetText(strSliceToString(reg.config.Include))
-	includeFormated = reg.config.Include
+	include, includeFormated := includeArea(reg)
 	include.OnChanged = func(s string) {
 		includeFormated = textValidation(s)
-		//log.Println(includeFormated)
 	}
 
 	excludeRegex := widget.NewCheck("Exclude : check to use Regex instead of string", func(v bool) {})
@@ -324,4 +305,40 @@ func updateRadioGroup(userOption string) types.RadioGroupFilters {
 	}
 	//log.Println(selection)
 	return selection
+}
+
+// inputButon return the "Choose the directory to scan"
+func inputButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
+	inputDirURL := binding.NewString()
+	inputDirURL.Set(reg.config.InputDir)
+	inputDirStr, _ := inputDirURL.Get()
+	//inputDirLabel := widget.NewLabel(inputDirStr)
+	inputDirLabel := widget.NewLabelWithStyle(insertNewlines(inputDirStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
+	inputDirButton := getdirPath(reg.win, "Choose the directory to scan", inputDirURL, inputDirLabel)
+
+	return inputDirButton, inputDirLabel, inputDirURL
+}
+
+// outPutButons return the "Output file" buttons
+func outPutButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
+	// Create a string binding
+	outFileURL := binding.NewString()
+	outFileURL.Set(reg.config.OutputFile)
+	outFileStr, _ := outFileURL.Get()
+	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
+	outFileButton := getfileSave(reg.win, "Output file", outFileURL, outFileLabel) //
+
+	return outFileButton, outFileLabel, outFileURL
+}
+
+func includeArea(reg *Regist) (*widget.Entry, []string) {
+	var includeFormated []string
+	include := widget.NewMultiLineEntry()
+	include.SetText(strSliceToString(reg.config.Include))
+	includeFormated = reg.config.Include
+	include.OnChanged = func(s string) {
+		includeFormated = textValidation(s)
+	}
+
+	return include, includeFormated
 }

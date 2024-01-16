@@ -69,7 +69,8 @@ Note : for the command line version, backslashes must be escaped in regex in the
 Example : to exclude names starting with a dot use "^\\..+"
 
 - The filter priority is Date > Include > Exclude
-
+- If more than one string/regex is given they are cumulated (reg1 OR reg2)
+- If Include and Exclude are used simultaneously, they are cumulated (Include OR Exclude)
 - Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 ```json
 {
