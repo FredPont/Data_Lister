@@ -68,6 +68,8 @@ Note : for the command line version, backslashes must be escaped in regex in the
 
 Example : to exclude names starting with a dot use "^\\..+"
 
+- The filter priority is Date > Include > Exclude
+
 - Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 ```json
 {
@@ -113,5 +115,6 @@ Usage :
       ./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
 ```
 
-## Known issues
+<!-- ## Known issues
 In some computers, the pop up window showing the end of the analysis can freeze. To close the application click on the up right corner.
+-->
