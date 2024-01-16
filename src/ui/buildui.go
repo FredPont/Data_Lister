@@ -20,7 +20,6 @@ import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
 	"Data_Lister/src/types"
-	"fmt"
 	"log"
 	"time"
 
@@ -115,7 +114,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// create a radio button group with four options
 	radioGroup := widget.NewRadioGroup([]string{"Filter Names", "Path", "Path and Names"}, func(s string) {
 		// do something when the option changes
-		fmt.Println("You selected", s)
+		//fmt.Println("You selected", s)
+		selection = updateRadioGroup(s)
 
 	})
 	selection = setRadioGroupFilters(reg, radioGroup)
@@ -273,7 +273,7 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	infoLabel.Refresh()
 }
 
-// setRadioGroupFilters read and save the radiogroup configuration for filters
+// setRadioGroupFilters read and set the radiogroup configuration for filters
 func setRadioGroupFilters(reg *Regist, radioGroup *widget.RadioGroup) types.RadioGroupFilters {
 	var selection types.RadioGroupFilters
 	savedOption := "Filter Names"
@@ -301,6 +301,27 @@ func setRadioGroupFilters(reg *Regist, radioGroup *widget.RadioGroup) types.Radi
 		selection.FilterPath = false
 		selection.FilterPathName = true
 	}
-	log.Println(selection)
+	//log.Println(selection)
+	return selection
+}
+
+// updateRadioGroup set the user change in radiogroup selection
+func updateRadioGroup(userOption string) types.RadioGroupFilters {
+	var selection types.RadioGroupFilters
+	switch userOption {
+	case "Filter Names":
+		selection.FilterName = true
+		selection.FilterPath = false
+		selection.FilterPathName = false
+	case "Path":
+		selection.FilterName = false
+		selection.FilterPath = true
+		selection.FilterPathName = false
+	case "Path and Names":
+		selection.FilterName = false
+		selection.FilterPath = false
+		selection.FilterPathName = true
+	}
+	//log.Println(selection)
 	return selection
 }
