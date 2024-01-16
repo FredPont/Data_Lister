@@ -36,12 +36,19 @@ func FilterName(path, name string, pref types.Conf) bool {
 	} else if pref.FilterPathName {
 		name = path + "/" + name
 	}
-	if len(pref.Include) > 0 && pref.Include[0] != "" {
-		//fmt.Println(pref.Include)
-		return IncludeFilter(name, pref)
-	} else if len(pref.Exclude) > 0 && pref.Exclude[0] != "" {
-		//fmt.Println(name, ExcludeFilter(name, pref))
-		return ExcludeFilter(name, pref)
+
+	if pref.IncludeAndExclude {
+		if len(pref.Include) > 0 && pref.Include[0] != "" && len(pref.Exclude) > 0 && pref.Exclude[0] != "" {
+			return IncludeFilter(name, pref) && ExcludeFilter(name, pref)
+		}
+	} else {
+		if len(pref.Include) > 0 && pref.Include[0] != "" {
+			//fmt.Println(pref.Include)
+			return IncludeFilter(name, pref)
+		} else if len(pref.Exclude) > 0 && pref.Exclude[0] != "" {
+			//fmt.Println(name, ExcludeFilter(name, pref))
+			return ExcludeFilter(name, pref)
+		}
 	}
 	return true // if no filter, any name is valid
 }

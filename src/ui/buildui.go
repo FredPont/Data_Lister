@@ -123,6 +123,9 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		//log.Println(excludeFormated)
 	}
 
+	IncludeAndExclude := widget.NewCheck("Include And Exclude", func(v bool) {})
+	IncludeAndExclude.Checked = reg.config.IncludeAndExclude
+
 	dateFilter := widget.NewCheck("Date Filter", func(v bool) {})
 	//dateFilter.Checked = false // set the default value to true
 	dateFilter.Checked = reg.config.DateFilter
@@ -141,6 +144,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	filtersContent := container.NewVBox(
 		radioGroup,
+		IncludeAndExclude,
 		includeRegex,
 		include,
 		excludeRegex,
@@ -175,7 +179,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// run button
 	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, outFileURL,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter,
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
 			includeFormated, excludeFormated, selection)
 	})
@@ -208,7 +212,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
 func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
-	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter *widget.Check,
+	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	infoLabel *widget.Label,
 	includeFormated, excludeFormated []string,
@@ -220,8 +224,8 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	infoLabel.Refresh()
 
 	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
-		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, level,
-		olderthan, newerthan,
+		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
+		level, olderthan, newerthan,
 		includeFormated, excludeFormated,
 		selection)
 	//log.Println(userSetting)

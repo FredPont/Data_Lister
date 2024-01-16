@@ -1,2 +1,14 @@
 Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
-test/level1	level1	2024-01-12	0			Cells	Project_1	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/analyses	analyses	2024-01-15	0	Cytometry	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/sequences_2	sequences_2	2024-01-15	0	Fasta	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/FolderStructure	FolderStructure	2024-01-16	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/FolderStructure/02_Projects	02_Projects	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/FolderStructure/02_Projects/2018	2018	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/FolderStructure/01_MetaData	01_MetaData	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/level1	level1	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/level1/level2	level2	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/level1/level2/sofware	sofware	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/level1/level2/level3	level3	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/sequences	sequences	2024-01-15	0	BCL2	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/images1	images1	2024-01-15	0	Microscope_Zeiss	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+/home/fred/Teletravail/2024/02_logiciels/Data_Lister/test/dir1	dir1	2024-01-15	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01

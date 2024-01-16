@@ -33,6 +33,7 @@ type Conf struct {
 	FilterPathName       bool     `json:"filterPathName"`
 	IncludeRegex         bool     `json:"IncludeRegex"`
 	Include              []string `json:"Include"`
+	IncludeAndExclude    bool     `json:"IncludeAndExclude"`
 	ExcludeRegex         bool     `json:"ExcludeRegex"`
 	Exclude              []string `json:"Exclude"`
 	OlderThan            string   `json:"OlderThan"`
