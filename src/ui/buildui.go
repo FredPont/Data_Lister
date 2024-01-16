@@ -108,7 +108,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//includeRegex.Checked = false // set the default value to true
 	includeRegex.Checked = reg.config.IncludeRegex
 
-	include := widget.NewMultiLineEntry()
 	include, includeFormated := includeArea(reg)
 	include.OnChanged = func(s string) {
 		includeFormated = textValidation(s)
@@ -118,10 +117,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//excludeRegex.Checked = false // set the default value to true
 	excludeRegex.Checked = reg.config.ExcludeRegex
 
-	var excludeFormated []string
-	exclude := widget.NewMultiLineEntry()
-	exclude.SetText(strSliceToString(reg.config.Exclude))
-	excludeFormated = reg.config.Exclude
+	exclude, excludeFormated := excludeArea(reg)
+	//var excludeFormated []string
+	//exclude := widget.NewMultiLineEntry()
+	//exclude.SetText(strSliceToString(reg.config.Exclude))
+	//excludeFormated = reg.config.Exclude
 	exclude.OnChanged = func(s string) {
 		excludeFormated = textValidation(s)
 		//log.Println(excludeFormated)
@@ -270,7 +270,10 @@ func setRadioGroupFilters(reg *Regist, radioGroup *widget.RadioGroup) types.Radi
 
 	switch savedOption {
 	case "Filter Names":
-		selection.FilterName = true
+		selection.FilterName = true //var excludeFormated []string
+		//exclude := widget.NewMultiLineEntry()
+		//exclude.SetText(strSliceToString(reg.config.Exclude))
+		//excludeFormated = reg.config.Exclude
 		selection.FilterPath = false
 		selection.FilterPathName = false
 	case "Path":
@@ -336,9 +339,13 @@ func includeArea(reg *Regist) (*widget.Entry, []string) {
 	include := widget.NewMultiLineEntry()
 	include.SetText(strSliceToString(reg.config.Include))
 	includeFormated = reg.config.Include
-	include.OnChanged = func(s string) {
-		includeFormated = textValidation(s)
-	}
-
 	return include, includeFormated
+}
+
+func excludeArea(reg *Regist) (*widget.Entry, []string) {
+	var excludeFormated []string
+	exclude := widget.NewMultiLineEntry()
+	exclude.SetText(strSliceToString(reg.config.Exclude))
+	excludeFormated = reg.config.Exclude
+	return exclude, excludeFormated
 }
