@@ -64,6 +64,11 @@ func helpText() string {
 
 	Example : to exclude names starting with a dot use "^\\..+"
 
+	- The filter priority is Date > Include > Exclude
+	- If more than one string/regex is given they are cumulated (reg1 OR reg2)
+	- If Include and Exclude are used simultaneously, they are cumulated (Include OR Exclude)
+	  if "Include AND Exclude" is not checked
+
 	- Edit config/DirSignatures.json to set the directory patterns (strings, no regex)
 
 	{

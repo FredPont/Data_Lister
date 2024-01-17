@@ -123,7 +123,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		//log.Println(excludeFormated)
 	}
 
-	IncludeAndExclude := widget.NewCheck("Include And Exclude", func(v bool) {})
+	IncludeAndExclude := widget.NewCheck("Include AND Exclude (default: OR)", func(v bool) {})
 	IncludeAndExclude.Checked = reg.config.IncludeAndExclude
 
 	dateFilter := widget.NewCheck("Date Filter", func(v bool) {})
