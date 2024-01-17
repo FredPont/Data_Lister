@@ -91,12 +91,16 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if err != nil {
 			return err
 		}
-		// filter the name by date
-		if !FilterDate(fileInfo.ModTime(), pref) {
-			continue
-		}
+
 		// store file info
 		if pref.ListFiles {
+			// filter the name by date
+			if !fileInfo.IsDir() {
+				if !FilterDate(fileInfo.ModTime(), pref) {
+					continue
+				}
+			}
+
 			if !FilterName(path, name, pref) {
 				// do not save the file if it does not contain the include string pattern
 				continue
@@ -105,10 +109,12 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		}
 		// store dir info
 		if fileInfo.IsDir() {
-			if FilterName(path, name, pref) {
-				// do not block subdir analysis because subdir can contain the filter string
-				saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
-				//continue
+			if FilterDate(fileInfo.ModTime(), pref) {
+				if FilterName(path, name, pref) {
+					// do not block subdir analysis because subdir can contain the filter string
+					saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+					//continue
+				}
 			}
 
 			// analyse subdir if current level < user level limit
