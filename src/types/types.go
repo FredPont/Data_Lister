@@ -39,6 +39,8 @@ type Conf struct {
 	OlderThan            string   `json:"OlderThan"`
 	NewerThan            string   `json:"NewerThan"`
 	DateFilter           bool     `json:"DateFilter"`
+	UseSQLite            bool     `json:"UseSQLite"`
+	SQLiteTable          string   `json:"SQLiteDB"`
 	CompiledIncludeRegex []*regexp.Regexp
 	CompiledExcludeRegex []*regexp.Regexp
 }

@@ -6,6 +6,7 @@ require (
 	fyne.io/fyne/v2 v2.4.3
 	github.com/akrylysov/pogreb v0.10.2
 	github.com/markthree/go-get-folder-size v0.5.2
+	github.com/mattn/go-sqlite3 v1.14.19
 )
 
 require (

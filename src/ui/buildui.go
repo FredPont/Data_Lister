@@ -59,13 +59,22 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// shared widgets
 	////////////////////
 
+	// label of the run button : "Make csv table" or "Update SQLite database"
+	// label of outfile button : "Save CSV as"	or "SQLite database path"
+	runButtonLBL := "Make csv table"
+	outputButtonLBL := "Save CSV as"
+	if reg.config.UseSQLite {
+		runButtonLBL = "Update SQLite database"
+		outputButtonLBL = "SQLite database path"
+	}
+
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	// progress bar
 	//reg.progBar.Show() // to avoid resizing of the window by the progress bar
 	reg.progBar.Hide()
 
 	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
-	outFileButton, outFileLabel, outFileURL := outPutButton(reg)
+	outFileButton, outFileLabel, outFileURL := outPutButton(reg, outputButtonLBL)
 
 	// image logo
 	pict := widget.NewCard(reg.cardTitle, reg.cardSubTitle, reg.img)
@@ -177,7 +186,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
 	// run button
-	runButton := widget.NewButtonWithIcon("Run", theme.ComputerIcon(), func() {
+	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, outFileURL,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
@@ -190,6 +199,33 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			dirSize, levelEntry, runButton, closeButton, reg.progBar, infoLabel),
 		pict)
 
+	////////////
+	// 	SQLite
+	////////////
+	UseSQLite := widget.NewCheck("Update SQLite database", func(v bool) {})
+	UseSQLite.Checked = reg.config.UseSQLite
+	// the label of the run button is changed depending if SQLite is used or not
+	UseSQLite.OnChanged = func(v bool) {
+		if v {
+			runButton.Text = "Update SQLite database"
+			runButton.Refresh()
+			outFileButton.Text = "SQLite database path"
+			outFileButton.Refresh()
+		} else {
+			runButton.Text = "Make csv table"
+			runButton.Refresh()
+			outFileButton.Text = "Save CSV as"
+			outFileButton.Refresh()
+		}
+	}
+
+	sqliteTabLab := widget.NewLabel("SQLite Table name")
+	sqliteTable := widget.NewEntry()
+	sqliteTable.SetText(reg.config.SQLiteTable)
+	sqliteEntry := container.New(layout.NewVBoxLayout(), sqliteTabLab, sqliteTable)
+
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry)
+
 	//////////////////////
 	// build windows tabs
 	/////////////////////
@@ -197,10 +233,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
 	mergeTab := container.NewTabItem("Merge", mergeContent)
+	sqliteTab := container.NewTabItem("Advanced", sqliteContent)
 	helpTab := container.NewTabItem("Help", helpContent)
 
 	// build tab container
-	tabs := container.NewAppTabs(homeTab, filtersTab, mergeTab, helpTab)
+	tabs := container.NewAppTabs(homeTab, filtersTab, mergeTab, sqliteTab, helpTab)
 
 	content := tabs
 
@@ -315,13 +352,13 @@ func inputButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
 }
 
 // outPutButons return the "Output file" buttons
-func outPutButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
+func outPutButton(reg *Regist, outputButtonLBL string) (*widget.Button, *widget.Label, binding.String) {
 	// Create a string binding
 	outFileURL := binding.NewString()
 	outFileURL.Set(reg.config.OutputFile)
 	outFileStr, _ := outFileURL.Get()
 	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
-	outFileButton := getfileSave(reg.win, "Output file", outFileURL, outFileLabel) //
+	outFileButton := getfileSave(reg.win, outputButtonLBL, outFileURL, outFileLabel) //
 
 	return outFileButton, outFileLabel, outFileURL
 }
