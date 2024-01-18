@@ -138,3 +138,23 @@ func TestBetween(t *testing.T) {
 		})
 	}
 }
+
+func TestCreateSQLiteDB(t *testing.T) {
+	tests := []struct {
+		tableName, DBpath string
+		optionalColumns   []string
+	}{
+		{"MyTable", "../../test/SQLiteTest.db", []string{"col1", "col2"}},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := CreateSQLiteDB(tc.tableName, tc.DBpath, tc.optionalColumns)
+			if !got {
+				t.Fatalf("got %v", got)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}
