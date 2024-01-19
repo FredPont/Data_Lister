@@ -20,6 +20,7 @@ import (
 	"Data_Lister/src/merge"
 	"Data_Lister/src/process"
 	"Data_Lister/src/types"
+	"fmt"
 	"log"
 	"time"
 
@@ -224,7 +225,12 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	sqliteTable.SetText(reg.config.SQLiteTable)
 	sqliteEntry := container.New(layout.NewVBoxLayout(), sqliteTabLab, sqliteTable)
 
-	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry)
+	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
+		process.InitSQL()
+		fmt.Println("Database created")
+	})
+
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton)
 
 	//////////////////////
 	// build windows tabs

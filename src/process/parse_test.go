@@ -158,3 +158,24 @@ func TestCreateSQLiteDB(t *testing.T) {
 		})
 	}
 }
+
+func TestInsertRecord(t *testing.T) {
+	tests := []struct {
+		tableName, DBpath string
+		record            []any
+	}{
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "col1", "col2"}},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "col1", "col2"}}, // wrong date use text instead
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := InsertRecord(tc.tableName, tc.DBpath, tc.record)
+			if !got {
+				t.Fatalf("got %v", got)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}
