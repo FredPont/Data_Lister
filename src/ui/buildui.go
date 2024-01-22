@@ -226,7 +226,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	sqliteEntry := container.New(layout.NewVBoxLayout(), sqliteTabLab, sqliteTable)
 
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
-		process.InitSQL()
+		process.InitSQL(outFileURL)
 		fmt.Println("Database created")
 	})
 

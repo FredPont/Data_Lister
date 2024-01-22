@@ -6,15 +6,18 @@ import (
 	"fmt"
 	"log"
 
+	"fyne.io/fyne/v2/data/binding"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 // InitSQL read the DBpath from json and the user optional columns from CSV before creating a SQL database
-func InitSQL() {
+func InitSQL(outFileURL binding.String) {
 	pref := conf.ReadConf() // read preferences
+	url, _ := outFileURL.Get()
+	pref.OutputFile = url
 	DBpath := pref.OutputFile
 	userCols, _ := conf.ReadOptionalColumns()
-	log.Println(DBpath, userCols)
+
 	CreateSQLiteDB("data", DBpath, userCols)
 }
 
@@ -25,7 +28,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 	db, err := sql.Open("sqlite3", DBpath)
 	if err != nil {
 		//log.Fatal(err)
-		log.Println(DBpath, err)
+		log.Println("erreur ici : ", DBpath, err)
 	}
 	defer db.Close()
 
