@@ -11,14 +11,14 @@ import (
 )
 
 // InitSQL read the DBpath from json and the user optional columns from CSV before creating a SQL database
-func InitSQL(outFileURL binding.String) {
+func InitSQL(outFileURL binding.String, tableName string) {
 	pref := conf.ReadConf() // read preferences
 	url, _ := outFileURL.Get()
 	pref.OutputFile = url
 	DBpath := pref.OutputFile
 	userCols, _ := conf.ReadOptionalColumns()
 
-	CreateSQLiteDB("data", DBpath, userCols)
+	CreateSQLiteDB(tableName, DBpath, userCols)
 }
 
 // CreateSQLiteDB build an empty SQLite DB with primary key based on the user optional column
