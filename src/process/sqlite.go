@@ -2,11 +2,14 @@ package process
 
 import (
 	conf "Data_Lister/src/configuration"
+	"Data_Lister/src/pogrebdb"
+	"Data_Lister/src/types"
 	"database/sql"
 	"fmt"
 	"log"
 
 	"fyne.io/fyne/v2/data/binding"
+	"github.com/akrylysov/pogreb"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -62,6 +65,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 	return true
 }
 
+// InsertRecord insert one row in the DataBase
 func InsertRecord(tableName, DBpath string, records []any) bool {
 
 	// Open the database connection
@@ -88,4 +92,43 @@ INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) V
 	}
 	//fmt.Println("Inserted a row into table")
 	return true
+}
+
+func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
+
+	_, defaultValues := conf.ReadOptionalColumns()
+	//  =======================================================
+	// read the dir/files infos stored in the pogreb databases
+	//  =======================================================
+	it := fDB.Items()
+	for {
+		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
+		dirSize := pogrebdb.StringToByte("")
+		key, val, err := it.Next()
+		if err == pogreb.ErrIterationDone {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if pref.GuessDirType {
+			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
+			if dirInfo == nil || !pref.GuessDirType {
+				dirInfo = pogrebdb.StringToByte("\t")
+			}
+		}
+
+		if pref.CalcSize {
+			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
+		}
+
+		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
+		//fmt.Println(line)
+
+		//writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues))
+
+		InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize, defaultValues})
+
+	}
 }
