@@ -32,6 +32,7 @@ func errorBinding(err error, window fyne.Window) {
 // GetUserSettings get user settings from the gui
 func (reg *Regist) GetUserSettings(
 	inputDirURL, outFileURL binding.String,
+	UseSQLiteBind binding.Bool,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	includeFormated, excludeFormated []string,
@@ -52,6 +53,7 @@ func (reg *Regist) GetUserSettings(
 		ExcludeRegex:      excludeRegex.Checked,
 		Exclude:           excludeFormated,
 		DateFilter:        dateFilter.Checked,
+		UseSQLite:         reg.dbToBool(UseSQLiteBind),
 		OlderThan:         olderthan.Text,
 		NewerThan:         newerthan.Text,
 	}
@@ -66,4 +68,14 @@ func (reg *Regist) dbToStr(dataBind binding.String) string {
 		errorBinding(err, reg.win)
 	}
 	return s
+}
+
+// dbToBool convert dataBind binding.Bool to Bool
+func (reg *Regist) dbToBool(dataBind binding.Bool) bool {
+	b, err := dataBind.Get() // s is a string, err is an error
+	if err != nil {
+		// handle error
+		errorBinding(err, reg.win)
+	}
+	return b
 }

@@ -66,7 +66,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 }
 
 // InsertRecord insert one row in the DataBase
-func InsertRecord(tableName, DBpath string, records []any) bool {
+func InsertRecord(tableName, DBpath string, records []any, nbColsup int) bool {
 
 	// Open the database connection
 	db, err := sql.Open("sqlite3", DBpath)
@@ -90,7 +90,7 @@ INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) V
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Println("Inserted a row into table")
+	fmt.Println("Inserted a row into table")
 	return true
 }
 
@@ -127,8 +127,10 @@ func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref
 		//fmt.Println(line)
 
 		//writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues))
-
-		InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize, defaultValues})
-
+		fmt.Println("PrepareRecord")
+		rec := []any{key, val, dirInfo, dirSize}
+		rec = append(rec, defaultValues)
+		InsertRecord(tableName, DBpath, rec, len(defaultValues))
+		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
 	}
 }

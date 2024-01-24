@@ -56,6 +56,7 @@ func NewRegist() *Regist {
 func (reg *Regist) BuildUI(win fyne.Window) {
 	reg.win = win
 
+	UseSQLiteBind := binding.NewBool()
 	////////////////////
 	// shared widgets
 	////////////////////
@@ -186,9 +187,12 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
+	////////////
 	// run button
+	////////////
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, outFileURL,
+			UseSQLiteBind,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
 			includeFormated, excludeFormated, selection)
@@ -212,11 +216,17 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			runButton.Refresh()
 			outFileButton.Text = "SQLite database path"
 			outFileButton.Refresh()
+			UseSQLiteBind.Set(true)
+			x, _ := UseSQLiteBind.Get()
+			fmt.Println("UseSQLiteBind=", x)
+			//reg.saveConfig(types.Conf{UseSQLite: true})
 		} else {
 			runButton.Text = "Make csv table"
 			runButton.Refresh()
 			outFileButton.Text = "Save CSV as"
 			outFileButton.Refresh()
+			UseSQLiteBind.Set(false)
+			//reg.saveConfig(types.Conf{UseSQLite: false})
 		}
 	}
 
@@ -255,6 +265,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
 func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
+	UseSQLiteBind binding.Bool,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
 	infoLabel *widget.Label,
@@ -267,6 +278,7 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	infoLabel.Refresh()
 
 	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
+		UseSQLiteBind,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 		level, olderthan, newerthan,
 		includeFormated, excludeFormated,
