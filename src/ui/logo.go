@@ -26,5 +26,6 @@ func picture() fyne.CanvasObject {
 
 	img.SetMinSize(fyne.Size{Width: 330, Height: 220})
 	img.FillMode = canvas.ImageFillContain
+	//img.FillMode = canvas.ImageFillOriginal
 	return img
 }
