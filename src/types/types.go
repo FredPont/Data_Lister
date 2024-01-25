@@ -40,7 +40,7 @@ type Conf struct {
 	NewerThan            string   `json:"NewerThan"`
 	DateFilter           bool     `json:"DateFilter"`
 	UseSQLite            bool     `json:"UseSQLite"`
-	SQLiteTable          string   `json:"SQLiteDB"`
+	SQLiteTable          string   `json:"SQLiteTable"`
 	CompiledIncludeRegex []*regexp.Regexp
 	CompiledExcludeRegex []*regexp.Regexp
 }

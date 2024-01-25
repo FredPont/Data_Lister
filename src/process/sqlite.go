@@ -81,7 +81,12 @@ func InsertRecord(tableName, DBpath string, records []any, nbColsup int) bool {
 		log.Fatal(err)
 	}
 	fmt.Println("Connected to the database")
-
+	fmt.Println(records...)
+	userColumns := records[len(records)-nbColsup:] //user columns
+	strUserCols := ""
+	for i := 0; i < nbColsup; i++ {
+		strUserCols = strUserCols + fmt.Sprint(userColumns[i]) + ", "
+	}
 	// Insert some rows
 	sqlStmt := `
 INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) VALUES (?, ?, ?, ?, ?, ?);
