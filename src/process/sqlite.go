@@ -67,7 +67,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 }
 
 // InsertRecord insert one row in the DataBase
-func InsertRecord(tableName, DBpath string, records []any, nbColsup int) bool {
+func InsertRecord(tableName, DBpath string, records []any, SQLcolnames []string) bool {
 
 	// Open the database connection
 	db, err := sql.Open("sqlite3", DBpath)
@@ -81,39 +81,29 @@ func InsertRecord(tableName, DBpath string, records []any, nbColsup int) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Connected to the database")
+	//fmt.Println("Connected to the database")
 
 	// create a string of placeholders for the values
-	placeholders := strings.Repeat("?,", len(records))
-	placeholders = placeholders[:len(placeholders)-1] // remove the last comma
+	placeholders := strings.Repeat("?,", len(records)-1)
+	placeholders = placeholders + "?" // remove the last comma
 
-	//fmt.Println(records...)
-	// userColumns := records[len(records)-nbColsup] //user columns
-	// var strUserCols, strUserVals string
-	// for _, col := range strUserCols {
-	// 	strUserCols = strUserCols + string(col) + ", "
-	// 	strUserVals = strUserVals + ",? "
-	// }
-	// fmt.Println(userColumns, "\n", strUserCols, "\n", strUserVals)
-	// Insert some rows
+	colnames := []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
+	colnames = append(colnames, SQLcolnames...)
 
 	// create a SQL statement to insert the values into the table
-	sqlStmt := fmt.Sprintf("INSERT INTO %s VALUES (%s)", tableName, placeholders)
-	fmt.Println(sqlStmt, tableName)
-
-	//sqlStmt := `INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) VALUES (?, ?, ?, ?, ?, ?);`
+	sqlStmt := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", tableName, strings.Join(colnames, ", "), placeholders)
 
 	_, err = db.Exec(sqlStmt, records...)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Inserted a row into table")
+	//fmt.Println("Inserted a row into table")
 	return true
 }
 
 func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
 
-	_, defaultValues := conf.ReadOptionalColumns()
+	SQLcolnames, defaultValues := conf.ReadOptionalColumns()
 	//  =======================================================
 	// read the dir/files infos stored in the pogreb databases
 	//  =======================================================
@@ -140,22 +130,25 @@ func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref
 			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
 		}
 
-		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
-		//fmt.Println(line)
+		Path := pogrebdb.ByteToString(key)
+		NameDate := strings.Split(pogrebdb.ByteToString(val), "\t")
+		Name, Modified := NameDate[0], NameDate[1]
+		Size := pogrebdb.ByteToInt(dirSize)
+		dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
+		DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
 
-		//writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues))
-		fmt.Println("PrepareRecord")
-		rec := []any{key, val, dirInfo, dirSize}
+		rec := []any{Path, Name, Modified, Size, DirType, TypeScore}
 		// create a new slice of any with the same length as defaultValues
 		strSlice := make([]any, len(defaultValues))
 
 		// loop over strs and convert each string to an interface value
-		for i, s := range strSlice {
-			strSlice[i] = s
+		for i := range strSlice {
+			strSlice[i] = defaultValues[i]
 		}
 
 		rec = append(rec, strSlice...)
-		InsertRecord(tableName, DBpath, rec, len(defaultValues))
+
+		InsertRecord(tableName, DBpath, rec, SQLcolnames)
 		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
 	}
 }
