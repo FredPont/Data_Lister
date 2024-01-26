@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 
 	"fyne.io/fyne/v2/data/binding"
 	"github.com/akrylysov/pogreb"
@@ -81,16 +82,27 @@ func InsertRecord(tableName, DBpath string, records []any, nbColsup int) bool {
 		log.Fatal(err)
 	}
 	fmt.Println("Connected to the database")
-	fmt.Println(records...)
-	userColumns := records[len(records)-nbColsup:] //user columns
-	strUserCols := ""
-	for i := 0; i < nbColsup; i++ {
-		strUserCols = strUserCols + fmt.Sprint(userColumns[i]) + ", "
-	}
+
+	// create a string of placeholders for the values
+	placeholders := strings.Repeat("?,", len(records))
+	placeholders = placeholders[:len(placeholders)-1] // remove the last comma
+
+	//fmt.Println(records...)
+	// userColumns := records[len(records)-nbColsup] //user columns
+	// var strUserCols, strUserVals string
+	// for _, col := range strUserCols {
+	// 	strUserCols = strUserCols + string(col) + ", "
+	// 	strUserVals = strUserVals + ",? "
+	// }
+	// fmt.Println(userColumns, "\n", strUserCols, "\n", strUserVals)
 	// Insert some rows
-	sqlStmt := `
-INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) VALUES (?, ?, ?, ?, ?, ?);
-`
+
+	// create a SQL statement to insert the values into the table
+	sqlStmt := fmt.Sprintf("INSERT INTO %s VALUES (%s)", tableName, placeholders)
+	fmt.Println(sqlStmt, tableName)
+
+	//sqlStmt := `INSERT INTO ` + tableName + ` (Path, Name, Modified, Size, DirType, TypeScore) VALUES (?, ?, ?, ?, ?, ?);`
+
 	_, err = db.Exec(sqlStmt, records...)
 	if err != nil {
 		log.Fatal(err)
@@ -134,7 +146,15 @@ func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref
 		//writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues))
 		fmt.Println("PrepareRecord")
 		rec := []any{key, val, dirInfo, dirSize}
-		rec = append(rec, defaultValues)
+		// create a new slice of any with the same length as defaultValues
+		strSlice := make([]any, len(defaultValues))
+
+		// loop over strs and convert each string to an interface value
+		for i, s := range strSlice {
+			strSlice[i] = s
+		}
+
+		rec = append(rec, strSlice...)
 		InsertRecord(tableName, DBpath, rec, len(defaultValues))
 		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
 	}

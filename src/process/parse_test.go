@@ -167,6 +167,8 @@ func TestInsertRecord(t *testing.T) {
 	}{
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "col1", "col2"}, 2},
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "col1", "col2"}, 2}, // wrong date use text instead
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1", "control", "2028-01-01"}, 2},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, 2},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {

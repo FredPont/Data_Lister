@@ -57,6 +57,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	reg.win = win
 
 	UseSQLiteBind := binding.NewBool()
+	sqlTableName := binding.NewString()
 	////////////////////
 	// shared widgets
 	////////////////////
@@ -191,7 +192,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// run button
 	////////////
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, inputDirURL, outFileURL,
+		go startDirAnalysis(reg, inputDirURL, outFileURL, sqlTableName,
 			UseSQLiteBind,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
@@ -210,6 +211,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	////////////
 	UseSQLite := widget.NewCheck("Update SQLite database", func(v bool) {})
 	UseSQLite.Checked = reg.config.UseSQLite
+	UseSQLiteBind.Set(reg.config.UseSQLite)
 	// the label of the run button is changed depending if SQLite is used or not
 	UseSQLite.OnChanged = func(v bool) {
 		if v {
@@ -234,7 +236,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	sqliteTabLab := widget.NewLabel("SQLite Table name")
 	sqliteTable := widget.NewEntry()
 	sqliteTable.SetText(reg.config.SQLiteTable)
+	sqlTableName.Set(reg.config.SQLiteTable)
 	sqliteEntry := container.New(layout.NewVBoxLayout(), sqliteTabLab, sqliteTable)
+	sqliteTable.OnChanged = func(v string) {
+		sqlTableName.Set(v)
+	}
 
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
 		process.InitSQL(outFileURL, sqliteTable.Text)
@@ -265,7 +271,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
-func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
+func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqlTableName binding.String,
 	UseSQLiteBind binding.Bool,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
@@ -278,7 +284,7 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL binding.String,
 	infoLabel.Text = "Saving user settings..."
 	infoLabel.Refresh()
 
-	userSetting := reg.GetUserSettings(inputDirURL, outFileURL,
+	userSetting := reg.GetUserSettings(inputDirURL, outFileURL, sqlTableName,
 		UseSQLiteBind,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 		level, olderthan, newerthan,
