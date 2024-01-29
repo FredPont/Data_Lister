@@ -75,6 +75,7 @@ func getfileSave(window fyne.Window, buttonlabel string, url binding.String, out
 				// Ne rien faire si aucun fichier n'est sélectionné
 				return
 			}
+
 			// Fermer le fichier
 			file.Close()
 			// Afficher le chemin du fichier dans le label
@@ -121,6 +122,47 @@ func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outD
 	}
 	// Créer un bouton qui déclenche la fonction de choix de fichier
 	button := widget.NewButton(buttonlabel, chooseDir)
+
+	return button
+}
+
+// getDatabasePath stores the SQLIte database path
+func getDatabasePath(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
+	//var path string // file path
+	// Créer un label pour afficher le chemin du fichier
+	//label := widget.NewLabel("")
+
+	// Créer une fonction de choix de fichier
+	chooseFile := func() {
+		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
+			if err != nil {
+				// Afficher une erreur si nécessaire
+				dialog.ShowError(err, window)
+				return
+			}
+			if file == nil {
+				// Ne rien faire si aucun fichier n'est sélectionné
+				return
+			}
+			// exists, err := storage.Exists(file)
+			// if err != nil {
+			// 	// handle error
+			// }
+			// if !exists {
+			// 	// Fermer le fichier
+			// 	file.Close()
+			// }
+			// Afficher le chemin du fichier dans le label
+			//label.SetText(file.URI().String())
+			//path = file.URI().String()
+			url.Set(cleanFileURL(file.URI().String()))
+			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 45)
+			outFileLabel.Refresh()
+		}, window)
+	}
+	// Créer un bouton qui déclenche la fonction de choix de fichier
+	button := widget.NewButton(buttonlabel, chooseFile)
 
 	return button
 }

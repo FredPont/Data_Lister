@@ -247,7 +247,10 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		fmt.Println("Database created")
 	})
 
-	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton)
+	sqliteOutButton, sqliteOutFileLabel, _ := sqliteOutButton(reg)
+	// sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
+	// sqliteOutFile, outFileLabel, outFileURL := sqliteOutButton(reg)
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
 
 	//////////////////////
 	// build windows tabs
@@ -384,6 +387,18 @@ func outPutButton(reg *Regist, outputButtonLBL string) (*widget.Button, *widget.
 	outFileStr, _ := outFileURL.Get()
 	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
 	outFileButton := getfileSave(reg.win, outputButtonLBL, outFileURL, outFileLabel) //
+
+	return outFileButton, outFileLabel, outFileURL
+}
+
+// outPutButons return the "Output file" buttons
+func sqliteOutButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
+	// Create a string binding
+	outFileURL := binding.NewString()
+	outFileURL.Set(reg.config.OutputFile)
+	outFileStr, _ := outFileURL.Get()
+	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
+	outFileButton := getDatabasePath(reg.win, "Open database path", outFileURL, outFileLabel) //
 
 	return outFileButton, outFileLabel, outFileURL
 }

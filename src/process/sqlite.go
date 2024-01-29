@@ -50,6 +50,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 	}
 
 	// Create a table
+	// Path TEXT UNIQUE avoid duplicate path in database
 	sqlStmt := `
 	CREATE TABLE IF NOT EXISTS ` + tableName + `(
 	id INTEGER PRIMARY KEY,
