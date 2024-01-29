@@ -53,7 +53,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 	sqlStmt := `
 	CREATE TABLE IF NOT EXISTS ` + tableName + `(
 	id INTEGER PRIMARY KEY,
-	Path TEXT, Name TEXT, Modified TEXT, Size INTEGER, DirType TEXT, TypeScore REAL
+	Path TEXT UNIQUE, Name TEXT, Modified TEXT, Size INTEGER, DirType TEXT, TypeScore REAL
 	` + optCol + `
 	);
 	`
@@ -91,7 +91,7 @@ func InsertRecord(tableName, DBpath string, records []any, SQLcolnames []string)
 	colnames = append(colnames, SQLcolnames...)
 
 	// create a SQL statement to insert the values into the table
-	sqlStmt := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", tableName, strings.Join(colnames, ", "), placeholders)
+	sqlStmt := fmt.Sprintf("INSERT OR IGNORE INTO %s (%s) VALUES (%s)", tableName, strings.Join(colnames, ", "), placeholders)
 
 	_, err = db.Exec(sqlStmt, records...)
 	if err != nil {
