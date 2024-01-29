@@ -22,7 +22,8 @@ import "regexp"
 
 type Conf struct {
 	InputDir   string `json:"InputDir"`
-	OutputFile string `json:"OutputFile"`
+	OutputFile string `json:"OutputCSVFile"`
+	OutputDB   string `json:"OutputSQLFile"`
 	ListFiles  bool   `json:"ListFiles"`
 	//ListDir              bool     `json:"ListDir"`
 	GuessDirType         bool     `json:"GuessDirType"`

@@ -54,9 +54,10 @@ func Parse() {
 	//pogrebdb.ShowDBInt(dsizeDB)
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
-		fmt.Println("start prepare record")
+		fmt.Println("start SQLite output")
 		PrepareRecord(pref.SQLiteTable, pref.OutputFile, fDB, dtDB, dsizeDB, pref)
 	} else {
+		fmt.Println("start CSV output")
 		WriteCSV(pref.OutputFile, fDB, dtDB, dsizeDB, pref)
 	}
 

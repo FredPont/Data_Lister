@@ -157,7 +157,7 @@ func getDatabasePath(window fyne.Window, buttonlabel string, url binding.String,
 			//label.SetText(file.URI().String())
 			//path = file.URI().String()
 			url.Set(cleanFileURL(file.URI().String()))
-			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 45)
+			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 100)
 			outFileLabel.Refresh()
 		}, window)
 	}

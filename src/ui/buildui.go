@@ -66,10 +66,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// label of outfile button : "Save CSV as"	or "SQLite database path"
 	runButtonLBL := "Make csv table"
 	outputButtonLBL := "Save CSV as"
-	if reg.config.UseSQLite {
-		runButtonLBL = "Update SQLite database"
-		outputButtonLBL = "SQLite database path"
-	}
+	sqliteOutButtonLBL := ""
+	//if reg.config.UseSQLite {
+	sqliteOutButtonLBL = "Update SQLite database"
+	//outputButtonLBL = "SQLite database path"
+	//}
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	// progress bar
@@ -78,6 +79,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
 	outFileButton, outFileLabel, outFileURL := outPutButton(reg, outputButtonLBL)
+	//outFileButton, outFileLabel, outFileURL := outPutButton(reg, outputButtonLBL)
 
 	// image logo
 	pict := widget.NewCard(reg.cardTitle, reg.cardSubTitle, reg.img)
@@ -199,13 +201,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			includeFormated, excludeFormated, selection)
 	})
 
-	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
-	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
-		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
-			dirSize, levelEntry, runButton, closeButton, infoLabel),
-		container.NewVBox(
-			pict, reg.progBar))
-
 	////////////
 	// 	SQLite
 	////////////
@@ -215,19 +210,19 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// the label of the run button is changed depending if SQLite is used or not
 	UseSQLite.OnChanged = func(v bool) {
 		if v {
-			runButton.Text = "Update SQLite database"
-			runButton.Refresh()
-			outFileButton.Text = "SQLite database path"
-			outFileButton.Refresh()
+			//runButton.Text = "Update SQLite database"
+			//runButton.Refresh()
+			//outFileButton.Text = "SQLite database path"
+			//outFileButton.Refresh()
 			UseSQLiteBind.Set(true)
 			x, _ := UseSQLiteBind.Get()
 			fmt.Println("UseSQLiteBind=", x)
 			//reg.saveConfig(types.Conf{UseSQLite: true})
 		} else {
-			runButton.Text = "Make csv table"
-			runButton.Refresh()
-			outFileButton.Text = "Save CSV as"
-			outFileButton.Refresh()
+			// runButton.Text = "Make csv table"
+			// runButton.Refresh()
+			// outFileButton.Text = "Save CSV as"
+			// outFileButton.Refresh()
 			UseSQLiteBind.Set(false)
 			//reg.saveConfig(types.Conf{UseSQLite: false})
 		}
@@ -247,14 +242,33 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		fmt.Println("Database created")
 	})
 
-	sqliteOutButton, sqliteOutFileLabel, _ := sqliteOutButton(reg)
+	sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
 	// sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
 	// sqliteOutFile, outFileLabel, outFileURL := sqliteOutButton(reg)
+
+	//////////////////////////////
+	//   update SQLlite button
+	//////////////////////////////
+	updateSQLliteButton := widget.NewButtonWithIcon(sqliteOutButtonLBL, theme.ComputerIcon(), func() {
+		go startDirAnalysis(reg, inputDirURL, sqliteOutFileURL, sqlTableName,
+			UseSQLiteBind,
+			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
+			level, olderthan, newerthan, infoLabel,
+			includeFormated, excludeFormated, selection)
+	})
+
 	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
 
 	//////////////////////
 	// build windows tabs
 	/////////////////////
+
+	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
+	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
+		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
+			dirSize, levelEntry, runButton, updateSQLliteButton, closeButton, infoLabel),
+		container.NewVBox(
+			pict, reg.progBar))
 
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
