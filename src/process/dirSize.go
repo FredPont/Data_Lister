@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/akrylysov/pogreb"
 	getFolderSize "github.com/markthree/go-get-folder-size/src"
@@ -40,6 +41,8 @@ func DirSize2(path string) (int64, error) {
 
 func DirSize(path string, dsizeDB *pogreb.DB) {
 	rootDir := path
+
+	//fmt.Println("rootDir", path)
 	// Create a map to store the subdirectory sizes
 	sizes := make(map[string]int64)
 
@@ -71,10 +74,11 @@ func DirSize(path string, dsizeDB *pogreb.DB) {
 	}
 
 	// Print the map of subdirectory sizes
-	//fmt.Println(sizes)
+	//fmt.Print("size storage : ", sizes)
 
 	// enter the dirpath => sizes into the dsizeDB
 	pogrebdb.MapToDB(sizes, dsizeDB)
+	//fmt.Println("	size storage : done !")
 }
 
 // incrementDirSizes propagate current file size to all upper dir up to root dir
@@ -83,8 +87,11 @@ func incrementDirSizes(rootDir, path string, fileSize int64, sizes map[string]in
 	for {
 		path = filepath.Dir(path)
 		sizes[path] += fileSize
-		//fmt.Println(path, rootDir)
-		if path == rootDir {
+		//fmt.Println("path => ", path, "rootDir => ", rootDir)
+		// if the path is equal to the root dir, browsing stops
+		// if the path is included in rootdir, parsing has gone too far and it is necessary to stop
+		// the prefix testing is an additional security, in principle not needed.
+		if path == filepath.Clean(rootDir) || strings.HasPrefix(rootDir, path) {
 			return
 		}
 

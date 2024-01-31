@@ -25,32 +25,32 @@ import (
 
 // getfilePath create a file button and stores the file path using databinding
 func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fyne.Container {
-	//var path string // file path
-	// Créer un label pour afficher le chemin du fichier
+
+	// label to display file path
 	label := widget.NewLabel("")
 
-	// Créer une fonction de choix de fichier
+	// file choosing function
 	chooseFile := func() {
-		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		// dialog to open a file
 		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
 			if err != nil {
-				// Afficher une erreur si nécessaire
+				// show error on pop up
 				dialog.ShowError(err, window)
 				return
 			}
 			if file == nil {
-				// Ne rien faire si aucun fichier n'est sélectionné
+				// do nothing when no file is selected
 				return
 			}
-			// Fermer le fichier
+			// close the file
 			file.Close()
-			// Afficher le chemin du fichier dans le label
-			label.SetText(cleanFileURL(file.URI().String()))
+			// display file path in label
+			label.SetText(cleanFileURI(file.URI()))
 			//path = file.URI().String()
-			url.Set(cleanFileURL(file.URI().String()))
+			url.Set(cleanFileURI(file.URI()))
 		}, window)
 	}
-	// Créer un bouton qui déclenche la fonction de choix de fichier
+	// button to trigger file pickup
 	button := widget.NewButton(buttonlabel, chooseFile)
 
 	return container.NewVBox(button, label)
@@ -58,35 +58,30 @@ func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fy
 
 // getfileSave create a file button and stores the file path entered by the user and refresh the path label
 func getfileSave(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
-	//var path string // file path
-	// Créer un label pour afficher le chemin du fichier
-	//label := widget.NewLabel("")
 
-	// Créer une fonction de choix de fichier
+	// file choosing function
 	chooseFile := func() {
-		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		// dialog to open a file
 		dialog.ShowFileSave(func(file fyne.URIWriteCloser, err error) {
 			if err != nil {
-				// Afficher une erreur si nécessaire
+				// show error on pop up
 				dialog.ShowError(err, window)
 				return
 			}
 			if file == nil {
-				// Ne rien faire si aucun fichier n'est sélectionné
+				// do nothing when no file is selected
 				return
 			}
 
-			// Fermer le fichier
+			// close the file
 			file.Close()
-			// Afficher le chemin du fichier dans le label
-			//label.SetText(file.URI().String())
-			//path = file.URI().String()
-			url.Set(cleanFileURL(file.URI().String()))
-			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 45)
+
+			url.Set(cleanFileURI(file.URI()))
+			outFileLabel.Text = insertNewlines(cleanFileURI(file.URI()), 45)
 			outFileLabel.Refresh()
 		}, window)
 	}
-	// Créer un bouton qui déclenche la fonction de choix de fichier
+	// button to trigger file pickup
 	button := widget.NewButton(buttonlabel, chooseFile)
 
 	return button
@@ -94,33 +89,27 @@ func getfileSave(window fyne.Window, buttonlabel string, url binding.String, out
 
 // getdirPath create a file button and stores the dir path using databinding and refresh the path label
 func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outDirLabel *widget.Label) *widget.Button {
-	//var path string // file path
-	// Créer un label pour afficher le chemin du fichier
-	//label := widget.NewLabel("")
 
-	// Créer une fonction de choix de fichier
+	// dir choosing function
 	chooseDir := func() {
-		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		// dialog to open a dir
 		dialog.ShowFolderOpen(func(dir fyne.ListableURI, err error) {
 			if err != nil {
-				// Afficher une erreur si nécessaire
+				// show error on pop up
 				dialog.ShowError(err, window)
 				return
 			}
 			if dir == nil {
-				// Ne rien faire si aucun fichier n'est sélectionné
+				// do nothing when no file is selected
 				return
 			}
 
-			// Afficher le chemin du fichier dans le label
-			//label.SetText(dir.Path())
-			//path = file.URI().String()
-			outDirLabel.SetText(insertNewlines(cleanFileURL(dir.Path()), 45))
-			url.Set(cleanFileURL(dir.String()))
+			outDirLabel.SetText(insertNewlines(cleanDirURI(dir), 45))
+			url.Set(cleanDirURI(dir))
 			outDirLabel.Refresh()
 		}, window)
 	}
-	// Créer un bouton qui déclenche la fonction de choix de fichier
+	// button to trigger dir pickup
 	button := widget.NewButton(buttonlabel, chooseDir)
 
 	return button
@@ -128,40 +117,27 @@ func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outD
 
 // getDatabasePath stores the SQLIte database path
 func getDatabasePath(window fyne.Window, buttonlabel string, url binding.String, outFileLabel *widget.Label) *widget.Button {
-	//var path string // file path
-	// Créer un label pour afficher le chemin du fichier
-	//label := widget.NewLabel("")
 
-	// Créer une fonction de choix de fichier
+	// file choosing function
 	chooseFile := func() {
-		// Ouvrir une boîte de dialogue pour sélectionner un fichier
+		// dialog to open a file
 		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
 			if err != nil {
-				// Afficher une erreur si nécessaire
+				// show error on pop up
 				dialog.ShowError(err, window)
 				return
 			}
 			if file == nil {
-				// Ne rien faire si aucun fichier n'est sélectionné
+				// do nothing when no file is selected
 				return
 			}
-			// exists, err := storage.Exists(file)
-			// if err != nil {
-			// 	// handle error
-			// }
-			// if !exists {
-			// 	// Fermer le fichier
-			// 	file.Close()
-			// }
-			// Afficher le chemin du fichier dans le label
-			//label.SetText(file.URI().String())
-			//path = file.URI().String()
-			url.Set(cleanFileURL(file.URI().String()))
-			outFileLabel.Text = insertNewlines(cleanFileURL(file.URI().String()), 100)
+
+			url.Set(cleanFileURI(file.URI()))
+			outFileLabel.Text = insertNewlines(cleanFileURI(file.URI()), 100)
 			outFileLabel.Refresh()
 		}, window)
 	}
-	// Créer un bouton qui déclenche la fonction de choix de fichier
+	// button to trigger file pickup
 	button := widget.NewButton(buttonlabel, chooseFile)
 
 	return button

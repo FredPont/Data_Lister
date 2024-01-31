@@ -18,10 +18,12 @@ package ui
 import (
 	"Data_Lister/src/types"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 	"time"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 )
 
@@ -40,8 +42,28 @@ func strSliceToString(sl []string) string {
 }
 
 // cleanFileURL removes "file://" at the beginning of URL
-func cleanFileURL(url string) string {
-	return strings.TrimPrefix(url, "file://") // t is "lang"
+func cleanFileURI(url fyne.URI) string {
+	//return strings.TrimPrefix(url, "file://") //
+	if os.PathSeparator == '\\' {
+		fmt.Println("Dectected OS Windows")
+		//return strings.Replace(url.Path(), "/", "\\", -1)
+		return url.Path() // files can be accessed on window with "/" separators
+	} else {
+		fmt.Println("Dectected OS Linux/Mac")
+		return url.Path()
+	}
+}
+
+// cleanFileURL removes "file://" at the beginning of URI and replace the separator for windows
+func cleanDirURI(url fyne.ListableURI) string {
+	//return strings.TrimPrefix(url, "file://") //
+	if os.PathSeparator == '\\' {
+		fmt.Println("Dectected OS Windows")
+		return strings.Replace(url.Path(), "/", "\\", -1)
+	} else {
+		fmt.Println("Dectected OS Linux/Mac")
+		return url.Path()
+	}
 }
 
 // dateValidator control the date format

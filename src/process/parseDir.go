@@ -89,7 +89,8 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		// if !FilterName(path, name, pref) {
 		// 	continue
 		// }
-		filePath := fmt.Sprintf("%v/%v", path, name)
+		filePath := fmt.Sprintf("%v"+string(os.PathSeparator)+"%v", path, name)
+		//fmt.Println(filePath)
 		file, err := os.Open(filePath)
 		if err != nil {
 			return err
