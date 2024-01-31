@@ -60,7 +60,7 @@ func Parse() {
 		fmt.Println("start CSV output")
 		WriteCSV(pref.OutputFile, fDB, dtDB, dsizeDB, pref)
 	}
-
+	dsizeDB.Close()
 	fDB.Close()
 	dtDB.Close()
 }

@@ -1,3 +1,4 @@
 db/
 test/FolderStructure
 SQLiteTest.db
+results/

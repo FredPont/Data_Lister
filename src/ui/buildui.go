@@ -211,21 +211,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// the label of the run button is changed depending if SQLite is used or not
 	UseSQLite.OnChanged = func(v bool) {
 		if v {
-			//runButton.Text = "Update SQLite database"
-			//runButton.Refresh()
-			//outFileButton.Text = "SQLite database path"
-			//outFileButton.Refresh()
 			UseSQLiteBind.Set(true)
-			x, _ := UseSQLiteBind.Get()
-			fmt.Println("UseSQLiteBind=", x)
-			//reg.saveConfig(types.Conf{UseSQLite: true})
+			//x, _ := UseSQLiteBind.Get()
+			//fmt.Println("UseSQLiteBind=", x)
 		} else {
-			// runButton.Text = "Make csv table"
-			// runButton.Refresh()
-			// outFileButton.Text = "Save CSV as"
-			// outFileButton.Refresh()
 			UseSQLiteBind.Set(false)
-			//reg.saveConfig(types.Conf{UseSQLite: false})
 		}
 	}
 
