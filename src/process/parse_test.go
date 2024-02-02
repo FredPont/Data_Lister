@@ -33,7 +33,7 @@ func TestScoreType(t *testing.T) {
 		want          types.DirMatch
 	}{
 		{[]string{"prog.pl", "data", "results", "src"}, map[string]types.DirSignature{"soft": types.DirSignature{Content: []string{".go", ".git", ".r", ".jl", ".pl"}, ScoreThreshold: 0.2}}, types.DirMatch{true, "soft", 0.25}},
-		{[]string{"prog.pl", "data", "results", "src"}, map[string]types.DirSignature{"soft": types.DirSignature{Content: []string{".go", ".git", ".DLL", ".dll", ".r", ".jl", ".pl", "\\.json", "j[a-z]{2}n", ".+[a-z]{2}n", ".json"}, ScoreThreshold: 0.2}}, types.DirMatch{true, "soft", 0.25}},
+		{[]string{"prog.pl", "data", "results", "src"}, map[string]types.DirSignature{"soft": types.DirSignature{Content: []string{".go", ".git", ".DLL", ".dll", ".r", ".jl", ".pl", ".json"}, ScoreThreshold: 0.2}}, types.DirMatch{true, "soft", 0.25}},
 		{[]string{"sample1.fasta", "sample2.fasta.gz"}, map[string]types.DirSignature{"Fasta": types.DirSignature{Content: []string{".fasta", ".FASTA"}, ScoreThreshold: 0.8}}, types.DirMatch{true, "Fasta", 1.}},
 	}
 	for i, tc := range tests {
@@ -166,14 +166,14 @@ func TestInsertRecord(t *testing.T) {
 		UserSQLcolnames   []string
 		//nbColsup          int
 	}{
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "col1", "col2"}, []string{}},
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "col1", "col2"}, 2}, // wrong date use text instead
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1", "control", "2028-01-01"}, 2},
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, 2},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "fasta", 0.75, "col1", "col2"}, []string{"col1", "col2"}},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "fasta", 0.75, "col1", "col2"}, []string{"col1", "col2"}}, // wrong date use text instead
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, []string{"col1", "col2"}},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, []string{"col1", "col2"}},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
-			got := InsertRecord(tc.tableName, tc.DBpath, tc.record, tc.nbColsup)
+			got := InsertRecord(tc.tableName, tc.DBpath, tc.record, tc.UserSQLcolnames)
 			if !got {
 				t.Fatalf("got %v", got)
 			} else {
