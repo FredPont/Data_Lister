@@ -58,6 +58,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	UseSQLiteBind := binding.NewBool()
 	sqlTableName := binding.NewString()
+	sqliteOutFileURL := binding.NewString()
 	////////////////////
 	// shared widgets
 	////////////////////
@@ -200,7 +201,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// run button
 	////////////
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, inputDirURL, outFileURL, sqlTableName,
+		go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
 			UseSQLiteBind,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
@@ -210,6 +211,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	////////////
 	// 	SQLite
 	////////////
+
 	// UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {
 	// 	if v {
 	// 		updateSQLliteButton.Enable()
@@ -240,11 +242,15 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	}
 
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
-		process.InitSQL(outFileURL, sqliteTable.Text)
+		DBpath, _ := sqliteOutFileURL.Get()
+		fmt.Println("SQLite DB path : ", DBpath)
+		process.InitSQL(sqliteOutFileURL, sqliteTable.Text)
 		fmt.Println("Database created")
 	})
 
-	sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
+	sqliteSaveAsButton, sqliteSaveAsFileLabel := saveSQLButton(reg, "Save New SQLite database as", sqliteOutFileURL)
+
+	sqliteOutButton, sqliteOutFileLabel := sqliteOutButton(reg, sqliteOutFileURL)
 	// sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
 	// sqliteOutFile, outFileLabel, outFileURL := sqliteOutButton(reg)
 
@@ -252,7 +258,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//   update SQLlite button
 	//////////////////////////////
 	updateSQLliteButton := widget.NewButtonWithIcon(sqliteUpdateButtonLBL, theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, inputDirURL, sqliteOutFileURL, sqlTableName,
+		go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
 			UseSQLiteBind,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
@@ -292,7 +298,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		updateSQLliteButton.Refresh()
 	}
 
-	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
 
 	//////////////////////
 	// build windows tabs
@@ -323,7 +329,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
-func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqlTableName binding.String,
+func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName binding.String,
 	UseSQLiteBind binding.Bool,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
 	level, olderthan, newerthan *widget.Entry,
@@ -336,7 +342,7 @@ func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqlTableName binding
 	infoLabel.Text = "Saving user settings..."
 	infoLabel.Refresh()
 
-	userSetting := reg.GetUserSettings(inputDirURL, outFileURL, sqlTableName,
+	userSetting := reg.GetUserSettings(inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
 		UseSQLiteBind,
 		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 		level, olderthan, newerthan,
@@ -440,16 +446,27 @@ func outPutButton(reg *Regist, outputButtonLBL string) (*widget.Button, *widget.
 	return outFileButton, outFileLabel, outFileURL
 }
 
-// outPutButons return the "Output file" buttons
-func sqliteOutButton(reg *Regist) (*widget.Button, *widget.Label, binding.String) {
+// saveSQLButton return the "Save New SQLite database as" button
+func saveSQLButton(reg *Regist, outputButtonLBL string, sqliteOutFileURL binding.String) (*widget.Button, *widget.Label) {
 	// Create a string binding
-	outFileURL := binding.NewString()
-	outFileURL.Set(reg.config.OutputFile)
-	outFileStr, _ := outFileURL.Get()
-	outFileLabel := widget.NewLabelWithStyle(insertNewlines(outFileStr, 45), fyne.TextAlignLeading, fyne.TextStyle{})
-	outFileButton := getDatabasePath(reg.win, "Open database path", outFileURL, outFileLabel) //
+	//outFileURL := binding.NewString()
+	sqliteOutFileURL.Set(reg.config.OutputDB)
+	sqliteOutStr, _ := sqliteOutFileURL.Get()
+	sqloutFileLabel := widget.NewLabelWithStyle(insertNewlines(sqliteOutStr, 110), fyne.TextAlignLeading, fyne.TextStyle{})
+	sqloutFileButton := getfileSave(reg.win, outputButtonLBL, sqliteOutFileURL, sqloutFileLabel) //
 
-	return outFileButton, outFileLabel, outFileURL
+	return sqloutFileButton, sqloutFileLabel
+}
+
+// outPutButons return the "Output file" buttons
+func sqliteOutButton(reg *Regist, sqliteOutFileURL binding.String) (*widget.Button, *widget.Label) {
+	// Create a string binding
+	sqliteOutFileURL.Set(reg.config.OutputDB)
+	sqliteOutStr, _ := sqliteOutFileURL.Get()
+	outFileLabel := widget.NewLabelWithStyle(insertNewlines(sqliteOutStr, 110), fyne.TextAlignLeading, fyne.TextStyle{})
+	outFileButton := getDatabasePath(reg.win, "Open existing database path", sqliteOutFileURL, outFileLabel) //
+
+	return outFileButton, outFileLabel
 }
 
 func includeArea(reg *Regist) (*widget.Entry, []string) {
