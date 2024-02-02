@@ -62,15 +62,10 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// shared widgets
 	////////////////////
 
-	// label of the run button : "Make csv table" or "Update SQLite database"
-	// label of outfile button : "Save CSV as"	or "SQLite database path"
+	// home tab buttons labels
 	runButtonLBL := "Make csv table"
 	outputButtonLBL := "Save CSV as"
-	sqliteOutButtonLBL := ""
-	//if reg.config.UseSQLite {
-	sqliteOutButtonLBL = "Update SQLite database"
-	//outputButtonLBL = "SQLite database path"
-	//}
+	sqliteUpdateButtonLBL := "Update SQLite database"
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	// progress bar
@@ -195,15 +190,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		}
 
 		reg.progBar.Hide()
-		//
-		// log.Println("Merge done !")
-		// // Show progress in status bar
-		// mergeStatus.Text = "Merge done !"
-		// mergeStatus.Refresh()
-		// time.Sleep(time.Second)
-		// mergeStatus.Text = "Ready"
-		// mergeStatus.Refresh()
-		//dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
 
 	})
 	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar, mergeStatus)
@@ -224,19 +210,25 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	////////////
 	// 	SQLite
 	////////////
-	UseSQLite := widget.NewCheck("Update SQLite database", func(v bool) {})
-	UseSQLite.Checked = reg.config.UseSQLite
-	UseSQLiteBind.Set(reg.config.UseSQLite)
-	// the label of the run button is changed depending if SQLite is used or not
-	UseSQLite.OnChanged = func(v bool) {
-		if v {
-			UseSQLiteBind.Set(true)
-			//x, _ := UseSQLiteBind.Get()
-			//fmt.Println("UseSQLiteBind=", x)
-		} else {
-			UseSQLiteBind.Set(false)
-		}
-	}
+	// UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {
+	// 	if v {
+	// 		updateSQLliteButton.Enable()
+	// 	} else {
+	// 		updateSQLliteButton.Disable()
+	// 	}
+	// })
+	// UseSQLite.Checked = reg.config.UseSQLite
+	// UseSQLiteBind.Set(reg.config.UseSQLite)
+	// // the label of the run button is changed depending if SQLite is used or not
+	// UseSQLite.OnChanged = func(v bool) {
+	// 	if v {
+	// 		UseSQLiteBind.Set(true)
+	// 		//x, _ := UseSQLiteBind.Get()
+	// 		//fmt.Println("UseSQLiteBind=", x)
+	// 	} else {
+	// 		UseSQLiteBind.Set(false)
+	// 	}
+	// }
 
 	sqliteTabLab := widget.NewLabel("SQLite Table name")
 	sqliteTable := widget.NewEntry()
@@ -259,13 +251,46 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//////////////////////////////
 	//   update SQLlite button
 	//////////////////////////////
-	updateSQLliteButton := widget.NewButtonWithIcon(sqliteOutButtonLBL, theme.ComputerIcon(), func() {
+	updateSQLliteButton := widget.NewButtonWithIcon(sqliteUpdateButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, sqliteOutFileURL, sqlTableName,
 			UseSQLiteBind,
 			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
 			level, olderthan, newerthan, infoLabel,
 			includeFormated, excludeFormated, selection)
 	})
+
+	UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {
+		if v {
+			updateSQLliteButton.Enable()
+			updateSQLliteButton.Refresh()
+		} else {
+			updateSQLliteButton.Disable()
+			updateSQLliteButton.Refresh()
+		}
+	})
+
+	UseSQLite.Checked = reg.config.UseSQLite
+	UseSQLiteBind.Set(reg.config.UseSQLite)
+	// the label of the run button is changed depending if SQLite is used or not
+	UseSQLite.OnChanged = func(v bool) {
+		if v {
+			UseSQLiteBind.Set(true)
+			updateSQLliteButton.Enable()
+			updateSQLliteButton.Refresh()
+		} else {
+			UseSQLiteBind.Set(false)
+			updateSQLliteButton.Disable()
+			updateSQLliteButton.Refresh()
+		}
+	}
+
+	if UseSQLite.Checked {
+		updateSQLliteButton.Enable()
+		updateSQLliteButton.Refresh()
+	} else {
+		updateSQLliteButton.Disable()
+		updateSQLliteButton.Refresh()
+	}
 
 	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
 
