@@ -244,7 +244,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
 		DBpath, _ := sqliteOutFileURL.Get()
 		fmt.Println("SQLite DB path : ", DBpath)
-		process.InitSQL(sqliteOutFileURL, sqliteTable.Text)
+		process.InitSQL()
 		fmt.Println("Database created")
 	})
 

@@ -45,13 +45,14 @@ func main() {
 
 func cmdLine() {
 	// start DataLister in cmd line
-	var cmd bool
+	var cmd, mkSQL bool
 	var gui bool
 	var mergeFiles bool
 	var oldFile string //old result file to be merged with
 	var newFile string // new result file
 	flag.BoolVar(&mergeFiles, "m", false, "Start DataLister merging tool.")
 	flag.BoolVar(&cmd, "c", false, "Start DataLister directories analysis in command line with TSV output. Example : DataLister -c")
+	flag.BoolVar(&mkSQL, "s", false, "Create a new SQLite database. Example : DataLister -s")
 	flag.BoolVar(&gui, "g", true, "Start DataLister directories analysis in graphic mode. Example : DataLister -g")
 	flag.StringVar(&oldFile, "o", "", "Old result file path. Example, to add new data from newfile to oldfile : DataLister -m -o oldfile.csv -i newfile.csv")
 	flag.StringVar(&newFile, "i", "", "New result file path. Only new files/dir are added to the old file")
@@ -68,6 +69,18 @@ func cmdLine() {
 
 		close(stop) // closing the channel stop the goroutine
 		return
+	} else if mkSQL {
+		fmt.Println("Starting directory analysis...")
+		// start a new goroutine that runs the spinner function
+		// Create a channel called stop
+		stop := make(chan struct{})
+		go process.Spinner(stop) // enable spinner
+
+		process.InitSQL()
+
+		close(stop) // closing the channel stop the goroutine
+		return
+
 	} else if mergeFiles {
 		fmt.Println("Starting update of ...", oldFile, "with", newFile)
 		// start the merging tool. The old result file is merged with a new result file
