@@ -99,7 +99,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	level.SetText(IntToString(reg.config.Level))
 	levelEntry := container.New(layout.NewHBoxLayout(), levelLab, level)
 
-	// status bar
+	// Home tab status bar
 	// create a label to show some information
 	infoLabel := widget.NewLabel("Ready")
 
@@ -172,6 +172,9 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// 	merge
 	////////////
 
+	// merge tab status bar
+	mergeStatus := widget.NewLabel("Ready")
+
 	// Create a string binding
 	oldFileURL := binding.NewString()
 	oldFileButton := getfilePath(reg.win, "Choose file to update", oldFileURL)
@@ -184,10 +187,26 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		oldURL, _ := oldFileURL.Get()
 		newURL, _ := newFileURL.Get()
 		//merge.Merge(cleanFileURL(oldURL), cleanFileURL(newURL))
-		merge.Merge(oldURL, newURL)
+		success := merge.Merge(oldURL, newURL)
+		if success {
+			merge.MergeStatusDone(mergeStatus)
+		} else {
+			merge.MergeStatusFail(mergeStatus)
+		}
+
 		reg.progBar.Hide()
+		//
+		// log.Println("Merge done !")
+		// // Show progress in status bar
+		// mergeStatus.Text = "Merge done !"
+		// mergeStatus.Refresh()
+		// time.Sleep(time.Second)
+		// mergeStatus.Text = "Ready"
+		// mergeStatus.Refresh()
+		//dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
+
 	})
-	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar)
+	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar, mergeStatus)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 

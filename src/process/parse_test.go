@@ -163,9 +163,10 @@ func TestInsertRecord(t *testing.T) {
 	tests := []struct {
 		tableName, DBpath string
 		record            []any
-		nbColsup          int
+		UserSQLcolnames   []string
+		//nbColsup          int
 	}{
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "col1", "col2"}, 2},
+		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "col1", "col2"}, []string{}},
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "col1", "col2"}, 2}, // wrong date use text instead
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1", "control", "2028-01-01"}, 2},
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, 2},

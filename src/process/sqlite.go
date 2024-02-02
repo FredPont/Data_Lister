@@ -68,7 +68,7 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 }
 
 // InsertRecord insert one row in the DataBase
-func InsertRecord(tableName, DBpath string, records []any, SQLcolnames []string) bool {
+func InsertRecord(tableName, DBpath string, records []any, userColNames []string) bool {
 
 	// Open the database connection
 	db, err := sql.Open("sqlite3", DBpath)
@@ -89,7 +89,7 @@ func InsertRecord(tableName, DBpath string, records []any, SQLcolnames []string)
 	placeholders = placeholders + "?" // remove the last comma
 
 	colnames := []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
-	colnames = append(colnames, SQLcolnames...)
+	colnames = append(colnames, userColNames...)
 
 	// create a SQL statement to insert the values into the table
 	sqlStmt := fmt.Sprintf("INSERT OR IGNORE INTO %s (%s) VALUES (%s)", tableName, strings.Join(colnames, ", "), placeholders)
@@ -104,7 +104,7 @@ func InsertRecord(tableName, DBpath string, records []any, SQLcolnames []string)
 
 func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
 
-	SQLcolnames, defaultValues := conf.ReadOptionalColumns()
+	userColNames, defaultValues := conf.ReadOptionalColumns()
 	//  =======================================================
 	// read the dir/files infos stored in the pogreb databases
 	//  =======================================================
@@ -149,7 +149,7 @@ func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref
 
 		rec = append(rec, strSlice...)
 
-		InsertRecord(tableName, DBpath, rec, SQLcolnames)
+		InsertRecord(tableName, DBpath, rec, userColNames)
 		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
 	}
 }

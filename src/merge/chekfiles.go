@@ -19,14 +19,14 @@
 package merge
 
 import (
-	"fmt"
+	"log"
 	"reflect"
 )
 
 func CheckHeader(header1, header2 []string) bool {
 	// check the headers
 	if !reflect.DeepEqual(header1, header2) {
-		fmt.Println("The header of new table is different from the header of the old table. The tables cannot be merged !")
+		log.Println("The header of new table is different from the header of the old table. The tables cannot be merged !")
 		return false
 	}
 	return true

@@ -24,6 +24,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"time"
+
+	"fyne.io/fyne/v2/widget"
 )
 
 //###########################################
@@ -35,11 +38,11 @@ func check(e error) {
 }
 
 // Merge append new rows from newfile to oldfile
-func Merge(oldfile, newfile string) {
+func Merge(oldfile, newfile string) bool {
 	oldRows := ReadCSVrowNames(oldfile)
 	newRows := ReadCSVrowNames(newfile)
 	if !CheckHeader(readHeader(oldfile), readHeader(newfile)) {
-		return
+		return false
 	}
 	newRowNames := NewRowNames(oldRows, newRows)
 
@@ -96,4 +99,28 @@ func Merge(oldfile, newfile string) {
 
 	// Flush the writer
 	writer.Flush()
+	return true
+}
+
+// MergeStatusDone display merging success in the status bar
+func MergeStatusDone(mergeStatus *widget.Label) {
+
+	log.Println("Merge done !")
+	// Show progress in status bar
+	mergeStatus.Text = "Merge done !"
+	mergeStatus.Refresh()
+	time.Sleep(time.Second)
+	mergeStatus.Text = "Ready"
+	mergeStatus.Refresh()
+}
+
+// MergeStatusFail display merging problem in the status bar
+func MergeStatusFail(mergeStatus *widget.Label) {
+
+	// Show error in status bar
+	mergeStatus.Text = "The header of new table is different from the header of the old table. The tables cannot be merged !"
+	mergeStatus.Refresh()
+	time.Sleep(2 * time.Second)
+	mergeStatus.Text = "Ready"
+	mergeStatus.Refresh()
 }

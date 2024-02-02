@@ -45,11 +45,11 @@ func strSliceToString(sl []string) string {
 func cleanFileURI(url fyne.URI) string {
 	//return strings.TrimPrefix(url, "file://") //
 	if os.PathSeparator == '\\' {
-		fmt.Println("Dectected OS Windows")
+		//fmt.Println("Dectected OS Windows")
 		//return strings.Replace(url.Path(), "/", "\\", -1)
 		return url.Path() // files can be accessed on window with "/" separators
 	} else {
-		fmt.Println("Dectected OS Linux/Mac")
+		//fmt.Println("Dectected OS Linux/Mac")
 		return url.Path()
 	}
 }
@@ -61,7 +61,7 @@ func cleanDirURI(url fyne.ListableURI) string {
 		fmt.Println("Dectected OS Windows")
 		return strings.Replace(url.Path(), "/", "\\", -1)
 	} else {
-		fmt.Println("Dectected OS Linux/Mac")
+		//fmt.Println("Dectected OS Linux/Mac")
 		return url.Path()
 	}
 }
