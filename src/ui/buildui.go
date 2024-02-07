@@ -212,26 +212,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// 	SQLite
 	////////////
 
-	// UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {
-	// 	if v {
-	// 		updateSQLliteButton.Enable()
-	// 	} else {
-	// 		updateSQLliteButton.Disable()
-	// 	}
-	// })
-	// UseSQLite.Checked = reg.config.UseSQLite
-	// UseSQLiteBind.Set(reg.config.UseSQLite)
-	// // the label of the run button is changed depending if SQLite is used or not
-	// UseSQLite.OnChanged = func(v bool) {
-	// 	if v {
-	// 		UseSQLiteBind.Set(true)
-	// 		//x, _ := UseSQLiteBind.Get()
-	// 		//fmt.Println("UseSQLiteBind=", x)
-	// 	} else {
-	// 		UseSQLiteBind.Set(false)
-	// 	}
-	// }
-
+	// sqlite tab status bar
+	sqliteStatus := widget.NewLabel("Ready")
 	sqliteTabLab := widget.NewLabel("SQLite Table name")
 	sqliteTable := widget.NewEntry()
 	sqliteTable.SetText(reg.config.SQLiteTable)
@@ -245,7 +227,12 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		DBpath, _ := sqliteOutFileURL.Get()
 		fmt.Println("SQLite DB path : ", DBpath)
 		process.InitSQL()
-		fmt.Println("Database created")
+		fmt.Println("Database created : " + DBpath)
+		sqliteStatus.Text = "Database created : " + DBpath
+		sqliteStatus.Refresh()
+		time.Sleep(time.Second)
+		sqliteStatus.Text = "Ready"
+		sqliteStatus.Refresh()
 	})
 
 	sqliteSaveAsButton, sqliteSaveAsFileLabel := saveSQLButton(reg, "Save New SQLite database as", sqliteOutFileURL)
@@ -298,7 +285,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		updateSQLliteButton.Refresh()
 	}
 
-	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton, sqliteOutButton, sqliteOutFileLabel)
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton, sqliteOutButton, sqliteOutFileLabel, sqliteStatus)
 
 	//////////////////////
 	// build windows tabs
