@@ -224,22 +224,12 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	}
 
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
-		DBpath, _ := sqliteOutFileURL.Get()
-		fmt.Println("SQLite DB path : ", DBpath)
-		process.InitSQL()
-		fmt.Println("Database created : " + DBpath)
-		sqliteStatus.Text = "Database created : " + DBpath
-		sqliteStatus.Refresh()
-		time.Sleep(time.Second)
-		sqliteStatus.Text = "Ready"
-		sqliteStatus.Refresh()
+		go makeSQLiteDB(sqliteOutFileURL, sqliteStatus)
 	})
 
 	sqliteSaveAsButton, sqliteSaveAsFileLabel := saveSQLButton(reg, "Save New SQLite database as", sqliteOutFileURL)
 
 	sqliteOutButton, sqliteOutFileLabel := sqliteOutButton(reg, sqliteOutFileURL)
-	// sqliteOutButton, sqliteOutFileLabel, sqliteOutFileURL := sqliteOutButton(reg)
-	// sqliteOutFile, outFileLabel, outFileURL := sqliteOutButton(reg)
 
 	//////////////////////////////
 	//   update SQLlite button
@@ -470,4 +460,19 @@ func excludeArea(reg *Regist) (*widget.Entry, []string) {
 	exclude.SetText(strSliceToString(reg.config.Exclude))
 	excludeFormated = reg.config.Exclude
 	return exclude, excludeFormated
+}
+
+// makeSQLiteDB create a new SQLite database and display info on the status bar
+func makeSQLiteDB(sqliteOutFileURL binding.String, sqliteStatus *widget.Label) {
+	DBpath, _ := sqliteOutFileURL.Get()
+	fmt.Println("SQLite DB path : ", DBpath)
+
+	process.InitSQL()
+
+	fmt.Println("Database created : " + DBpath)
+	sqliteStatus.Text = "Database created : " + DBpath
+	sqliteStatus.Refresh()
+	time.Sleep(time.Second)
+	sqliteStatus.Text = "Ready"
+	sqliteStatus.Refresh()
 }
