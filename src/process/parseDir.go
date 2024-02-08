@@ -55,7 +55,7 @@ func Parse() {
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
 		fmt.Println("start SQLite output")
-		PrepareRecord(pref.SQLiteTable, pref.OutputDB, fDB, dtDB, dsizeDB, pref)
+		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, fDB, dtDB, dsizeDB, pref)
 	} else {
 		fmt.Println("start CSV output")
 		WriteCSV(pref.OutputFile, fDB, dtDB, dsizeDB, pref)
