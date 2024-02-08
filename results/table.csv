@@ -1,10 +1,10 @@
-Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	RelatedProject	content	Delete_Date
-Data_Lister/test/sequences	sequences	2024-01-17	0	BCL2	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/images1	images1	2024-01-17	0	Microscope_Zeiss	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/analyses	analyses	2024-01-17	0	Cytometry	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/sequences_2	sequences_2	2024-01-17	0	Fasta	1	Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/dir1	dir1	2024-01-17	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/level1	level1	2024-01-17	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/level1/level2	level2	2024-01-17	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/level1/level2/sofware	sofware	2024-01-17	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
-Data_Lister/test/level1/level2/level3	level3	2024-01-17	0			Cells	BreastCancer	Project_2	MyExperiments	2028-01-01
+Path	Name	Modified	Size	DirType	TypeScore	SampleType	Project_ID	FileMetadata	RelatedProject	content	Delete_Date
+test/sequences	sequences	2024-01-26	9			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/images1	images1	2024-01-26	0			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/analyses	analyses	2024-01-26	0			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/sequences_2	sequences_2	2024-01-26	5			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/dir1	dir1	2024-01-26	4			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/level1	level1	2024-01-26	1351			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/level1/level2	level2	2024-02-08	900			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/level1/level2/level3	level3	2024-01-26	450			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01
+test/level1/level2/software	software	2024-01-26	450			Cells	BreastCancer	/path/metaData	Project_2	MyExperiments	2028-01-01

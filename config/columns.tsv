@@ -1,6 +1,7 @@
 ColumnName	DefaultValues
 SampleType	Cells
 Project_ID	BreastCancer
+FileMetadata	/path/metaData
 RelatedProject	Project_2
 content	MyExperiments
 Delete_Date	2028-01-01

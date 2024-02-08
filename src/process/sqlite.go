@@ -80,7 +80,7 @@ func InsertRecord(tableName, DBpath string, records []any, userColNames []string
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Connected to the database", DBpath)
+	//fmt.Println("Connected to the database", DBpath)
 
 	// create a string of placeholders for the values
 	placeholders := strings.Repeat("?,", len(records)-1)

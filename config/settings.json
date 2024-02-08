@@ -1,1 +1,28 @@
-{"InputDir":"test","OutputCSVFile":"results/table.csv","OutputSQLFile":"test/testDB1.db","ListFiles":false,"GuessDirType":false,"CalcSize":true,"Level":3,"filterName":false,"filterPath":false,"filterPathName":true,"IncludeRegex":false,"Include":[""],"IncludeAndExclude":false,"ExcludeRegex":false,"Exclude":[""],"OlderThan":"3023-12-12","NewerThan":"1922-12-12","DateFilter":false,"UseSQLite":true,"SQLiteTable":"table1","CompiledIncludeRegex":null,"CompiledExcludeRegex":null}
+{
+    "InputDir": "test",
+    "OutputCSVFile": "results/table.csv",
+    "OutputSQLFile": "test/testDB.db",
+    "ListFiles": false,
+    "GuessDirType": false,
+    "CalcSize": true,
+    "Level": 3,
+    "filterName": false,
+    "filterPath": false,
+    "filterPathName": true,
+    "IncludeRegex": false,
+    "Include": [
+        ""
+    ],
+    "IncludeAndExclude": false,
+    "ExcludeRegex": false,
+    "Exclude": [
+        ""
+    ],
+    "OlderThan": "3023-12-12",
+    "NewerThan": "1922-12-12",
+    "DateFilter": false,
+    "UseSQLite": false,
+    "SQLiteTable": "table1",
+    "CompiledIncludeRegex": null,
+    "CompiledExcludeRegex": null
+}

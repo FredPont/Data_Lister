@@ -290,7 +290,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
-	mergeTab := container.NewTabItem("Merge", mergeContent)
+	mergeTab := container.NewTabItem("Merge CSV", mergeContent)
 	sqliteTab := container.NewTabItem("Advanced", sqliteContent)
 	helpTab := container.NewTabItem("Help", helpContent)
 

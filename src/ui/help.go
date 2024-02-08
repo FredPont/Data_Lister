@@ -26,7 +26,7 @@ func helpText() string {
 	New result file path. Only new files/dir are added to the old file
 	-o string
     	Old result file path. 
-
+	-s	Create a new SQLite database. Example : DataLister -s
 	Examples :
 
 	Start the analysis of the directories in command line (-c):
@@ -34,6 +34,11 @@ func helpText() string {
 
 	To add new data from newfile to oldfile :
 	./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
+
+	if "UseSQLite": true in the config/settings.json file, then
+	./Linux_DataLister.bin -c
+	will update the SQLite database indicated in "OutputSQLFile"
+
 
 	Quick start :
 	
