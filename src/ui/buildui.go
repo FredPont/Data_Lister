@@ -86,7 +86,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	guessType := widget.NewCheck("Guess Dir Type", func(v bool) {})
 	guessType.Checked = reg.config.GuessDirType
 
-	dirSize := widget.NewCheck("Compute dir Size", func(v bool) {})
+	dirSize := widget.NewCheck("Compute dir Size (very slow on Gigabytes)", func(v bool) {})
 	// dirSize.Checked = false // set the default value to false
 	dirSize.Checked = reg.config.CalcSize
 

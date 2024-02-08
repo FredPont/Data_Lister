@@ -201,8 +201,6 @@ func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, p
 
 		rec = append(rec, strSlice...)       // create one row
 		allRecords = append(allRecords, rec) // append the row to allRecords
-		//InsertRecord(tableName, DBpath, rec, userColNames)
-		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
 	}
 	InsertAllRecord(tableName, DBpath, allRecords, userColNames)
 }
