@@ -23,9 +23,9 @@ func helpText() string {
 	-g	Start DataLister directories analysis in graphic mode.
 	-m	Start DataLister merging tool.
 	-i string
-	New result file path. Only new files/dir are added to the old file
+	New TSV file path. Only new files/dir are added to the old file
 	-o string
-    	Old result file path. 
+    	Old TSV file path. 
 	-s	Create a new SQLite database. Example : DataLister -s
 	Examples :
 
@@ -46,22 +46,31 @@ func helpText() string {
 
 	{
 		"InputDir": "test",
-		"OutputFile": "results/table.csv",
+		"OutputCSVFile": "results/table.csv",
+		"OutputSQLFile": "test/testDB.db",
 		"ListFiles": false,
-		"GuessDirType": true,
-		"CalcSize": false,
-		"Level": 4,
-		"IncludeRegex": true,
+		"GuessDirType": false,
+		"CalcSize": true,
+		"Level": 3,
+		"filterName": false,
+		"filterPath": false,
+		"filterPathName": true,
+		"IncludeRegex": false,
 		"Include": [
-			".*", "level", "seq"	
-		]
-		"ExcludeRegex": true,
-		"Exclude": [
-			"image"
+			""
 		],
+		"IncludeAndExclude": false,
+		"ExcludeRegex": false,
+		"Exclude": [
+			""
+		],
+		"OlderThan": "3023-12-12",
+		"NewerThan": "1922-12-12",
 		"DateFilter": false,
-		"OlderThan": "2023-12-12",
-		"NewerThan": "2022-12-12"
+		"UseSQLite": true,
+		"SQLiteTable": "table1",
+		"CompiledIncludeRegex": null,
+		"CompiledExcludeRegex": null
 	}
 
 	Note : for the command line version, backslashes must be escaped 

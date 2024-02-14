@@ -193,7 +193,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		reg.progBar.Hide()
 
 	})
-	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, reg.progBar, mergeStatus)
+	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, mergeStatus, reg.progBar)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
@@ -275,7 +275,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		updateSQLliteButton.Refresh()
 	}
 
-	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton, sqliteOutButton, sqliteOutFileLabel, sqliteStatus)
+	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton,
+		sqliteOutButton, sqliteOutFileLabel, updateSQLliteButton, sqliteStatus, reg.progBar)
 
 	//////////////////////
 	// build windows tabs
@@ -284,9 +285,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
 	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
 		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
-			dirSize, levelEntry, runButton, updateSQLliteButton, closeButton, infoLabel),
-		container.NewVBox(
-			pict, reg.progBar))
+			dirSize, levelEntry, runButton, closeButton, infoLabel),
+		container.NewVBox(pict, reg.progBar))
 
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)

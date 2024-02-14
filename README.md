@@ -24,6 +24,7 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 ## Key characteristics
 - List directories and optionally files.
 - TSV table output
+- SQLite output/update
 - Tunable dir level
 - Try to guess dir content based on footprint (level must be set to dir +1 to allow the dir content analysis)
 - Unlimited number of customizable dir footprint
@@ -46,22 +47,31 @@ No installation required the code is statically compiled.
 ```json
 {
     "InputDir": "test",
-    "OutputFile": "results/table.csv",
+    "OutputCSVFile": "results/table.csv",
+    "OutputSQLFile": "test/testDB.db",
     "ListFiles": false,
-    "GuessDirType": true,
+    "GuessDirType": false,
     "CalcSize": false,
-    "Level": 4,
-    "IncludeRegex": true,
+    "Level": 3,
+    "filterName": false,
+    "filterPath": false,
+    "filterPathName": true,
+    "IncludeRegex": false,
     "Include": [
-	      ".*", "level", "seq"	
-    ]
-    "ExcludeRegex": true,
-    "Exclude": [
-        "image"
+        ""
     ],
+    "IncludeAndExclude": false,
+    "ExcludeRegex": false,
+    "Exclude": [
+        ""
+    ],
+    "OlderThan": "3023-12-12",
+    "NewerThan": "1922-12-12",
     "DateFilter": false,
-    "OlderThan": "2023-12-12",
-    "NewerThan": "2022-12-12"
+    "UseSQLite": true,
+    "SQLiteTable": "table1",
+    "CompiledIncludeRegex": null,
+    "CompiledExcludeRegex": null
 }
 ```
 Note : for the command line version, backslashes must be escaped in regex in the settings.json file (this is not necessary in the GUI). 
