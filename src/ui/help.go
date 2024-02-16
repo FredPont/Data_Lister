@@ -73,6 +73,7 @@ func helpText() string {
 		"CompiledExcludeRegex": null
 	}
 
+	Use absolute path in "InputDir", "OutputCSVFile" or "OutputSQLFile".
 	Note : for the command line version, backslashes must be escaped 
 	in regex in the settings.json file (this is not necessary in the GUI). 
 

@@ -74,6 +74,7 @@ No installation required the code is statically compiled.
     "CompiledExcludeRegex": null
 }
 ```
+Use absolute path in "InputDir", "OutputCSVFile" or "OutputSQLFile".
 Note : for the command line version, backslashes must be escaped in regex in the settings.json file (this is not necessary in the GUI). 
 
 Example : to exclude names starting with a dot use "^\\..+"

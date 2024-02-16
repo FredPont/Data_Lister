@@ -197,9 +197,9 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
-	////////////
-	// run button
-	////////////
+	//////////////////////////
+	// run (make CSV) button
+	//////////////////////////
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
 			UseSQLiteBind,
@@ -242,15 +242,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			includeFormated, excludeFormated, selection)
 	})
 
-	UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {
-		if v {
-			updateSQLliteButton.Enable()
-			updateSQLliteButton.Refresh()
-		} else {
-			updateSQLliteButton.Disable()
-			updateSQLliteButton.Refresh()
-		}
-	})
+	UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {})
 
 	UseSQLite.Checked = reg.config.UseSQLite
 	UseSQLiteBind.Set(reg.config.UseSQLite)
@@ -260,19 +252,28 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			UseSQLiteBind.Set(true)
 			updateSQLliteButton.Enable()
 			updateSQLliteButton.Refresh()
+			runButton.Disable()
+			runButton.Refresh()
 		} else {
 			UseSQLiteBind.Set(false)
 			updateSQLliteButton.Disable()
 			updateSQLliteButton.Refresh()
+			runButton.Enable()
+			runButton.Refresh()
 		}
 	}
-
+	// the update sql button is disabled when the make csv button is enabled
+	// this is controled by the UseSQLite.Checked box
 	if UseSQLite.Checked {
 		updateSQLliteButton.Enable()
 		updateSQLliteButton.Refresh()
+		runButton.Disable()
+		runButton.Refresh()
 	} else {
 		updateSQLliteButton.Disable()
 		updateSQLliteButton.Refresh()
+		runButton.Enable()
+		runButton.Refresh()
 	}
 
 	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton,
@@ -306,6 +307,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 // startDirAnalysis start a goroutine that register user settings, save them in json file
 // and then start computation with cmd line engine
+// this function is used to make CSV or to update SQLite DB. The switch is controled by the UseSQLite.Checked box
+// this is necessary for the startDirAnalysis() to work with both GUI and command line with the same function
 func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName binding.String,
 	UseSQLiteBind binding.Bool,
 	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
