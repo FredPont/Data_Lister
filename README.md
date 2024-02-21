@@ -45,7 +45,7 @@ No installation required the code is statically compiled.
 - or `git clone https://github.com/FredPont/Data_Lister.git`
 
 ## Quick start
-
+### CLI
 - Edit config/settings.json to set root directory and options
 ```json
 {
@@ -132,6 +132,11 @@ Usage :
 	./Linux_DataLister.bin -c
 	will update the SQLite database indicated in "OutputSQLFile"
 ```
+
+### GUI
+By default the software start in GUI mode
+For a basic usage all the settings are in the "home" tab.
+Choose the directory to scan, the CSV output, the deepness level and click on the "Make csv table" button.
 
 <!-- ## Known issues
 In some computers, the pop up window showing the end of the analysis can freeze. To close the application click on the up right corner.
