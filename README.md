@@ -8,6 +8,8 @@
 # DATA Lister
  DATA Lister is a software to list relevant directories/files from a file system in a table for data management. 
 
+## ScreenShots
+
 ![GUI](src/images/gui1.png)
 
 ![GUI](src/images/gui2.png)
@@ -47,6 +49,8 @@ No installation required the code is statically compiled.
 
 - Download the zip file from the "<>Code" green button and unzip it 
 - or `git clone https://github.com/FredPont/Data_Lister.git`
+
+Start the software in a terminal (Linux/Mac) using the ./Linux_DataLister.bin command, Win_DataLister.exe (Windows) or double click on Win_DataLister.exe (Windows)
 
 ## Quick start
 ### CLI
