@@ -67,7 +67,7 @@ func helpText() string {
 		"OlderThan": "3023-12-12",
 		"NewerThan": "1922-12-12",
 		"DateFilter": false,
-		"UseSQLite": true,
+		"UseSQLite": false,
 		"SQLiteTable": "table1",
 		"CompiledIncludeRegex": null,
 		"CompiledExcludeRegex": null

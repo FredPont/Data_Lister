@@ -223,7 +223,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		sqlTableName.Set(v)
 	}
 
-	initSQLButton := widget.NewButtonWithIcon("Create SQLite table", theme.ComputerIcon(), func() {
+	initSQLButton := widget.NewButtonWithIcon("Create SQLite DataBase", theme.ComputerIcon(), func() {
 		go makeSQLiteDB(sqliteOutFileURL, sqliteStatus)
 	})
 
@@ -242,7 +242,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 			includeFormated, excludeFormated, selection)
 	})
 
-	UseSQLite := widget.NewCheck("Enable SQLite database", func(v bool) {})
+	UseSQLite := widget.NewCheck("Use SQLite database instead of CSV", func(v bool) {})
 
 	UseSQLite.Checked = reg.config.UseSQLite
 	UseSQLiteBind.Set(reg.config.UseSQLite)
@@ -292,7 +292,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
 	mergeTab := container.NewTabItem("Merge CSV", mergeContent)
-	sqliteTab := container.NewTabItem("Advanced", sqliteContent)
+	sqliteTab := container.NewTabItem("SQLite", sqliteContent)
 	helpTab := container.NewTabItem("Help", helpContent)
 
 	// build tab container

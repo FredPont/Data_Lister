@@ -14,9 +14,10 @@
 
 ![GUI](src/images/gui3.png)
 
-work in progress...
+![GUI](src/images/gui4.png)
 
-  ![Output Table](src/images/table.png)
+
+![Output Table](src/images/table.png)
 
 
 Caution : set the directory level to a reasonable value before starting DATA Lister on a large file system to avoid producing a huge result table.
@@ -68,7 +69,7 @@ No installation required the code is statically compiled.
     "OlderThan": "3023-12-12",
     "NewerThan": "1922-12-12",
     "DateFilter": false,
-    "UseSQLite": true,
+    "UseSQLite": false,
     "SQLiteTable": "table1",
     "CompiledIncludeRegex": null,
     "CompiledExcludeRegex": null
