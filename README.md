@@ -23,7 +23,8 @@
 Caution : set the directory level to a reasonable value before starting DATA Lister on a large file system to avoid producing a huge result table.
 
 ## Key characteristics
-- List directories and optionally files.
+- GUI or command line interface
+- List directories and optionally files
 - TSV table output/update
 - SQLite output/update
 - Tunable dir level
@@ -118,7 +119,7 @@ Usage :
   -o string
     	Old result file path. 
   -s	Create a new SQLite database. Example : DataLister -s
-  
+
 	Examples :
 
 	Start the analysis of the directories in command line (-c):
