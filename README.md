@@ -22,6 +22,7 @@
 
 Caution : set the directory level to a reasonable value before starting DATA Lister on a large file system to avoid producing a huge result table.
 
+
 ## Key characteristics
 - GUI or command line interface
 - List directories and optionally files
@@ -36,6 +37,9 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 - Unlimited number of custom (pre-filed) columns
 - Compute directory size (slow on terabytes of data because 100% of the files are parsed)
 - Merge tool to update old table with the new rows from a new analysis
+
+## Documentation
+[link](doc/documentation.pdf)
 
 ## Installation
 
