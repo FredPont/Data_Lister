@@ -39,7 +39,7 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 - Merge tool to update old table with the new rows from a new analysis
 
 ## Documentation
-[link](doc/documentation.pdf)
+[Data Lister manual](doc/documentation.pdf)
 
 ## Installation
 
