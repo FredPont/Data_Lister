@@ -134,7 +134,8 @@ Usage :
 ```
 
 ### GUI
-By default the software start in GUI mode
+By default the software start in GUI mode.
+
 For a basic usage all the settings are in the "home" tab.
 Choose the directory to scan, the CSV output, the deepness level and click on the "Make csv table" button.
 
