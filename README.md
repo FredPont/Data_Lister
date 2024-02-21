@@ -6,7 +6,7 @@
 </p>
 
 # DATA Lister
- DATA Lister is a software to list directories/files and produce a TSV table for data management.
+ DATA Lister is a software to list relevant directories/files from a file system in a table for data management. 
 
 ![GUI](src/images/gui1.png)
 
@@ -24,11 +24,12 @@ Caution : set the directory level to a reasonable value before starting DATA Lis
 
 ## Key characteristics
 - List directories and optionally files.
-- TSV table output
+- TSV table output/update
 - SQLite output/update
 - Tunable dir level
 - Try to guess dir content based on footprint (level must be set to dir +1 to allow the dir content analysis)
 - Unlimited number of customizable dir footprint
+- Filters by name, path, name and Path
 - Include/Exclude filter list by unlimited number of string or regex
 - Filter by date
 - Unlimited number of custom (pre-filed) columns
@@ -76,6 +77,7 @@ No installation required the code is statically compiled.
 }
 ```
 Use absolute path in "InputDir", "OutputCSVFile" or "OutputSQLFile".
+
 Note : for the command line version, backslashes must be escaped in regex in the settings.json file (this is not necessary in the GUI). 
 
 Example : to exclude names starting with a dot use "^\\..+"
@@ -115,17 +117,19 @@ Usage :
     	New result file path. Only new files/dir are added to the old file
   -o string
     	Old result file path. 
+  -s	Create a new SQLite database. Example : DataLister -s
+  
+	Examples :
 
-      Examples :
+	Start the analysis of the directories in command line (-c):
+	./Linux_DataLister.bin -c
 
-      Start the analysis of the directories in command line (-c):
-      ./Linux_DataLister.bin -c
+	To add new data from newfile to oldfile :
+	./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
 
-      Start the analysis of the directories in graphic mode (-g):
-      ./Linux_DataLister.bin -g
-
-      To add new data from newfile to oldfile :
-      ./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
+	if "UseSQLite": true in the config/settings.json file, then
+	./Linux_DataLister.bin -c
+	will update the SQLite database indicated in "OutputSQLFile"
 ```
 
 <!-- ## Known issues
