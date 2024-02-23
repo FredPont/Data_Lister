@@ -5,7 +5,7 @@ GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64
 
 
 echo "Start compilation for Mac 64bits"
-#GOOS=darwin go build -o Mac_DataLister.bin .
+#GOOS=darwin  GOARCH=amd64 go build -o Mac_DataLister.bin .
 
 
 echo "Start compilation for linux 64bits"
