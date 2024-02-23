@@ -165,7 +165,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	)
 
 	////////////
-	// 	merge
+	//  merge
 	////////////
 
 	// merge tab status bar
@@ -200,12 +200,36 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//////////////////////////
 	// run (make CSV) button
 	//////////////////////////
+
+	guiParam := types.GuiSettings{
+		InputDirURL:       inputDirURL,
+		OutFileURL:        outFileURL,
+		SqliteOutFileURL:  sqliteOutFileURL,
+		SqlTableName:      sqlTableName,
+		UseSQLiteBind:     UseSQLiteBind,
+		Listfiles:         listfiles,
+		GuessType:         guessType,
+		DirSize:           dirSize,
+		IncludeRegex:      includeRegex,
+		ExcludeRegex:      excludeRegex,
+		DateFilter:        dateFilter,
+		IncludeAndExclude: IncludeAndExclude,
+		Level:             level,
+		Olderthan:         olderthan,
+		Newerthan:         newerthan,
+		InfoLabel:         infoLabel,
+		IncludeFormated:   includeFormated,
+		ExcludeFormated:   excludeFormated,
+		Selection:         selection,
+	}
+
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
-			UseSQLiteBind,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
-			level, olderthan, newerthan, infoLabel,
-			includeFormated, excludeFormated, selection)
+		go startDirAnalysis(reg, guiParam)
+		/*go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
+		UseSQLiteBind,
+		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
+		level, olderthan, newerthan, infoLabel,
+		includeFormated, excludeFormated, selection)*/
 	})
 
 	////////////
@@ -235,11 +259,12 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//   update SQLlite button
 	//////////////////////////////
 	updateSQLliteButton := widget.NewButtonWithIcon(sqliteUpdateButtonLBL, theme.ComputerIcon(), func() {
-		go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
-			UseSQLiteBind,
-			listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
-			level, olderthan, newerthan, infoLabel,
-			includeFormated, excludeFormated, selection)
+		go startDirAnalysis(reg, guiParam)
+		/*go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
+		UseSQLiteBind,
+		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
+		level, olderthan, newerthan, infoLabel,
+		includeFormated, excludeFormated, selection)*/
 	})
 
 	UseSQLite := widget.NewCheck("Use SQLite database instead of CSV", func(v bool) {})
@@ -309,44 +334,33 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 // and then start computation with cmd line engine
 // this function is used to make CSV or to update SQLite DB. The switch is controled by the UseSQLite.Checked box
 // this is necessary for the startDirAnalysis() to work with both GUI and command line with the same function
-func startDirAnalysis(reg *Regist, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName binding.String,
-	UseSQLiteBind binding.Bool,
-	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
-	level, olderthan, newerthan *widget.Entry,
-	infoLabel *widget.Label,
-	includeFormated, excludeFormated []string,
-	selection types.RadioGroupFilters) {
+func startDirAnalysis(reg *Regist, guiParam types.GuiSettings) {
 	reg.progBar.Show()
 
 	log.Println("Saving user settings...")
-	infoLabel.Text = "Saving user settings..."
-	infoLabel.Refresh()
+	guiParam.InfoLabel.Text = "Saving user settings..."
+	guiParam.InfoLabel.Refresh()
 
-	userSetting := reg.GetUserSettings(inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
-		UseSQLiteBind,
-		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
-		level, olderthan, newerthan,
-		includeFormated, excludeFormated,
-		selection)
+	userSetting := reg.GetUserSettings(guiParam)
 	//log.Println(userSetting)
 	reg.saveConfig(userSetting)
 
 	log.Println("Starting directory listing...")
-	infoLabel.Text = "Starting directory listing..."
-	infoLabel.Refresh()
+	guiParam.InfoLabel.Text = "Starting directory listing..."
+	guiParam.InfoLabel.Refresh()
 
 	process.Parse()
 
 	reg.progBar.Hide()
 
 	log.Println("Listing done !")
-	infoLabel.Text = "Listing done !"
-	infoLabel.Refresh()
+	guiParam.InfoLabel.Text = "Listing done !"
+	guiParam.InfoLabel.Refresh()
 	time.Sleep(time.Second)
 	//dialog.ShowInformation("Info", "Analysis done !", reg.win) // show the info dialog
 
-	infoLabel.Text = "Ready"
-	infoLabel.Refresh()
+	guiParam.InfoLabel.Text = "Ready"
+	guiParam.InfoLabel.Refresh()
 }
 
 // setRadioGroupFilters read and set the radiogroup configuration for filters

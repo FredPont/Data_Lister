@@ -18,7 +18,12 @@
 
 package types
 
-import "regexp"
+import (
+	"regexp"
+
+	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/widget"
+)
 
 type Conf struct {
 	InputDir   string `json:"InputDir"`
@@ -61,4 +66,14 @@ type RadioGroupFilters struct {
 	FilterName     bool
 	FilterPath     bool
 	FilterPathName bool
+}
+
+type GuiSettings struct {
+	InputDirURL, OutFileURL, SqliteOutFileURL, SqlTableName                                  binding.String
+	UseSQLiteBind                                                                            binding.Bool
+	Listfiles, GuessType, DirSize, IncludeRegex, ExcludeRegex, DateFilter, IncludeAndExclude *widget.Check
+	Level, Olderthan, Newerthan                                                              *widget.Entry
+	InfoLabel                                                                                *widget.Label
+	IncludeFormated, ExcludeFormated                                                         []string
+	Selection                                                                                RadioGroupFilters
 }

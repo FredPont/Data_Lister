@@ -21,7 +21,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
 )
 
 func errorBinding(err error, window fyne.Window) {
@@ -30,34 +29,28 @@ func errorBinding(err error, window fyne.Window) {
 }
 
 // GetUserSettings get user settings from the gui
-func (reg *Regist) GetUserSettings(
-	inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName binding.String,
-	UseSQLiteBind binding.Bool,
-	listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude *widget.Check,
-	level, olderthan, newerthan *widget.Entry,
-	includeFormated, excludeFormated []string,
-	selection types.RadioGroupFilters) types.Conf {
+func (reg *Regist) GetUserSettings(guiParam types.GuiSettings) types.Conf {
 	userSetting := types.Conf{
-		InputDir:          reg.dbToStr(inputDirURL),
-		OutputFile:        reg.dbToStr(outFileURL),
-		OutputDB:          reg.dbToStr(sqliteOutFileURL),
-		ListFiles:         listfiles.Checked,
-		GuessDirType:      guessType.Checked,
-		CalcSize:          dirSize.Checked,
-		Level:             StrToInt(level.Text),
-		FilterName:        selection.FilterName,
-		FilterPath:        selection.FilterPath,
-		FilterPathName:    selection.FilterPathName,
-		IncludeRegex:      includeRegex.Checked,
-		Include:           includeFormated,
-		IncludeAndExclude: IncludeAndExclude.Checked,
-		ExcludeRegex:      excludeRegex.Checked,
-		Exclude:           excludeFormated,
-		DateFilter:        dateFilter.Checked,
-		UseSQLite:         reg.dbToBool(UseSQLiteBind),
-		SQLiteTable:       reg.dbToStr(sqlTableName),
-		OlderThan:         olderthan.Text,
-		NewerThan:         newerthan.Text,
+		InputDir:          reg.dbToStr(guiParam.InputDirURL),
+		OutputFile:        reg.dbToStr(guiParam.OutFileURL),
+		OutputDB:          reg.dbToStr(guiParam.SqliteOutFileURL),
+		ListFiles:         guiParam.Listfiles.Checked,
+		GuessDirType:      guiParam.GuessType.Checked,
+		CalcSize:          guiParam.DirSize.Checked,
+		Level:             StrToInt(guiParam.Level.Text),
+		FilterName:        guiParam.Selection.FilterName,
+		FilterPath:        guiParam.Selection.FilterPath,
+		FilterPathName:    guiParam.Selection.FilterPathName,
+		IncludeRegex:      guiParam.IncludeRegex.Checked,
+		Include:           guiParam.IncludeFormated,
+		IncludeAndExclude: guiParam.IncludeAndExclude.Checked,
+		ExcludeRegex:      guiParam.ExcludeRegex.Checked,
+		Exclude:           guiParam.ExcludeFormated,
+		DateFilter:        guiParam.DateFilter.Checked,
+		UseSQLite:         reg.dbToBool(guiParam.UseSQLiteBind),
+		SQLiteTable:       reg.dbToStr(guiParam.SqlTableName),
+		OlderThan:         guiParam.Olderthan.Text,
+		NewerThan:         guiParam.Newerthan.Text,
 	}
 	return userSetting
 }
