@@ -266,33 +266,11 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	UseSQLiteBind.Set(reg.config.UseSQLite)
 	// the label of the run button is changed depending if SQLite is used or not
 	UseSQLite.OnChanged = func(v bool) {
-		if v {
-			UseSQLiteBind.Set(true)
-			updateSQLliteButton.Enable()
-			updateSQLliteButton.Refresh()
-			runButton.Disable()
-			runButton.Refresh()
-		} else {
-			UseSQLiteBind.Set(false)
-			updateSQLliteButton.Disable()
-			updateSQLliteButton.Refresh()
-			runButton.Enable()
-			runButton.Refresh()
-		}
+		switch_SQL_CSV(v, UseSQLiteBind, updateSQLliteButton, runButton)
 	}
 	// the update sql button is disabled when the make csv button is enabled
 	// this is controled by the UseSQLite.Checked box
-	if UseSQLite.Checked {
-		updateSQLliteButton.Enable()
-		updateSQLliteButton.Refresh()
-		runButton.Disable()
-		runButton.Refresh()
-	} else {
-		updateSQLliteButton.Disable()
-		updateSQLliteButton.Refresh()
-		runButton.Enable()
-		runButton.Refresh()
-	}
+	switch_SQL_CSV(UseSQLite.Checked, UseSQLiteBind, updateSQLliteButton, runButton)
 
 	sqliteContent := container.NewVBox(UseSQLite, sqliteEntry, sqliteSaveAsButton, sqliteSaveAsFileLabel, initSQLButton,
 		sqliteOutButton, sqliteOutFileLabel, updateSQLliteButton, sqliteStatus, reg.progBar)
@@ -484,4 +462,21 @@ func makeSQLiteDB(sqliteOutFileURL binding.String, sqliteStatus *widget.Label) {
 	time.Sleep(time.Second)
 	sqliteStatus.Text = "Ready"
 	sqliteStatus.Refresh()
+}
+
+// switch_SQL_CSV enable/disable the updateSQLliteButton/makeCSVbutton
+func switch_SQL_CSV(useSQL bool, UseSQLiteBind binding.Bool, updateSQLliteButton, runButton *widget.Button) {
+	if useSQL {
+		UseSQLiteBind.Set(true)
+		updateSQLliteButton.Enable()
+		updateSQLliteButton.Refresh()
+		runButton.Disable()
+		runButton.Refresh()
+	} else {
+		UseSQLiteBind.Set(false)
+		updateSQLliteButton.Disable()
+		updateSQLliteButton.Refresh()
+		runButton.Enable()
+		runButton.Refresh()
+	}
 }
