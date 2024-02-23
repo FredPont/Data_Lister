@@ -59,6 +59,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	UseSQLiteBind := binding.NewBool()
 	sqlTableName := binding.NewString()
 	sqliteOutFileURL := binding.NewString()
+
 	////////////////////
 	// shared widgets
 	////////////////////
@@ -66,7 +67,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// home tab buttons labels
 	runButtonLBL := "Make csv table"
 	outputButtonLBL := "Save CSV as"
-	sqliteUpdateButtonLBL := "Update SQLite database"
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	// progress bar
@@ -200,6 +200,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//////////////////////////
 	// run (make CSV) button
 	//////////////////////////
+
+	sqliteUpdateButtonLBL := "Update SQLite database"
 
 	// guiParam struct to record all GUI parameters and pass them to functions
 	guiParam := types.GuiSettings{

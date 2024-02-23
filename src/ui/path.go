@@ -20,6 +20,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -51,7 +52,7 @@ func getfilePath(window fyne.Window, buttonlabel string, url binding.String) *fy
 		}, window)
 	}
 	// button to trigger file pickup
-	button := widget.NewButton(buttonlabel, chooseFile)
+	button := widget.NewButtonWithIcon(buttonlabel, theme.FileIcon(), chooseFile)
 
 	return container.NewVBox(button, label)
 }
@@ -82,7 +83,7 @@ func getfileSave(window fyne.Window, buttonlabel string, url binding.String, out
 		}, window)
 	}
 	// button to trigger file pickup
-	button := widget.NewButton(buttonlabel, chooseFile)
+	button := widget.NewButtonWithIcon(buttonlabel, theme.FileIcon(), chooseFile)
 
 	return button
 }
@@ -110,7 +111,7 @@ func getdirPath(window fyne.Window, buttonlabel string, url binding.String, outD
 		}, window)
 	}
 	// button to trigger dir pickup
-	button := widget.NewButton(buttonlabel, chooseDir)
+	button := widget.NewButtonWithIcon(buttonlabel, theme.FolderOpenIcon(), chooseDir)
 
 	return button
 }
@@ -138,7 +139,7 @@ func getDatabasePath(window fyne.Window, buttonlabel string, url binding.String,
 		}, window)
 	}
 	// button to trigger file pickup
-	button := widget.NewButton(buttonlabel, chooseFile)
+	button := widget.NewButtonWithIcon(buttonlabel, theme.FileIcon(), chooseFile)
 
 	return button
 }
