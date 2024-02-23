@@ -16,16 +16,16 @@ func ReadConf() types.Conf {
 	var cs types.Conf
 	fp, err := os.Open(fname)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer fp.Close()
 	bytes, err := io.ReadAll(fp)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	err = json.Unmarshal(bytes, &cs)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	//fmt.Println(cs)
 	return cs
@@ -37,16 +37,16 @@ func ReadDirSignatures() map[string]types.DirSignature {
 	cs := make(map[string]types.DirSignature, 5)
 	fp, err := os.Open(fname)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer fp.Close()
 	bytes, err := io.ReadAll(fp)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	err = json.Unmarshal(bytes, &cs)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	//fmt.Println(cs)
 	return cs

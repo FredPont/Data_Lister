@@ -21,6 +21,7 @@ package merge
 import (
 	"bufio"
 	"encoding/csv"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -33,7 +34,7 @@ import (
 
 func check(e error) {
 	if e != nil {
-		panic(e)
+		fmt.Println(e)
 	}
 }
 

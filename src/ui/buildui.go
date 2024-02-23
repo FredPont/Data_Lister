@@ -284,8 +284,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	/////////////////////
 
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
-	homeContent := container.New(layout.NewGridLayoutWithColumns(2),
-		container.NewVBox(inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
+	homeContent := container.NewGridWithColumns(2,
+		container.NewGridWithColumns(1, inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
 			dirSize, levelEntry, runButton, closeButton, infoLabel),
 		container.NewVBox(pict, reg.progBar))
 

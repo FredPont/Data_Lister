@@ -47,7 +47,9 @@ func Parse() {
 
 	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)
 	if err != nil {
-		panic(err)
+		//panic(err)
+		fmt.Println("Error ! ", err)
+		return
 	}
 
 	//pogrebdb.ShowDB(fDB)
