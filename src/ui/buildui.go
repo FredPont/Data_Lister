@@ -201,6 +201,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// run (make CSV) button
 	//////////////////////////
 
+	// guiParam struct to record all GUI parameters and pass them to functions
 	guiParam := types.GuiSettings{
 		InputDirURL:       inputDirURL,
 		OutFileURL:        outFileURL,
@@ -225,11 +226,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, guiParam)
-		/*go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
-		UseSQLiteBind,
-		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
-		level, olderthan, newerthan, infoLabel,
-		includeFormated, excludeFormated, selection)*/
 	})
 
 	////////////
@@ -260,11 +256,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//////////////////////////////
 	updateSQLliteButton := widget.NewButtonWithIcon(sqliteUpdateButtonLBL, theme.ComputerIcon(), func() {
 		go startDirAnalysis(reg, guiParam)
-		/*go startDirAnalysis(reg, inputDirURL, outFileURL, sqliteOutFileURL, sqlTableName,
-		UseSQLiteBind,
-		listfiles, guessType, dirSize, includeRegex, excludeRegex, dateFilter, IncludeAndExclude,
-		level, olderthan, newerthan, infoLabel,
-		includeFormated, excludeFormated, selection)*/
 	})
 
 	UseSQLite := widget.NewCheck("Use SQLite database instead of CSV", func(v bool) {})
@@ -341,8 +332,7 @@ func startDirAnalysis(reg *Regist, guiParam types.GuiSettings) {
 	guiParam.InfoLabel.Text = "Saving user settings..."
 	guiParam.InfoLabel.Refresh()
 
-	userSetting := reg.GetUserSettings(guiParam)
-	//log.Println(userSetting)
+	userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
 	reg.saveConfig(userSetting)
 
 	log.Println("Starting directory listing...")

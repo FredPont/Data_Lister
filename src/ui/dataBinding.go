@@ -28,7 +28,7 @@ func errorBinding(err error, window fyne.Window) {
 	window.ShowAndRun()
 }
 
-// GetUserSettings get user settings from the gui
+// GetUserSettings get user settings from the gui and record them in a configuration struct
 func (reg *Regist) GetUserSettings(guiParam types.GuiSettings) types.Conf {
 	userSetting := types.Conf{
 		InputDir:          reg.dbToStr(guiParam.InputDirURL),
