@@ -126,7 +126,7 @@ Usage :
     	New result file path. Only new files/dir are added to the old file
   -o string
     	Old result file path. 
-  -s	Create a new SQLite database. Example : DataLister -s
+  -s	Create a new SQLite database. Example : ./Linux_DataLister.bin -s
 
 	Examples :
 

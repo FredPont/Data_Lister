@@ -178,7 +178,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// Create a string binding
 	newFileURL := binding.NewString()
 	newFileButton := getfilePath(reg.win, "Choose new file", newFileURL)
-	mergeButton := widget.NewButton("Merge Files", func() {
+	mergeButton := widget.NewButtonWithIcon("Merge Files", theme.ComputerIcon(), func() {
 		reg.progBar.Show()
 		oldURL, _ := oldFileURL.Get()
 		newURL, _ := newFileURL.Get()

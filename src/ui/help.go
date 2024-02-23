@@ -26,7 +26,7 @@ func helpText() string {
 	New TSV file path. Only new files/dir are added to the old file
 	-o string
     	Old TSV file path. 
-	-s	Create a new SQLite database. Example : DataLister -s
+	-s	Create a new SQLite database. Example : ./Linux_DataLister.bin -s
 	Examples :
 
 	Start the analysis of the directories in command line (-c):

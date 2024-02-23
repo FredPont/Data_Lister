@@ -52,7 +52,7 @@ func cmdLine() {
 	var newFile string // new result file
 	flag.BoolVar(&mergeFiles, "m", false, "Start DataLister merging tool.")
 	flag.BoolVar(&cmd, "c", false, "Start DataLister directories analysis in command line with TSV output or SQLite update. Example : DataLister -c")
-	flag.BoolVar(&mkSQL, "s", false, "Create a new SQLite database. Example : DataLister -s")
+	flag.BoolVar(&mkSQL, "s", false, "Create a new SQLite database. Example : ./Linux_DataLister.bin -s")
 	flag.BoolVar(&gui, "g", true, "Start DataLister directories analysis in graphic mode. Example : DataLister -g")
 	flag.StringVar(&oldFile, "o", "", "Old result file path. Example, to add new data from newfile to oldfile : DataLister -m -o oldfile.csv -i newfile.csv")
 	flag.StringVar(&newFile, "i", "", "New result file path. Only new files/dir are added to the old file")
