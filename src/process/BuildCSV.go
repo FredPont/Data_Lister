@@ -34,7 +34,13 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 	//  =========================
 	// build result table header
 	//  =========================
-	header := []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
+
+	// GuessDirType disabled by default : , "DirType", "TypeScore" columns are not saved
+	header := []string{"Path", "Name", "Modified", "Size"}
+	if pref.GuessDirType {
+		header = []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
+	}
+
 	userCols, defaultValues := conf.ReadOptionalColumns()
 	header = append(header, userCols...)
 
@@ -85,7 +91,7 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
 		//fmt.Println(line)
 
-		writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues))
+		writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues, pref))
 	}
 	// Flush the buffered data
 	writer.Flush()
@@ -100,11 +106,13 @@ func writeLine(writer *csv.Writer, data []string) {
 	}
 }
 
-func formatOutput(key, val, dirInfo, dirSize []byte, defaultValues []string) []string {
+func formatOutput(key, val, dirInfo, dirSize []byte, defaultValues []string, pref types.Conf) []string {
 	out := []string{pogrebdb.ByteToString(key)}
 	out = append(out, strings.Split(pogrebdb.ByteToString(val), "\t")...)
 	out = append(out, pogrebdb.IntToString(pogrebdb.ByteToInt(dirSize)))
-	out = append(out, strings.Split(pogrebdb.ByteToString(dirInfo), "\t")...)
+	if pref.GuessDirType {
+		out = append(out, strings.Split(pogrebdb.ByteToString(dirInfo), "\t")...)
+	}
 
 	out = append(out, defaultValues...)
 	return out

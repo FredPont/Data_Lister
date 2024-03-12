@@ -20,11 +20,11 @@ func InitSQL() {
 	DBpath := pref.OutputDB
 	userCols, _ := conf.ReadOptionalColumns()
 
-	CreateSQLiteDB(tableName, DBpath, userCols)
+	CreateSQLiteDB(tableName, DBpath, userCols, pref)
 }
 
-// CreateSQLiteDB build an empty SQLite DB with primary key based on the user optional column
-func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
+// CreateSQLiteDB build an empty SQLite DB with primary key and columns based on the user optional column
+func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string, pref types.Conf) bool {
 
 	// Open the database connection
 	db, err := sql.Open("sqlite3", DBpath)
@@ -49,13 +49,24 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 
 	// Create a table
 	// Path TEXT UNIQUE avoid duplicate path in database
+	// DirType TEXT, TypeScore REAL columns are disabled by default. They appear is the user select the guessDirType option
 	sqlStmt := `
+	CREATE TABLE IF NOT EXISTS ` + tableName + `(
+	id INTEGER PRIMARY KEY,
+	Path TEXT UNIQUE, Name TEXT, Modified TEXT, Size INTEGER
+	` + optCol + `
+	);
+	`
+	if pref.GuessDirType {
+		sqlStmt = `
 	CREATE TABLE IF NOT EXISTS ` + tableName + `(
 	id INTEGER PRIMARY KEY,
 	Path TEXT UNIQUE, Name TEXT, Modified TEXT, Size INTEGER, DirType TEXT, TypeScore REAL
 	` + optCol + `
 	);
 	`
+	}
+
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +76,8 @@ func CreateSQLiteDB(tableName, DBpath string, optionalColumns []string) bool {
 	return true
 }
 
-// InsertRecord insert one row in the DataBase
+// InsertRecord insert one row in the DataBase : This function is used for unit testing only
+// InsertAllRecord() is used to insert all records in the sqlite databes
 func InsertRecord(tableName, DBpath string, records []any, userColNames []string) bool {
 
 	// Open the database connection
@@ -101,57 +113,57 @@ func InsertRecord(tableName, DBpath string, records []any, userColNames []string
 }
 
 // PrepareRecord build each row one by one and insert them one by one in the database
-func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
+// func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
 
-	userColNames, defaultValues := conf.ReadOptionalColumns()
-	//  =======================================================
-	// read the dir/files infos stored in the pogreb databases
-	//  =======================================================
-	it := fDB.Items()
-	for {
-		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
-		dirSize := pogrebdb.StringToByte("")
-		key, val, err := it.Next()
-		if err == pogreb.ErrIterationDone {
-			break
-		}
-		if err != nil {
-			log.Fatal(err)
-		}
+// 	userColNames, defaultValues := conf.ReadOptionalColumns()
+// 	//  =======================================================
+// 	// read the dir/files infos stored in the pogreb databases
+// 	//  =======================================================
+// 	it := fDB.Items()
+// 	for {
+// 		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
+// 		dirSize := pogrebdb.StringToByte("")
+// 		key, val, err := it.Next()
+// 		if err == pogreb.ErrIterationDone {
+// 			break
+// 		}
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		if pref.GuessDirType {
-			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
-			if dirInfo == nil || !pref.GuessDirType {
-				dirInfo = pogrebdb.StringToByte("\t")
-			}
-		}
+// 		if pref.GuessDirType {
+// 			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
+// 			if dirInfo == nil || !pref.GuessDirType {
+// 				dirInfo = pogrebdb.StringToByte("\t")
+// 			}
+// 		}
 
-		if pref.CalcSize {
-			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
-		}
+// 		if pref.CalcSize {
+// 			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
+// 		}
 
-		Path := pogrebdb.ByteToString(key)
-		NameDate := strings.Split(pogrebdb.ByteToString(val), "\t")
-		Name, Modified := NameDate[0], NameDate[1]
-		Size := pogrebdb.ByteToInt(dirSize)
-		dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
-		DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
+// 		Path := pogrebdb.ByteToString(key)
+// 		NameDate := strings.Split(pogrebdb.ByteToString(val), "\t")
+// 		Name, Modified := NameDate[0], NameDate[1]
+// 		Size := pogrebdb.ByteToInt(dirSize)
+// 		dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
+// 		DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
 
-		rec := []any{Path, Name, Modified, Size, DirType, TypeScore}
-		// create a new slice of any with the same length as defaultValues
-		strSlice := make([]any, len(defaultValues))
+// 		rec := []any{Path, Name, Modified, Size, DirType, TypeScore}
+// 		// create a new slice of any with the same length as defaultValues
+// 		strSlice := make([]any, len(defaultValues))
 
-		// loop over strs and convert each string to an interface value
-		for i := range strSlice {
-			strSlice[i] = defaultValues[i]
-		}
+// 		// loop over strs and convert each string to an interface value
+// 		for i := range strSlice {
+// 			strSlice[i] = defaultValues[i]
+// 		}
 
-		rec = append(rec, strSlice...)
+// 		rec = append(rec, strSlice...)
 
-		InsertRecord(tableName, DBpath, rec, userColNames)
-		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
-	}
-}
+// 		InsertRecord(tableName, DBpath, rec, userColNames)
+// 		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
+// 	}
+// }
 
 // PrepareAllRecord build each row one by one, put all raw in a slice and insert the slice in the database
 func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
@@ -187,10 +199,15 @@ func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, p
 		NameDate := strings.Split(pogrebdb.ByteToString(val), "\t")
 		Name, Modified := NameDate[0], NameDate[1]
 		Size := pogrebdb.ByteToInt(dirSize)
-		dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
-		DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
 
-		rec := []any{Path, Name, Modified, Size, DirType, TypeScore}
+		// columns DirType, TypeScore are disabled by default
+		rec := []any{Path, Name, Modified, Size}
+		if pref.GuessDirType {
+			dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
+			DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
+			rec = []any{Path, Name, Modified, Size, DirType, TypeScore}
+		}
+
 		// create a new slice of any with the same length as defaultValues
 		strSlice := make([]any, len(defaultValues))
 
@@ -202,11 +219,11 @@ func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, p
 		rec = append(rec, strSlice...)       // create one row
 		allRecords = append(allRecords, rec) // append the row to allRecords
 	}
-	InsertAllRecord(tableName, DBpath, allRecords, userColNames)
+	InsertAllRecord(tableName, DBpath, allRecords, userColNames, pref)
 }
 
 // InsertRecord insert all rows in the DataBase
-func InsertAllRecord(tableName, DBpath string, allRecords [][]any, userColNames []string) bool {
+func InsertAllRecord(tableName, DBpath string, allRecords [][]any, userColNames []string, pref types.Conf) bool {
 	var records []any
 	if len(allRecords) > 0 {
 		records = allRecords[0]
@@ -239,7 +256,11 @@ func InsertAllRecord(tableName, DBpath string, allRecords [][]any, userColNames 
 	placeholders := strings.Repeat("?,", len(records)-1)
 	placeholders = placeholders + "?" // remove the last comma
 
-	colnames := []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
+	// DirType, TypeScore  columns are disabled by default. They appear is the user select the guessDirType option
+	colnames := []string{"Path", "Name", "Modified", "Size"}
+	if pref.GuessDirType {
+		colnames = []string{"Path", "Name", "Modified", "Size", "DirType", "TypeScore"}
+	}
 	colnames = append(colnames, userColNames...)
 
 	// create a SQL statement to insert the values into the table
