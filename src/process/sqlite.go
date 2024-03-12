@@ -112,59 +112,6 @@ func InsertRecord(tableName, DBpath string, records []any, userColNames []string
 	return true
 }
 
-// PrepareRecord build each row one by one and insert them one by one in the database
-// func PrepareRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
-
-// 	userColNames, defaultValues := conf.ReadOptionalColumns()
-// 	//  =======================================================
-// 	// read the dir/files infos stored in the pogreb databases
-// 	//  =======================================================
-// 	it := fDB.Items()
-// 	for {
-// 		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
-// 		dirSize := pogrebdb.StringToByte("")
-// 		key, val, err := it.Next()
-// 		if err == pogreb.ErrIterationDone {
-// 			break
-// 		}
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-
-// 		if pref.GuessDirType {
-// 			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
-// 			if dirInfo == nil || !pref.GuessDirType {
-// 				dirInfo = pogrebdb.StringToByte("\t")
-// 			}
-// 		}
-
-// 		if pref.CalcSize {
-// 			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
-// 		}
-
-// 		Path := pogrebdb.ByteToString(key)
-// 		NameDate := strings.Split(pogrebdb.ByteToString(val), "\t")
-// 		Name, Modified := NameDate[0], NameDate[1]
-// 		Size := pogrebdb.ByteToInt(dirSize)
-// 		dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
-// 		DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
-
-// 		rec := []any{Path, Name, Modified, Size, DirType, TypeScore}
-// 		// create a new slice of any with the same length as defaultValues
-// 		strSlice := make([]any, len(defaultValues))
-
-// 		// loop over strs and convert each string to an interface value
-// 		for i := range strSlice {
-// 			strSlice[i] = defaultValues[i]
-// 		}
-
-// 		rec = append(rec, strSlice...)
-
-// 		InsertRecord(tableName, DBpath, rec, userColNames)
-// 		//InsertRecord(tableName, DBpath, []any{key, val, dirInfo, dirSize})
-// 	}
-// }
-
 // PrepareAllRecord build each row one by one, put all raw in a slice and insert the slice in the database
 func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
 	var allRecords [][]any

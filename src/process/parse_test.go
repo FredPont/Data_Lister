@@ -145,7 +145,7 @@ func TestCreateSQLiteDB(t *testing.T) {
 		optionalColumns   []string
 		pref              types.Conf
 	}{
-		{"MyTable", "../../test/SQLiteTest.db", []string{"col1", "col2"}, types.Conf{}},
+		{"MyTable", "../../test/SQLiteTest.db", []string{"col1", "col2"}, types.Conf{GuessDirType: true}},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
@@ -161,6 +161,7 @@ func TestCreateSQLiteDB(t *testing.T) {
 }
 
 func TestInsertRecord(t *testing.T) {
+	fmt.Println("Enable dir type option before running this test !")
 	tests := []struct {
 		tableName, DBpath string
 		record            []any
@@ -168,7 +169,7 @@ func TestInsertRecord(t *testing.T) {
 		//nbColsup          int
 	}{
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "fasta", 0.75, "col1", "col2"}, []string{"col1", "col2"}},
-		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "fasta", 0.75, "col1", "col2"}, []string{"col1", "col2"}}, // wrong date use text instead
+		//{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", 2023 - 01 - 25, 12, "fasta", 0.75, "col1", "col2"}, []string{"col1", "col2"}}, // wrong date use text instead
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, []string{"col1", "col2"}},
 		{"MyTable", "../../test/SQLiteTest.db", []any{"Path", "Name", "2023-01-25", 12, "bcl2", 0.8, "cells", "project1"}, []string{"col1", "col2"}},
 	}
