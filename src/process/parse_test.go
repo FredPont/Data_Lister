@@ -143,12 +143,13 @@ func TestCreateSQLiteDB(t *testing.T) {
 	tests := []struct {
 		tableName, DBpath string
 		optionalColumns   []string
+		pref              types.Conf
 	}{
-		{"MyTable", "../../test/SQLiteTest.db", []string{"col1", "col2"}},
+		{"MyTable", "../../test/SQLiteTest.db", []string{"col1", "col2"}, types.Conf{}},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
-			got := CreateSQLiteDB(tc.tableName, tc.DBpath, tc.optionalColumns)
+			got := CreateSQLiteDB(tc.tableName, tc.DBpath, tc.optionalColumns, tc.pref)
 			if !got {
 				t.Fatalf("got %v", got)
 			} else {

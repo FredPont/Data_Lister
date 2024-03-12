@@ -219,6 +219,13 @@ func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, p
 		rec = append(rec, strSlice...)       // create one row
 		allRecords = append(allRecords, rec) // append the row to allRecords
 	}
+
+	// check if the columns number inserted by the user match the database
+	if getDBcolNumber(tableName, DBpath) != len(allRecords[0]) {
+		log.Println("Cannot insert record ! The column number of the database (" + fmt.Sprint((getDBcolNumber(tableName, DBpath))) +
+			") does not match the number of columns selected (" + fmt.Sprint(len(allRecords[0])) + ") ! consider changing the Guess dir type option.")
+		return
+	}
 	InsertAllRecord(tableName, DBpath, allRecords, userColNames, pref)
 }
 
@@ -287,4 +294,40 @@ func InsertAllRecord(tableName, DBpath string, allRecords [][]any, userColNames 
 	}
 	//fmt.Println("Inserted a row into table")
 	return true
+}
+
+// getDBcolNumber get the columns number of the SQLite database (except the ID column) to verify that the user
+// update the database with the sames options used previously especially the guess dir type
+func getDBcolNumber(tableName, DBpath string) int {
+	// Connect to the SQLite database
+	db, err := sql.Open("sqlite3", DBpath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Prepare a query
+	stmt, err := db.Prepare("SELECT * FROM " + tableName + " LIMIT 1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	// Execute the query
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	// Get column names
+	columns, err := rows.Columns()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print column names
+	//fmt.Println(columns)
+
+	return len(columns) - 1 // remove the ID column witch is not inserted
 }
