@@ -83,7 +83,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	listfiles := widget.NewCheck("List Files", func(v bool) {})
 	listfiles.Checked = reg.config.ListFiles
 
-	guessType := widget.NewCheck("Guess Dir Type (it changes columns number)", func(v bool) {})
+	guessType := widget.NewCheck("Guess Dir Type (change ouput table shape)", func(v bool) {})
 	guessType.Checked = reg.config.GuessDirType
 
 	dirSize := widget.NewCheck("Compute dir Size (very slow on Gigabytes)", func(v bool) {})
