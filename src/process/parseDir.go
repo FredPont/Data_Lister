@@ -33,14 +33,10 @@ func Parse() {
 	pogrebdb.InitDB()
 	filesDB := pogrebdb.LoadAllDB()
 
-	// fDB := pogrebdb.OpenDB("db/files")        // database filePath => "name", "size",  "date"
-	// dtDB := pogrebdb.OpenDB("db/dirTypes")    // database dirPath => "dir label", "dir score"
-	// dsizeDB := pogrebdb.OpenDB("db/dirSize")  // database dirPath => "dir size"
-
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
-	//fmt.Println(dirSignatures)
+
 	pref := conf.ReadConf() // read preferences
-	//fmt.Println(pref.InputDir)
+
 	// precompilation of include/exclude regex to speed filters
 	PreCompileAllRegex(&pref)
 
@@ -53,8 +49,6 @@ func Parse() {
 		return
 	}
 
-	//pogrebdb.ShowDB(fDB)
-	//pogrebdb.ShowDBInt(dsizeDB)
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
 		fmt.Println("start SQLite output")
@@ -162,9 +156,7 @@ func ScoreType(names []string, dirSignatures map[string]types.DirSignature) type
 			// the score is the ratio of names matching regex / number of elements in the directory
 			score = float64(matchNB) / float64(len(names))
 			if score >= dirSig.ScoreThreshold {
-				// if score > 1. {
-				// 	score = 1.
-				// }
+
 				return types.DirMatch{IsMatch: true, Label: label, Score: score}
 			}
 		}
@@ -196,8 +188,6 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, filesDB type
 	month := fmt.Sprintf("%02d", int(modTime.Month()))
 	day := fmt.Sprintf("%02d", modTime.Day())
 
-	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
-	//outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")
 	outString := strings.Join([]string{info.Name(), year + "-" + month + "-" + day}, "\t") // save name and date to database
 	pogrebdb.InsertDataDB(filesDB.FileDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
 }
