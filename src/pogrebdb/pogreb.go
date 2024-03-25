@@ -17,6 +17,7 @@
 package pogrebdb
 
 import (
+	"Data_Lister/src/types"
 	"fmt"
 	"log"
 	"os"
@@ -72,6 +73,22 @@ func InitDB() {
 	CleanDB("db")
 	//CreateDataBase("files")
 	//CreateDataBase("dirTypes")
+}
+
+// LoadAllDB load the 3 progreb databases for files and dir signatures
+func LoadAllDB() types.Databases {
+	fdb := OpenDB("db/files")       // database filePath => "name", "size",  "date"
+	dtdb := OpenDB("db/dirTypes")   // database dirPath => "dir label", "dir score"
+	dsizedb := OpenDB("db/dirSize") // database dirPath => "dir size"
+
+	return types.Databases{FileDB: fdb, DirLblDB: dtdb, DirSizeDB: dsizedb}
+}
+
+// CloseAllDB close the 3 progreb databases for files and dir signatures
+func CloseAllDB(allDB types.Databases) {
+	allDB.DirLblDB.Close()
+	allDB.DirSizeDB.Close()
+	allDB.FileDB.Close()
 }
 
 // CreateDataBase create a new pogreb database in tmp dir

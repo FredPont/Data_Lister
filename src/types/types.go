@@ -23,6 +23,7 @@ import (
 
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	"github.com/akrylysov/pogreb"
 )
 
 type Conf struct {
@@ -76,4 +77,10 @@ type GuiSettings struct {
 	InfoLabel                                                                                *widget.Label
 	IncludeFormated, ExcludeFormated                                                         []string
 	Selection                                                                                RadioGroupFilters
+}
+
+type Databases struct {
+	FileDB    *pogreb.DB // database filePath => "name", "size",  "date"
+	DirLblDB  *pogreb.DB // database dirPath => "dir label", "dir score"
+	DirSizeDB *pogreb.DB // database dirPath => "dir size"
 }

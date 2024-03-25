@@ -113,13 +113,13 @@ func InsertRecord(tableName, DBpath string, records []any, userColNames []string
 }
 
 // PrepareAllRecord build each row one by one, put all raw in a slice and insert the slice in the database
-func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
+func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref types.Conf) {
 	var allRecords [][]any
 	userColNames, defaultValues := conf.ReadOptionalColumns()
 	//  =======================================================
 	// read the dir/files infos stored in the pogreb databases
 	//  =======================================================
-	it := fDB.Items()
+	it := filesDB.FileDB.Items()
 	for {
 		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
 		dirSize := pogrebdb.StringToByte("")
@@ -132,14 +132,14 @@ func PrepareAllRecord(tableName, DBpath string, fDB, dtDB, dsizeDB *pogreb.DB, p
 		}
 
 		if pref.GuessDirType {
-			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
+			dirInfo = pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
 			if dirInfo == nil || !pref.GuessDirType {
 				dirInfo = pogrebdb.StringToByte("\t")
 			}
 		}
 
 		if pref.CalcSize {
-			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
+			dirSize = pogrebdb.GetKeyDB(filesDB.DirSizeDB, key)
 		}
 
 		Path := pogrebdb.ByteToString(key)

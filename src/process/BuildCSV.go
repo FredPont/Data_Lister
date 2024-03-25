@@ -29,7 +29,7 @@ import (
 	"github.com/akrylysov/pogreb"
 )
 
-func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf) {
+func WriteCSV(outputFile string, filesDB types.Databases, pref types.Conf) {
 	//fmt.Println("writing results to ", outputFile)
 	//  =========================
 	// build result table header
@@ -65,7 +65,7 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 	//  =======================================================
 	// read the dir/files infos stored in the pogreb databases
 	//  =======================================================
-	it := fDB.Items()
+	it := filesDB.FileDB.Items()
 	for {
 		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
 		dirSize := pogrebdb.StringToByte("")
@@ -78,14 +78,14 @@ func WriteCSV(outputFile string, fDB, dtDB, dsizeDB *pogreb.DB, pref types.Conf)
 		}
 
 		if pref.GuessDirType {
-			dirInfo = pogrebdb.GetKeyDB(dtDB, key)
+			dirInfo = pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
 			if dirInfo == nil || !pref.GuessDirType {
 				dirInfo = pogrebdb.StringToByte("\t")
 			}
 		}
 
 		if pref.CalcSize {
-			dirSize = pogrebdb.GetKeyDB(dsizeDB, key)
+			dirSize = pogrebdb.GetKeyDB(filesDB.DirSizeDB, key)
 		}
 
 		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")

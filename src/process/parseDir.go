@@ -27,15 +27,16 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/akrylysov/pogreb"
 )
 
 func Parse() {
 	pogrebdb.InitDB()
-	fDB := pogrebdb.OpenDB("db/files")        // database filePath => "name", "size",  "date"
-	dtDB := pogrebdb.OpenDB("db/dirTypes")    // database dirPath => "dir label", "dir score"
-	dsizeDB := pogrebdb.OpenDB("db/dirSize")  // database dirPath => "dir size"
+	filesDB := pogrebdb.LoadAllDB()
+
+	// fDB := pogrebdb.OpenDB("db/files")        // database filePath => "name", "size",  "date"
+	// dtDB := pogrebdb.OpenDB("db/dirTypes")    // database dirPath => "dir label", "dir score"
+	// dsizeDB := pogrebdb.OpenDB("db/dirSize")  // database dirPath => "dir size"
+
 	dirSignatures := conf.ReadDirSignatures() // load dir signatures
 	//fmt.Println(dirSignatures)
 	pref := conf.ReadConf() // read preferences
@@ -45,7 +46,7 @@ func Parse() {
 
 	rootLevel := strings.Count(pref.InputDir, string(os.PathSeparator))
 
-	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)
+	err := readDir(pref.InputDir, rootLevel, dirSignatures, pref, filesDB)
 	if err != nil {
 		//panic(err)
 		fmt.Println("Error ! ", err)
@@ -57,18 +58,16 @@ func Parse() {
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
 		fmt.Println("start SQLite output")
-		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, fDB, dtDB, dsizeDB, pref)
+		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
 	} else {
 		fmt.Println("start CSV output")
-		WriteCSV(pref.OutputFile, fDB, dtDB, dsizeDB, pref)
+		WriteCSV(pref.OutputFile, filesDB, pref)
 	}
-	dsizeDB.Close()
-	fDB.Close()
-	dtDB.Close()
+	pogrebdb.CloseAllDB(filesDB)
 }
 
 // readDir recursive function to read dir and files to a certain level of deepness
-func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, fDB, dtDB, dsizeDB *pogreb.DB) error {
+func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSignature, pref types.Conf, filesDB types.Databases) error {
 	//fmt.Println("level=", rootLevel)
 	file, err := os.Open(path)
 	if err != nil {
@@ -82,7 +81,7 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		if dirScore.IsMatch {
 			//fmt.Println(path, " -> ", dirScore.Label, dirScore.Score)
 			outString := strings.Join([]string{dirScore.Label, strconv.FormatFloat(dirScore.Score, 'f', -1, 64)}, "\t")
-			pogrebdb.InsertDataDB(dtDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
+			pogrebdb.InsertDataDB(filesDB.DirLblDB, pogrebdb.StringToByte(path), pogrebdb.StringToByte(outString))
 			return nil
 		}
 	}
@@ -116,21 +115,21 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 				// do not save the file if it does not contain the include string pattern
 				continue
 			}
-			saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+			saveOutput(filePath, fileInfo, pref, filesDB)
 		}
 		// store dir info
 		if fileInfo.IsDir() {
 			if FilterDate(fileInfo.ModTime(), pref) {
 				if FilterName(path, name, pref) {
 					// do not block subdir analysis because subdir can contain the filter string
-					saveOutput(filePath, fileInfo, pref, fDB, dsizeDB)
+					saveOutput(filePath, fileInfo, pref, filesDB)
 					//continue
 				}
 			}
 
 			// analyse subdir if current level < user level limit
 			if Level(filePath, rootLevel) < pref.Level {
-				readDir(filePath, rootLevel, dirSignatures, pref, fDB, dtDB, dsizeDB)
+				readDir(filePath, rootLevel, dirSignatures, pref, filesDB)
 			}
 		}
 
@@ -183,13 +182,13 @@ func ScanDirType(names []string, pref types.Conf, dirSignatures map[string]types
 }
 
 // saveOutput save the file/dir information to the pogreb databases
-func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dsizeDB *pogreb.DB) {
+func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, filesDB types.Databases) {
 	if pref.CalcSize {
 		if info.IsDir() {
-			DirSize(filePath, dsizeDB)
+			DirSize(filePath, filesDB.DirSizeDB)
 		} else {
 			//size = info.Size()
-			pogrebdb.InsertDataDB(dsizeDB, pogrebdb.StringToByte(filePath), pogrebdb.IntToBytes(info.Size()))
+			pogrebdb.InsertDataDB(filesDB.DirSizeDB, pogrebdb.StringToByte(filePath), pogrebdb.IntToBytes(info.Size()))
 		}
 	}
 	modTime := info.ModTime()
@@ -200,5 +199,5 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, fDB, dsizeDB
 	//fmt.Println(filePath, "name=", info.Name(), "size=", size, "date=", year, month, day)
 	//outString := strings.Join([]string{info.Name(), strconv.FormatInt(size/1e3, 10), year + "-" + month + "-" + day}, "\t")
 	outString := strings.Join([]string{info.Name(), year + "-" + month + "-" + day}, "\t") // save name and date to database
-	pogrebdb.InsertDataDB(fDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
+	pogrebdb.InsertDataDB(filesDB.FileDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
 }
