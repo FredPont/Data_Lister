@@ -79,8 +79,9 @@ type GuiSettings struct {
 	Selection                                                                                RadioGroupFilters
 }
 
+// Databases is an object containing the 3 databases storing files/dir informations
 type Databases struct {
-	FileDB    *pogreb.DB // database filePath => "name", "size",  "date"
+	FileDB    *pogreb.DB // database filePath => "name", "date"
 	DirLblDB  *pogreb.DB // database dirPath => "dir label", "dir score"
 	DirSizeDB *pogreb.DB // database dirPath => "dir size"
 }

@@ -77,7 +77,7 @@ func InitDB() {
 
 // LoadAllDB load the 3 progreb databases for files and dir signatures
 func LoadAllDB() types.Databases {
-	fdb := OpenDB("db/files")       // database filePath => "name", "size",  "date"
+	fdb := OpenDB("db/files")       // database filePath => "name",  "date"
 	dtdb := OpenDB("db/dirTypes")   // database dirPath => "dir label", "dir score"
 	dsizedb := OpenDB("db/dirSize") // database dirPath => "dir size"
 

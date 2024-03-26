@@ -65,11 +65,11 @@ func WriteCSV(outputFile string, filesDB types.Databases, pref types.Conf) {
 	//  =======================================================
 	// read the dir/files infos stored in the pogreb databases
 	//  =======================================================
-	it := filesDB.FileDB.Items()
+	it := filesDB.FileDB.Items() // database filePath => "name", "date"
 	for {
 		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
 		dirSize := pogrebdb.StringToByte("")
-		key, val, err := it.Next()
+		filePath, fileNameDate, err := it.Next()
 		if err == pogreb.ErrIterationDone {
 			break
 		}
@@ -78,20 +78,20 @@ func WriteCSV(outputFile string, filesDB types.Databases, pref types.Conf) {
 		}
 
 		if pref.GuessDirType {
-			dirInfo = pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
+			dirInfo = pogrebdb.GetKeyDB(filesDB.DirLblDB, filePath)
 			if dirInfo == nil || !pref.GuessDirType {
 				dirInfo = pogrebdb.StringToByte("\t")
 			}
 		}
 
 		if pref.CalcSize {
-			dirSize = pogrebdb.GetKeyDB(filesDB.DirSizeDB, key)
+			dirSize = pogrebdb.GetKeyDB(filesDB.DirSizeDB, filePath)
 		}
 
-		//line := strings.Join([]string{pogrebdb.ByteToString(key), pogrebdb.ByteToString(val), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
+		//line := strings.Join([]string{pogrebdb.ByteToString(filePath), pogrebdb.ByteToString(fileNameDate), pogrebdb.ByteToString(dirInfo), userValues}, "\t")
 		//fmt.Println(line)
 
-		writeLine(writer, formatOutput(key, val, dirInfo, dirSize, defaultValues, pref))
+		writeLine(writer, formatOutput(filePath, fileNameDate, dirInfo, dirSize, defaultValues, pref))
 	}
 	// Flush the buffered data
 	writer.Flush()
@@ -106,9 +106,9 @@ func writeLine(writer *csv.Writer, data []string) {
 	}
 }
 
-func formatOutput(key, val, dirInfo, dirSize []byte, defaultValues []string, pref types.Conf) []string {
-	out := []string{pogrebdb.ByteToString(key)}
-	out = append(out, strings.Split(pogrebdb.ByteToString(val), "\t")...)
+func formatOutput(filePath, fileNameDate, dirInfo, dirSize []byte, defaultValues []string, pref types.Conf) []string {
+	out := []string{pogrebdb.ByteToString(filePath)}
+	out = append(out, strings.Split(pogrebdb.ByteToString(fileNameDate), "\t")...)
 	out = append(out, pogrebdb.IntToString(pogrebdb.ByteToInt(dirSize)))
 	if pref.GuessDirType {
 		out = append(out, strings.Split(pogrebdb.ByteToString(dirInfo), "\t")...)

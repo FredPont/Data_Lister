@@ -24,6 +24,7 @@ import (
 	"Data_Lister/src/types"
 	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -48,16 +49,31 @@ func Parse() {
 		fmt.Println("Error ! ", err)
 		return
 	}
+	CSV_SQL_output(pref, filesDB)
+	// fmt.Println("pref.UseSQLite =", pref.UseSQLite)
+	// if pref.UseSQLite {
+	// 	fmt.Println("start SQLite output")
+	// 	PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
+	// } else {
+	// 	fmt.Println("start CSV output")
+	// 	WriteCSV(pref.OutputFile, filesDB, pref)
+	// 	fmt.Println("CSV saved in ", pref.OutputFile)
+	// }
+	pogrebdb.CloseAllDB(filesDB)
+}
 
+// CSV_SQL_output start the results saving in CSV or SQLite
+func CSV_SQL_output(pref types.Conf, filesDB types.Databases) {
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
-		fmt.Println("start SQLite output")
+		log.Println("start SQLite output")
 		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
+		log.Println("SQLite saved in", pref.SQLiteTable, pref.OutputDB)
 	} else {
-		fmt.Println("start CSV output")
+		log.Println("start CSV output")
 		WriteCSV(pref.OutputFile, filesDB, pref)
+		log.Println("CSV saved in", pref.OutputFile)
 	}
-	pogrebdb.CloseAllDB(filesDB)
 }
 
 // readDir recursive function to read dir and files to a certain level of deepness
