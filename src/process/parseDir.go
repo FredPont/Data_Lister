@@ -50,15 +50,6 @@ func Parse() {
 		return
 	}
 	CSV_SQL_output(pref, filesDB)
-	// fmt.Println("pref.UseSQLite =", pref.UseSQLite)
-	// if pref.UseSQLite {
-	// 	fmt.Println("start SQLite output")
-	// 	PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
-	// } else {
-	// 	fmt.Println("start CSV output")
-	// 	WriteCSV(pref.OutputFile, filesDB, pref)
-	// 	fmt.Println("CSV saved in ", pref.OutputFile)
-	// }
 	pogrebdb.CloseAllDB(filesDB)
 }
 
