@@ -130,8 +130,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	exclude, excludeFormated := excludeArea(reg)
 	exclude.OnChanged = func(s string) {
-		reg.config.Exclude = textValidation(s)
-		//saveFilterToJson(reg, s, &reg.config.Exclude)
+		excludeFormated = textValidation(s)
 	}
 
 	IncludeAndExclude := widget.NewCheck("Include AND Exclude (default: OR)", func(v bool) {})
