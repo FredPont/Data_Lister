@@ -54,6 +54,7 @@ func FilterName(path, name string, pref types.Conf) bool {
 }
 
 // ExcludeFilter apply exclusion list to the name
+// return false if the name match the regex/string
 func ExcludeFilter(name string, pref types.Conf) bool {
 	if pref.ExcludeRegex {
 		excListRegex := pref.CompiledExcludeRegex
@@ -101,7 +102,7 @@ func stringFilter(name, reg string) bool {
 	return strings.Contains(name, reg)
 }
 
-// regexFilter returns if regex "reg" match name
+// regexFilter returns true if regex "reg" match name
 func regexFilter(name string, reg *regexp.Regexp) bool {
 	//re := regexp.MustCompile(reg)
 	return reg.MatchString(name)
