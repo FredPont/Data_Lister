@@ -120,7 +120,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	include, includeFormated := includeArea(reg)
 	include.OnChanged = func(s string) {
-		includeFormated = textValidation(s)
+		saveFilterToJson(reg, s, &reg.config.Include)
 	}
 
 	excludeRegex := widget.NewCheck("Exclude : check to use Regex instead of string", func(v bool) {})
@@ -129,8 +129,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	exclude, excludeFormated := excludeArea(reg)
 	exclude.OnChanged = func(s string) {
-		excludeFormated = textValidation(s)
-		//log.Println(excludeFormated)
+		saveFilterToJson(reg, s, &reg.config.Exclude)
 	}
 
 	IncludeAndExclude := widget.NewCheck("Include AND Exclude (default: OR)", func(v bool) {})
@@ -243,6 +242,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	sqliteEntry := container.New(layout.NewVBoxLayout(), sqliteTabLab, sqliteTable)
 	sqliteTable.OnChanged = func(v string) {
 		sqlTableName.Set(v)
+		//saveSQLTableToJson(reg, v, &reg.config.SQLiteTable)
 	}
 
 	initSQLButton := widget.NewButtonWithIcon("Create SQLite DataBase", theme.ComputerIcon(), func() {
@@ -312,8 +312,9 @@ func startDirAnalysis(reg *Regist, guiParam types.GuiSettings) {
 	guiParam.InfoLabel.Text = "Saving user settings..."
 	guiParam.InfoLabel.Refresh()
 
-	userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
-	reg.saveConfig(userSetting)
+	//userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
+	//log.Println(guiParam.ExcludeFormated)
+	//reg.saveConfig(userSetting)
 
 	log.Println("Starting directory listing...")
 	guiParam.InfoLabel.Text = "Starting directory listing..."
@@ -479,4 +480,14 @@ func switch_SQL_CSV(useSQL bool, UseSQLiteBind binding.Bool, updateSQLliteButton
 		runButton.Enable()
 		runButton.Refresh()
 	}
+}
+
+func saveFilterToJson(reg *Regist, filterString string, configParameter *[]string) {
+	*configParameter = textValidation(filterString)
+	reg.saveConfig(reg.config)
+}
+
+func saveSQLTableToJson(reg *Regist, filterString string, configParameter *string) {
+	*configParameter = filterString
+	reg.saveConfig(reg.config)
 }

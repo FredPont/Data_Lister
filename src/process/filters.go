@@ -43,7 +43,7 @@ func FilterName(path, name string, pref types.Conf) bool {
 		}
 	} else {
 		if len(pref.Include) > 0 && pref.Include[0] != "" {
-			//fmt.Println(pref.Include)
+			//fmt.Println("run include filter\n", name, IncludeFilter(name, pref))
 			return IncludeFilter(name, pref)
 		} else if len(pref.Exclude) > 0 && pref.Exclude[0] != "" {
 			//fmt.Println(name, ExcludeFilter(name, pref))
@@ -75,6 +75,7 @@ func ExcludeFilter(name string, pref types.Conf) bool {
 }
 
 // IncludeFilter apply inclusion list to the name
+// return true is the name match the regex/string
 func IncludeFilter(name string, pref types.Conf) bool {
 	if pref.IncludeRegex {
 		incListRegex := pref.CompiledIncludeRegex
@@ -128,6 +129,7 @@ func PreCompileRegex(stringList []string) []*regexp.Regexp {
 }
 
 // FilterDate filter the accesstime of dir/file by date
+// return true if the file date is valid
 func FilterDate(accessTime time.Time, pref types.Conf) bool {
 	if !pref.DateFilter {
 		return true // if date filter is not set any date is valid

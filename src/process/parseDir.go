@@ -109,20 +109,21 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 			if !fileInfo.IsDir() {
 				if !FilterDate(fileInfo.ModTime(), pref) {
 					continue
+				} else if !FilterName(path, name, pref) {
+					// do not save the file if it does not contain the include string pattern
+					continue
 				}
+				saveOutput(filePath, fileInfo, pref, filesDB)
 			}
 
-			if !FilterName(path, name, pref) {
-				// do not save the file if it does not contain the include string pattern
-				continue
-			}
-			saveOutput(filePath, fileInfo, pref, filesDB)
 		}
 		// store dir info
 		if fileInfo.IsDir() {
+			//log.Println("=>", path, name)
 			if FilterDate(fileInfo.ModTime(), pref) {
 				if FilterName(path, name, pref) {
 					// do not block subdir analysis because subdir can contain the filter string
+					//log.Println(path, name)
 					saveOutput(filePath, fileInfo, pref, filesDB)
 					//continue
 				}
