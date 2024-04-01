@@ -119,13 +119,10 @@ func readDir(path string, rootLevel int, dirSignatures map[string]types.DirSigna
 		}
 		// store dir info
 		if fileInfo.IsDir() {
-			//log.Println("=>", path, name)
 			if FilterDate(fileInfo.ModTime(), pref) {
 				if FilterName(path, name, pref) {
 					// do not block subdir analysis because subdir can contain the filter string
-					//log.Println(path, name)
 					saveOutput(filePath, fileInfo, pref, filesDB)
-					//continue
 				}
 			}
 

@@ -74,6 +74,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	reg.progBar.Hide()
 
 	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
+
 	outFileButton, outFileLabel, outFileURL := outPutButton(reg, outputButtonLBL)
 	//outFileButton, outFileLabel, outFileURL := outPutButton(reg, outputButtonLBL)
 
@@ -120,7 +121,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	include, includeFormated := includeArea(reg)
 	include.OnChanged = func(s string) {
-		saveFilterToJson(reg, s, &reg.config.Include)
+		includeFormated = textValidation(s)
 	}
 
 	excludeRegex := widget.NewCheck("Exclude : check to use Regex instead of string", func(v bool) {})
@@ -129,7 +130,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	exclude, excludeFormated := excludeArea(reg)
 	exclude.OnChanged = func(s string) {
-		saveFilterToJson(reg, s, &reg.config.Exclude)
+		reg.config.Exclude = textValidation(s)
+		//saveFilterToJson(reg, s, &reg.config.Exclude)
 	}
 
 	IncludeAndExclude := widget.NewCheck("Include AND Exclude (default: OR)", func(v bool) {})
@@ -203,29 +205,51 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	sqliteUpdateButtonLBL := "Update SQLite database"
 
 	// guiParam struct to record all GUI parameters and pass them to functions
-	guiParam := types.GuiSettings{
-		InputDirURL:       inputDirURL,
-		OutFileURL:        outFileURL,
-		SqliteOutFileURL:  sqliteOutFileURL,
-		SqlTableName:      sqlTableName,
-		UseSQLiteBind:     UseSQLiteBind,
-		Listfiles:         listfiles,
-		GuessType:         guessType,
-		DirSize:           dirSize,
-		IncludeRegex:      includeRegex,
-		ExcludeRegex:      excludeRegex,
-		DateFilter:        dateFilter,
-		IncludeAndExclude: IncludeAndExclude,
-		Level:             level,
-		Olderthan:         olderthan,
-		Newerthan:         newerthan,
-		InfoLabel:         infoLabel,
-		IncludeFormated:   includeFormated,
-		ExcludeFormated:   excludeFormated,
-		Selection:         selection,
-	}
+	// guiParam := types.GuiSettings{
+	// 	InputDirURL:       inputDirURL,
+	// 	OutFileURL:        outFileURL,
+	// 	SqliteOutFileURL:  sqliteOutFileURL,
+	// 	SqlTableName:      sqlTableName,
+	// 	UseSQLiteBind:     UseSQLiteBind,
+	// 	Listfiles:         listfiles,
+	// 	GuessType:         guessType,
+	// 	DirSize:           dirSize,
+	// 	IncludeRegex:      includeRegex,
+	// 	ExcludeRegex:      excludeRegex,
+	// 	DateFilter:        dateFilter,
+	// 	IncludeAndExclude: IncludeAndExclude,
+	// 	Level:             level,
+	// 	Olderthan:         olderthan,
+	// 	Newerthan:         newerthan,
+	// 	InfoLabel:         infoLabel,
+	// 	IncludeFormated:   includeFormated,
+	// 	//ExcludeFormated:   excludeFormated,
+	// 	Selection: selection,
+	// }
 
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
+		// guiParam struct to record all GUI parameters and pass them to functions
+		guiParam := types.GuiSettings{
+			InputDirURL:       inputDirURL,
+			OutFileURL:        outFileURL,
+			SqliteOutFileURL:  sqliteOutFileURL,
+			SqlTableName:      sqlTableName,
+			UseSQLiteBind:     UseSQLiteBind,
+			Listfiles:         listfiles,
+			GuessType:         guessType,
+			DirSize:           dirSize,
+			IncludeRegex:      includeRegex,
+			ExcludeRegex:      excludeRegex,
+			DateFilter:        dateFilter,
+			IncludeAndExclude: IncludeAndExclude,
+			Level:             level,
+			Olderthan:         olderthan,
+			Newerthan:         newerthan,
+			InfoLabel:         infoLabel,
+			IncludeFormated:   includeFormated,
+			ExcludeFormated:   excludeFormated,
+			Selection:         selection,
+		}
 		go startDirAnalysis(reg, guiParam)
 	})
 
@@ -257,6 +281,27 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//   update SQLlite button
 	//////////////////////////////
 	updateSQLliteButton := widget.NewButtonWithIcon(sqliteUpdateButtonLBL, theme.ComputerIcon(), func() {
+		guiParam := types.GuiSettings{
+			InputDirURL:       inputDirURL,
+			OutFileURL:        outFileURL,
+			SqliteOutFileURL:  sqliteOutFileURL,
+			SqlTableName:      sqlTableName,
+			UseSQLiteBind:     UseSQLiteBind,
+			Listfiles:         listfiles,
+			GuessType:         guessType,
+			DirSize:           dirSize,
+			IncludeRegex:      includeRegex,
+			ExcludeRegex:      excludeRegex,
+			DateFilter:        dateFilter,
+			IncludeAndExclude: IncludeAndExclude,
+			Level:             level,
+			Olderthan:         olderthan,
+			Newerthan:         newerthan,
+			InfoLabel:         infoLabel,
+			IncludeFormated:   includeFormated,
+			ExcludeFormated:   excludeFormated,
+			Selection:         selection,
+		}
 		go startDirAnalysis(reg, guiParam)
 	})
 
@@ -312,9 +357,10 @@ func startDirAnalysis(reg *Regist, guiParam types.GuiSettings) {
 	guiParam.InfoLabel.Text = "Saving user settings..."
 	guiParam.InfoLabel.Refresh()
 
-	//userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
-	//log.Println(guiParam.ExcludeFormated)
-	//reg.saveConfig(userSetting)
+	userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
+	log.Println(guiParam.IncludeFormated)
+	reg.saveConfig(userSetting)
+	//reg.saveConfig(reg.config)
 
 	log.Println("Starting directory listing...")
 	guiParam.InfoLabel.Text = "Starting directory listing..."
@@ -482,12 +528,12 @@ func switch_SQL_CSV(useSQL bool, UseSQLiteBind binding.Bool, updateSQLliteButton
 	}
 }
 
-func saveFilterToJson(reg *Regist, filterString string, configParameter *[]string) {
-	*configParameter = textValidation(filterString)
-	reg.saveConfig(reg.config)
-}
+// func (reg *Regist) saveFilterToJson(filterString string, configParameter *[]string) {
+// 	*configParameter = textValidation(filterString)
+// 	reg.saveConfig(reg.config)
+// }
 
-func saveSQLTableToJson(reg *Regist, filterString string, configParameter *string) {
-	*configParameter = filterString
-	reg.saveConfig(reg.config)
-}
+// func (reg *Regist) saveStringToJson(filterString string, configParameter *string) {
+// 	*configParameter = filterString
+// 	reg.saveConfig(reg.config)
+// }
