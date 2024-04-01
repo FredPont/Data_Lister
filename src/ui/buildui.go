@@ -204,29 +204,6 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	sqliteUpdateButtonLBL := "Update SQLite database"
 
-	// guiParam struct to record all GUI parameters and pass them to functions
-	// guiParam := types.GuiSettings{
-	// 	InputDirURL:       inputDirURL,
-	// 	OutFileURL:        outFileURL,
-	// 	SqliteOutFileURL:  sqliteOutFileURL,
-	// 	SqlTableName:      sqlTableName,
-	// 	UseSQLiteBind:     UseSQLiteBind,
-	// 	Listfiles:         listfiles,
-	// 	GuessType:         guessType,
-	// 	DirSize:           dirSize,
-	// 	IncludeRegex:      includeRegex,
-	// 	ExcludeRegex:      excludeRegex,
-	// 	DateFilter:        dateFilter,
-	// 	IncludeAndExclude: IncludeAndExclude,
-	// 	Level:             level,
-	// 	Olderthan:         olderthan,
-	// 	Newerthan:         newerthan,
-	// 	InfoLabel:         infoLabel,
-	// 	IncludeFormated:   includeFormated,
-	// 	//ExcludeFormated:   excludeFormated,
-	// 	Selection: selection,
-	// }
-
 	runButton := widget.NewButtonWithIcon(runButtonLBL, theme.ComputerIcon(), func() {
 		// guiParam struct to record all GUI parameters and pass them to functions
 		guiParam := types.GuiSettings{
@@ -358,9 +335,7 @@ func startDirAnalysis(reg *Regist, guiParam types.GuiSettings) {
 	guiParam.InfoLabel.Refresh()
 
 	userSetting := reg.GetUserSettings(guiParam) // GUI parameters to configuration settings
-	log.Println(guiParam.IncludeFormated)
 	reg.saveConfig(userSetting)
-	//reg.saveConfig(reg.config)
 
 	log.Println("Starting directory listing...")
 	guiParam.InfoLabel.Text = "Starting directory listing..."
