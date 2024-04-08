@@ -185,3 +185,23 @@ func TestInsertRecord(t *testing.T) {
 		})
 	}
 }
+
+func TestDatePrefix(t *testing.T) {
+	tests := []struct {
+		name string
+		want string
+	}{
+		//{"test.txt", "2024-04-08_142400_test.txt"},
+	}
+	for i, tc := range tests {
+		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {
+			got := DatePrefix(tc.name)
+			if got != tc.want {
+				t.Fatalf("got %v; want %v", got, tc.want)
+			} else {
+				t.Logf("Success !")
+			}
+
+		})
+	}
+}

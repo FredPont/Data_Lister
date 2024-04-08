@@ -475,7 +475,7 @@ func makeSQLiteDB(sqliteOutFileURL binding.String, sqliteStatus *widget.Label) {
 	DBpath, _ := sqliteOutFileURL.Get()
 	fmt.Println("SQLite DB path : ", DBpath)
 
-	process.InitSQL()
+	process.InitSQLGUI(DBpath)
 
 	fmt.Println("Database created : " + DBpath)
 	sqliteStatus.Text = "Database created : " + DBpath

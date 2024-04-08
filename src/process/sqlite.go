@@ -19,7 +19,16 @@ func InitSQL() {
 	tableName := pref.SQLiteTable
 	DBpath := pref.OutputDB
 	userCols, _ := conf.ReadOptionalColumns()
+	log.Println("DBpath=", DBpath)
+	CreateSQLiteDB(tableName, DBpath, userCols, pref)
+}
 
+// InitSQL get the DBpath from the GUI and the user optional columns from CSV before creating a SQL database
+func InitSQLGUI(DBpath string) {
+	pref := conf.ReadConf() // read preferences
+	tableName := pref.SQLiteTable
+	userCols, _ := conf.ReadOptionalColumns()
+	log.Println("DBpath=", DBpath)
 	CreateSQLiteDB(tableName, DBpath, userCols, pref)
 }
 

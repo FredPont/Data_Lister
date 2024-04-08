@@ -23,11 +23,14 @@ import (
 	"Data_Lister/src/pogrebdb"
 	"Data_Lister/src/types"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Parse() {
@@ -57,6 +60,8 @@ func Parse() {
 func CSV_SQL_output(pref types.Conf, filesDB types.Databases) {
 	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
+		log.Println("Backup SQLite database")
+		backupDatabase(pref)
 		log.Println("start SQLite output")
 		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
 		log.Println("SQLite saved in", pref.SQLiteTable, pref.OutputDB)
@@ -195,4 +200,42 @@ func saveOutput(filePath string, info fs.FileInfo, pref types.Conf, filesDB type
 
 	outString := strings.Join([]string{info.Name(), year + "-" + month + "-" + day}, "\t") // save name and date to database
 	pogrebdb.InsertDataDB(filesDB.FileDB, pogrebdb.StringToByte(filePath), pogrebdb.StringToByte(outString))
+}
+
+// backupDatabase make a copy of the SQLite database
+func backupDatabase(pref types.Conf) {
+	source := pref.OutputDB
+	path, fileName := GetFileAndPath(source)
+	dest := fmt.Sprintf("%v"+string(os.PathSeparator)+"%v", path, DatePrefix(fileName)) //new file path with date time prefix to filename
+	CopyFile(source, dest)                                                              // copy file source to dest
+	log.Println("Database backup in ", dest)
+}
+
+func GetFileAndPath(fullPath string) (string, string) {
+	dir := filepath.Dir(fullPath)
+	fileName := filepath.Base(fullPath)
+	return dir, fileName
+}
+
+// DatePrefix, prefix a string with current date and time
+func DatePrefix(name string) string {
+	return time.Now().Format("2006-01-02_150405_") + name
+}
+
+// Copy a file
+func CopyFile(src, dst string) error {
+	source, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destination.Close()
+
+	_, err = io.Copy(destination, source)
+	return err
 }
