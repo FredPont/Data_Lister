@@ -152,25 +152,16 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 		// columns DirType, TypeScore are disabled by default
 		rec := []any{Path, Name, Modified, Size}
 		addDirTypeAndScore(rec, key, filesDB, pref)
-		// if pref.GuessDirType {
-		// 	dirInfo := pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
-		// 	if dirInfo == nil || !pref.GuessDirType {
-		// 		dirInfo = pogrebdb.StringToByte("\t")
-		// 	}
-		// 	dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
-		// 	DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
-		// 	rec = []any{Path, Name, Modified, Size, DirType, TypeScore}
-		// }
 
 		// create a new slice of any with the same length as defaultValues
 		strSlice := make([]any, len(defaultValues))
-
+		addUserDefaultValues(strSlice, rec, defaultValues)
 		// loop over strs and convert each string to an interface value
-		for i := range strSlice {
-			strSlice[i] = defaultValues[i]
-		}
+		// for i := range strSlice {
+		// 	strSlice[i] = defaultValues[i]
+		// }
 
-		rec = append(rec, strSlice...)       // create one row
+		// rec = append(rec, strSlice...)       // create one row
 		allRecords = append(allRecords, rec) // append the row to allRecords
 	}
 
@@ -181,6 +172,14 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 		return
 	}
 	InsertAllRecord(tableName, DBpath, allRecords, userColNames, pref)
+}
+
+func addUserDefaultValues(strSlice, rec []any, defaultValues []string) {
+	// loop over strs and convert each string to an interface value
+	for i := range strSlice {
+		strSlice[i] = defaultValues[i]
+	}
+	rec = append(rec, strSlice...) // create one row
 }
 
 // addDirTypeAndScore append dirtype and type score to the record
