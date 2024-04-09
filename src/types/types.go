@@ -27,11 +27,11 @@ import (
 )
 
 type Conf struct {
-	InputDir   string `json:"InputDir"`
-	OutputFile string `json:"OutputCSVFile"`
-	OutputDB   string `json:"OutputSQLFile"`
-	ListFiles  bool   `json:"ListFiles"`
-	//ListDir              bool     `json:"ListDir"`
+	InputDir             string   `json:"InputDir"`
+	OutputFile           string   `json:"OutputCSVFile"`
+	OutputDB             string   `json:"OutputSQLFile"`
+	UpdateCSV            bool     `json:"UpdateCSV"`
+	ListFiles            bool     `json:"ListFiles"`
 	GuessDirType         bool     `json:"GuessDirType"`
 	CalcSize             bool     `json:"CalcSize"`
 	Level                int      `json:"Level"`
@@ -71,7 +71,7 @@ type RadioGroupFilters struct {
 
 type GuiSettings struct {
 	InputDirURL, OutFileURL, SqliteOutFileURL, SqlTableName                                  binding.String
-	UseSQLiteBind                                                                            binding.Bool
+	UseSQLiteBind, UpdateCSVbind                                                             binding.Bool
 	Listfiles, GuessType, DirSize, IncludeRegex, ExcludeRegex, DateFilter, IncludeAndExclude *widget.Check
 	Level, Olderthan, Newerthan                                                              *widget.Entry
 	InfoLabel                                                                                *widget.Label

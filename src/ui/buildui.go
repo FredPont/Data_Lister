@@ -56,6 +56,8 @@ func NewRegist() *Regist {
 func (reg *Regist) BuildUI(win fyne.Window) {
 	reg.win = win
 
+	// Data binding
+	UpdateCSVbind := binding.NewBool()
 	UseSQLiteBind := binding.NewBool()
 	sqlTableName := binding.NewString()
 	sqliteOutFileURL := binding.NewString()
@@ -90,6 +92,9 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	dirSize := widget.NewCheck("Compute dir Size (very slow on Gigabytes)", func(v bool) {})
 	// dirSize.Checked = false // set the default value to false
 	dirSize.Checked = reg.config.CalcSize
+
+	updateCSV := widget.NewCheck("Update CSV automatically", func(v bool) { UpdateCSVbind.Set(v) })
+	updateCSV.Checked = reg.config.UpdateCSV
 
 	levelLab := widget.NewLabel("Level")
 	level := widget.NewEntry()
@@ -208,6 +213,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		guiParam := types.GuiSettings{
 			InputDirURL:       inputDirURL,
 			OutFileURL:        outFileURL,
+			UpdateCSVbind:     UpdateCSVbind,
 			SqliteOutFileURL:  sqliteOutFileURL,
 			SqlTableName:      sqlTableName,
 			UseSQLiteBind:     UseSQLiteBind,
@@ -260,6 +266,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		guiParam := types.GuiSettings{
 			InputDirURL:       inputDirURL,
 			OutFileURL:        outFileURL,
+			UpdateCSVbind:     UpdateCSVbind,
 			SqliteOutFileURL:  sqliteOutFileURL,
 			SqlTableName:      sqlTableName,
 			UseSQLiteBind:     UseSQLiteBind,
@@ -303,7 +310,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
 	homeContent := container.NewGridWithColumns(2,
 		container.NewGridWithColumns(1, inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
-			dirSize, levelEntry, runButton, closeButton, infoLabel),
+			dirSize, updateCSV, levelEntry, runButton, closeButton, infoLabel),
 		container.NewVBox(pict, reg.progBar))
 
 	homeTab := container.NewTabItem("Home", homeContent)

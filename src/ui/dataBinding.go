@@ -34,6 +34,7 @@ func (reg *Regist) GetUserSettings(guiParam types.GuiSettings) types.Conf {
 		InputDir:          reg.dbToStr(guiParam.InputDirURL),
 		OutputFile:        reg.dbToStr(guiParam.OutFileURL),
 		OutputDB:          reg.dbToStr(guiParam.SqliteOutFileURL),
+		UpdateCSV:         reg.dbToBool(guiParam.UpdateCSVbind),
 		ListFiles:         guiParam.Listfiles.Checked,
 		GuessDirType:      guiParam.GuessType.Checked,
 		CalcSize:          guiParam.DirSize.Checked,

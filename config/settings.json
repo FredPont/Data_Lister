@@ -1,7 +1,8 @@
 {
     "InputDir": "test",
     "OutputCSVFile": "results/table.csv",
-    "OutputSQLFile": "test/testDB.db",
+    "OutputSQLFile": "test/test2.db",
+    "UpdateCSV": true,
     "ListFiles": false,
     "GuessDirType": false,
     "CalcSize": false,

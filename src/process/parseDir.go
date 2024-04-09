@@ -65,6 +65,8 @@ func CSV_SQL_output(pref types.Conf, filesDB types.Databases) {
 		log.Println("start SQLite output")
 		PrepareAllRecord(pref.SQLiteTable, pref.OutputDB, filesDB, pref)
 		log.Println("SQLite saved in", pref.SQLiteTable, pref.OutputDB)
+	} else if pref.UpdateCSV {
+		UpdateCSV(pref, filesDB)
 	} else {
 		log.Println("start CSV output")
 		WriteCSV(pref.OutputFile, filesDB, pref)

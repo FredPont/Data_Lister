@@ -16,10 +16,10 @@
  (c) Frederic Pont 2023
 */
 
-package merge
+package process
 
 import (
-	"Data_Lister/src/process"
+	"Data_Lister/src/merge"
 	"Data_Lister/src/types"
 	"fmt"
 	"log"
@@ -29,17 +29,19 @@ import (
 // BackupCSV make a copy of the CSV table
 func BackupCSV(pref types.Conf) {
 	source := pref.OutputFile
-	path, fileName := process.GetFileAndPath(source)
-	dest := fmt.Sprintf("%v"+string(os.PathSeparator)+"%v", path, process.DatePrefix(fileName)) //new file path with date time prefix to filename
-	process.CopyFile(source, dest)                                                              // copy file source to dest
+	path, fileName := GetFileAndPath(source)
+	dest := fmt.Sprintf("%v"+string(os.PathSeparator)+"%v", path, DatePrefix(fileName)) //new file path with date time prefix to filename
+	CopyFile(source, dest)                                                              // copy file source to dest
 	log.Println("CSV backup in ", dest)
 }
 
 func UpdateCSV(pref types.Conf, filesDB types.Databases) {
 	oldfile := pref.OutputFile
 	BackupCSV(pref)
-	path, _ := process.GetFileAndPath(oldfile)
+	path, _ := GetFileAndPath(oldfile)
 	tempFile := fmt.Sprintf("%v"+string(os.PathSeparator)+"%v", path, "tmp.tsv")
-	process.WriteCSV(tempFile, filesDB, pref)
-	Merge(oldfile, tempFile)
+	WriteCSV(tempFile, filesDB, pref)
+	log.Println("temp table written in ", tempFile)
+	merge.Merge(oldfile, tempFile)
+	log.Println("CSV written in ", oldfile)
 }
