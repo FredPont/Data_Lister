@@ -130,7 +130,7 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 	//  =======================================================
 	it := filesDB.FileDB.Items()
 	for {
-		dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
+		//dirInfo := pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
 		dirSize := pogrebdb.StringToByte("")
 		key, val, err := it.Next()
 		if err == pogreb.ErrIterationDone {
@@ -138,13 +138,6 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 		}
 		if err != nil {
 			log.Fatal(err)
-		}
-
-		if pref.GuessDirType {
-			dirInfo = pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
-			if dirInfo == nil || !pref.GuessDirType {
-				dirInfo = pogrebdb.StringToByte("\t")
-			}
 		}
 
 		if pref.CalcSize {
@@ -159,6 +152,10 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 		// columns DirType, TypeScore are disabled by default
 		rec := []any{Path, Name, Modified, Size}
 		if pref.GuessDirType {
+			dirInfo := pogrebdb.GetKeyDB(filesDB.DirLblDB, key)
+			if dirInfo == nil || !pref.GuessDirType {
+				dirInfo = pogrebdb.StringToByte("\t") // dirtype and size empty by default to avoid column shift if compute dir size is enabled
+			}
 			dirTypeScore := strings.Split(pogrebdb.ByteToString(dirInfo), "\t")
 			DirType, TypeScore := dirTypeScore[0], dirTypeScore[1]
 			rec = []any{Path, Name, Modified, Size, DirType, TypeScore}
