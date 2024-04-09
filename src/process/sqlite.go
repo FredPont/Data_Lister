@@ -156,12 +156,7 @@ func PrepareAllRecord(tableName, DBpath string, filesDB types.Databases, pref ty
 		// create a new slice of any with the same length as defaultValues
 		strSlice := make([]any, len(defaultValues))
 		addUserDefaultValues(strSlice, rec, defaultValues)
-		// loop over strs and convert each string to an interface value
-		// for i := range strSlice {
-		// 	strSlice[i] = defaultValues[i]
-		// }
 
-		// rec = append(rec, strSlice...)       // create one row
 		allRecords = append(allRecords, rec) // append the row to allRecords
 	}
 
