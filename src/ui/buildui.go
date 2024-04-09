@@ -494,14 +494,13 @@ func makeSQLiteDB(sqliteOutFileURL binding.String, sqliteStatus *widget.Label) {
 
 // switch_SQL_CSV enable/disable the updateSQLliteButton/makeCSVbutton
 func switch_SQL_CSV(useSQL bool, UseSQLiteBind binding.Bool, updateSQLliteButton, runButton *widget.Button) {
+	UseSQLiteBind.Set(useSQL)
 	if useSQL {
-		UseSQLiteBind.Set(true)
 		updateSQLliteButton.Enable()
 		updateSQLliteButton.Refresh()
 		runButton.Disable()
 		runButton.Refresh()
 	} else {
-		UseSQLiteBind.Set(false)
 		updateSQLliteButton.Disable()
 		updateSQLliteButton.Refresh()
 		runButton.Enable()

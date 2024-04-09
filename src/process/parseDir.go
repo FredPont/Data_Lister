@@ -58,7 +58,7 @@ func Parse() {
 
 // CSV_SQL_output start the results saving in CSV or SQLite
 func CSV_SQL_output(pref types.Conf, filesDB types.Databases) {
-	fmt.Println("pref.UseSQLite =", pref.UseSQLite)
+	//fmt.Println("pref.UseSQLite =", pref.UseSQLite)
 	if pref.UseSQLite {
 		log.Println("Backup SQLite database")
 		backupDatabase(pref)
