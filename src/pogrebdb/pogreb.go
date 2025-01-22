@@ -86,9 +86,12 @@ func LoadAllDB() types.Databases {
 
 // CloseAllDB close the 3 progreb databases for files and dir signatures
 func CloseAllDB(allDB types.Databases) {
-	allDB.DirLblDB.Close()
-	allDB.DirSizeDB.Close()
-	allDB.FileDB.Close()
+	defer func() { // close the databases
+		allDB.DirLblDB.Close()
+		allDB.DirSizeDB.Close()
+		allDB.FileDB.Close()
+	}()
+
 }
 
 // CreateDataBase create a new pogreb database in tmp dir

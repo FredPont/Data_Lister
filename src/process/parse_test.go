@@ -58,6 +58,7 @@ func TestRegexFilter(t *testing.T) {
 		{"test.pl", "\\.pl", true},
 		{"file.json", "j[a-z]{2}n", true},
 		{"dir1", "dir", true},
+		{".hidden_dir", "^\\.", true},
 	}
 	for i, tc := range tests {
 		t.Run(fmt.Sprintf("Index=%d", i), func(t *testing.T) {

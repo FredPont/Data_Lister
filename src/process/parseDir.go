@@ -52,7 +52,9 @@ func Parse() {
 		fmt.Println("Error ! ", err)
 		return
 	}
+	log.Println("End of directory parsing")
 	CSV_SQL_output(pref, filesDB)
+	log.Println("End of CSV/SQLite output")
 	pogrebdb.CloseAllDB(filesDB)
 }
 

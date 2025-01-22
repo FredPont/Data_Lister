@@ -59,6 +59,7 @@ func ExcludeFilter(name string, pref types.Conf) bool {
 	if pref.ExcludeRegex {
 		excListRegex := pref.CompiledExcludeRegex
 		for _, reg := range excListRegex {
+			//fmt.Println(name, reg, regexFilter(name, reg))
 			if regexFilter(name, reg) {
 				return false
 			}
