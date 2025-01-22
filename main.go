@@ -102,7 +102,7 @@ func GraphicInterface() {
 
 	a := app.NewWithID("DataLister")
 
-	w := a.NewWindow("DataLister v20240401 © Frédéric Pont 2023")
+	w := a.NewWindow("DataLister v20250122 © Frédéric Pont 2023")
 
 	reg := ui.NewRegist()
 

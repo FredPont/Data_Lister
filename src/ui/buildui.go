@@ -72,7 +72,7 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 
 	closeButton := widget.NewButtonWithIcon("Close", theme.LogoutIcon(), func() { reg.win.Close() })
 	// progress bar
-	//reg.progBar.Show() // to avoid resizing of the window by the progress bar
+	reg.progBar.Show() // to avoid resizing of the window by the progress bar
 	reg.progBar.Hide()
 
 	inputDirButton, inputDirLabel, inputDirURL := inputButton(reg)
@@ -198,7 +198,8 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 		reg.progBar.Hide()
 
 	})
-	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, mergeStatus, reg.progBar)
+	//mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, closeButton, mergeStatus, reg.progBar)
+	mergeContent := container.NewVBox(oldFileButton, newFileButton, mergeButton, mergeStatus, reg.progBar)
 	// Create a widget label with some help text
 	helpContent := container.NewVScroll(widget.NewLabel(helpText()))
 
@@ -307,11 +308,13 @@ func (reg *Regist) BuildUI(win fyne.Window) {
 	// build windows tabs
 	/////////////////////
 
-	//homeContent := container.NewVBox(listfiles, guessType, dirSize, levelEntry, closeButton, pict, progBar)fyne.Window
-	homeContent := container.NewGridWithColumns(2,
-		container.NewGridWithColumns(1, inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
-			dirSize, updateCSV, levelEntry, runButton, closeButton, infoLabel),
-		container.NewVBox(pict, reg.progBar))
+	// homeContent := container.NewGridWithColumns(2,
+	// 	container.NewGridWithColumns(1, inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
+	// 		dirSize, updateCSV, levelEntry, runButton, closeButton, infoLabel),
+	// 	container.NewVBox(pict, reg.progBar))
+
+	homeContent := container.NewVBox(pict, inputDirButton, inputDirLabel, outFileButton, outFileLabel, listfiles, guessType,
+		dirSize, updateCSV, levelEntry, runButton, closeButton, reg.progBar, infoLabel)
 
 	homeTab := container.NewTabItem("Home", homeContent)
 	filtersTab := container.NewTabItem("Filters", filtersContent)
