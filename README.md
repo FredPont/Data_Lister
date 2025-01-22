@@ -109,7 +109,7 @@ Example : to exclude names starting with a dot use "^\\..+"
 ```
 - Edit config/columns.tsv to add custom columns and their optional default values
 ```tsv
-ColumnName	DefaultValueswork in progress...
+ColumnName	DefaultValues
 SampleType	Cells
 Project_ID	Project_1
 RelatedProject	Project_2
@@ -121,20 +121,22 @@ Delete_Date	2028-01-01
 Usage :
   -c	Start DataLister directories analysis in command line.
   -g	Start DataLister directories analysis in graphic mode.
+Example :
+	Start the analysis of the directories in command line (-c):
+	./Linux_DataLister.bin -c
+
+  Merge CSV
   -m	Start DataLister merging tool.
   -i string
     	New result file path. Only new files/dir are added to the old file
   -o string
-    	Old result file path. 
-  -s	Create a new SQLite database. Example : ./Linux_DataLister.bin -s
-
-	Examples :
-
-	Start the analysis of the directories in command line (-c):
-	./Linux_DataLister.bin -c
-
+    	Old result file path.
 	To add new data from newfile to oldfile :
 	./Linux_DataLister.bin -m -o oldfile.csv -i newfile.csv
+
+  SQLite       
+  -s	Create a new SQLite database. 
+  Example : ./Linux_DataLister.bin -s
 
 	if "UseSQLite": true in the config/settings.json file, then
 	./Linux_DataLister.bin -c
